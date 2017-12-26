@@ -1,7 +1,7 @@
 {
   "name": "bitfees",
   "version": "1.0.0",
-  "description": "",
+  "description": "Bitcoin fees bot",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",

@@ -13,7 +13,14 @@ let fees = {}
 const getbitgofees = () => {
   trae.get('https://www.bitgo.com/api/v1/tx/fee')
     .then((res) => {
-      fees = res.data.feeByBlockTarget
+      const resFees = res.data.feeByBlockTarget
+      const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a])
+      const blocksSorted = Object.keys(resFees).sort((a, b) => a - b)
+      let feesObj = {}
+      for (let i = 0; i < feesSorted.length; i++) {
+        feesObj[blocksSorted[i]] = resFees[feesSorted[i]]
+      }
+      fees = feesObj
       console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
