@@ -1,0 +1,17 @@
+{
+  "name": "bitfees",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "astrolince",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "node-schedule": "^1.2.5",
+    "trae": "^1.4.2",
+    "twitter": "^1.7.1"
+  }
+}
