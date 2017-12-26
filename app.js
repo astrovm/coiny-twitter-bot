@@ -14,8 +14,9 @@ const getbitgofees = () => {
   trae.get('https://www.bitgo.com/api/v1/tx/fee')
     .then((res) => {
       const resFees = res.data.feeByBlockTarget
-      const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a])
-      const blocksSorted = Object.keys(resFees).sort((a, b) => a - b)
+      const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a]) // sort fee numbers
+      const blocksSorted = Object.keys(resFees).sort((a, b) => a - b) // sort block target numbers
+      // recreate fees object by matching sorted blocks with sorted fees
       let feesObj = {}
       for (let i = 0; i < feesSorted.length; i++) {
         feesObj[blocksSorted[i]] = resFees[feesSorted[i]]
