@@ -1,0 +1,2 @@
+# bitfees
+Bitcoin fees bot
