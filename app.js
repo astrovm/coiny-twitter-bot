@@ -8,56 +8,67 @@ const schedule = require('node-schedule')
 const client = new Twitter({
 })
 
-//request bitgo api fees
-let fees = {}
-const getbitgofees = () => {
+// request bitgo api fees
+let bitGoFees = {}
+const getBitGoFees = () => {
   trae.get('https://www.bitgo.com/api/v1/tx/fee')
     .then((res) => {
-      const resFees = res.data.feeByBlockTarget
-      const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a]) // sort fee numbers
-      const blocksSorted = Object.keys(resFees).sort((a, b) => a - b) // sort block target numbers
-      // recreate fees object by matching sorted blocks with sorted fees
-      let feesObj = {}
-      for (let i = 0; i < feesSorted.length; i++) {
-        feesObj[blocksSorted[i]] = resFees[feesSorted[i]]
-      }
-      fees = feesObj
+      bitGoFees = sortBitGoFees(res.data.feeByBlockTarget)
+      tweet = buildTweet()
       console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
       console.error(err)
     })
 }
-getbitgofees()
+
+// sort fees object
+const sortBitGoFees = (resFees) => {
+  const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a]) // sort fee numbers
+  const blocksSorted = Object.keys(resFees).sort((a, b) => a - b) // sort block target numbers
+  // recreate fees object by matching sorted blocks with sorted fees
+  let tempBitGofees = {}
+  for (let i = 0; i < feesSorted.length; i++) {
+    tempBitGofees[blocksSorted[i]] = resFees[feesSorted[i]]
+  }
+  return tempBitGofees
+}
 
 // select bitgo fee for specific block target
-const bitgofeefor = (blocks) => {
-  const keysSorted = Object.keys(fees).sort((a,b) => fees[a]-fees[b])
+const bitGoFeeFor = (blocks) => {
+  const keysSorted = Object.keys(bitGoFees).sort((a,b) => bitGoFees[a] - bitGoFees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
-      const satB = fees[keysSorted[key]]/1000
+      const satB = bitGoFees[keysSorted[key]]/1000
       return satB
     }
   }
 }
 
+// build tweet
+let tweet
+const buildTweet = () =>
+`20 min ${bitGoFeeFor(2)} sat/B
+40 min ${bitGoFeeFor(4)} sat/B
+60 min ${bitGoFeeFor(6)} sat/B
+2 hours ${bitGoFeeFor(12)} sat/B
+4 hours ${bitGoFeeFor(24)} sat/B
+8 hours ${bitGoFeeFor(48)} sat/B
+24 hours ${bitGoFeeFor(144)} sat/B
+3 days ${bitGoFeeFor(504)} sat/B
+7 days ${bitGoFeeFor(1008)} sat/B`
+
+// init fees data
+getBitGoFees()
+
 // get bitgo fees every 7 minutes job
-const bitgojob = schedule.scheduleJob('*/7 * * * *', () => {
-  getbitgofees()
+const bitGoJob = schedule.scheduleJob('*/7 * * * *', () => {
+  getBitGoFees()
 })
 
 // hpurly tweet
-const tweetjob = schedule.scheduleJob('0 * * * *', () => {
-  if (Object.getOwnPropertyNames(fees).length > 0) { // if fees obj is not empty
-    const tweet = `20 min ${bitgofeefor(2)} sat/B
-40 min ${bitgofeefor(4)} sat/B
-60 min ${bitgofeefor(6)} sat/B
-2 hours ${bitgofeefor(12)} sat/B
-4 hours ${bitgofeefor(24)} sat/B
-8 hours ${bitgofeefor(48)} sat/B
-24 hours ${bitgofeefor(144)} sat/B
-3 days ${bitgofeefor(504)} sat/B
-7 days ${bitgofeefor(1008)} sat/B`
+const tweetJob = schedule.scheduleJob('0 * * * *', () => {
+  if (Object.getOwnPropertyNames(bitGoFees).length > 0) { // if fees obj is not empty
     // tweet
     client.post('statuses/update', {status: tweet},  function(err, tweet, res) {
       ((err) ? console.log(err) : console.log(`Tweet created at: ${tweet.created_at}`))
