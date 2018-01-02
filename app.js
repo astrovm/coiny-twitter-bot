@@ -6,6 +6,10 @@ const trae = require('trae')
 const schedule = require('node-schedule')
 
 const client = new Twitter({
+  consumer_key: '',
+  consumer_secret: '',
+  access_token_key: '',
+  access_token_secret: ''
 })
 
 // request bitgo api fees
