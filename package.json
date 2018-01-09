@@ -2,15 +2,15 @@
   "name": "bitfees",
   "version": "1.0.0",
   "description": "Bitcoin fees bot",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "micro"
   },
   "author": "astrolince",
   "license": "MPL-2.0",
   "dependencies": {
-    "bcoin": "^1.0.0-beta.15",
+    "bitcoin-core": "^2.0.0",
+    "micro": "^9.1.0",
     "node-schedule": "^1.2.5",
     "trae": "^1.4.2",
     "twitter": "^1.7.1"

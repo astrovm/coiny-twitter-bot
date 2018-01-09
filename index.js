@@ -6,10 +6,10 @@ const trae = require('trae')
 const schedule = require('node-schedule')
 
 const client = new Twitter({
-  consumer_key: '',
-  consumer_secret: '',
-  access_token_key: '',
-  access_token_secret: ''
+  consumer_key: process.env.BITFEES_TW_CONSUMER_KEY,
+  consumer_secret: process.env.BITFEES_TW_CONSUMER_SECRET,
+  access_token_key: process.env.BITFEES_TW_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.BITFEES_TW_ACCESS_TOKEN_SECRET
 })
 
 // request bitgo api fees
@@ -79,3 +79,6 @@ const tweetJob = schedule.scheduleJob('0 * * * *', () => {
     })
   }
 })
+
+// show fees in web sv
+module.exports = () => tweet
