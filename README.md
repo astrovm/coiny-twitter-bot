@@ -1,5 +1,5 @@
 # bitfees
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Twitter Follow](https://img.shields.io/twitter/follow/bitfees.svg?style=social&label=Follow)](https://twitter.com/bitfees)
 
 Bitcoin fees bot tweets every hour the minimum fee to get a confirmation in x time using the estimates of my Bitcoin Core node and the BitGo API.
 
