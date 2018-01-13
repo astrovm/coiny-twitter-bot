@@ -13,7 +13,7 @@ const getFees = () => {
       console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
-      console.error(err)
+      console.log('Error: getFees bitgo.js')
     })
 }
 
@@ -24,7 +24,7 @@ const sortFees = (resFees) => {
   // recreate fees object by matching sorted blocks with sorted fees
   let tempFees = {}
   for (let i = 0; i < feesSorted.length; i++) {
-    tempFees[blocksSorted[i]] = resFees[feesSorted[i]]
+    tempFees[blocksSorted[i]] = Math.floor(resFees[feesSorted[i]]/1000)
   }
   return tempFees
 }
@@ -34,8 +34,7 @@ const feeFor = (blocks) => {
   const keysSorted = Object.keys(fees).sort((a,b) => fees[a] - fees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
-      const satB = Math.floor(fees[keysSorted[key]]/1000)
-      return satB
+      return fees[keysSorted[key]]
     }
   }
 }
