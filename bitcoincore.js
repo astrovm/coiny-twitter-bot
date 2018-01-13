@@ -8,9 +8,9 @@ const schedule = require('node-schedule')
 const rpc = new Bitcoin({
   network: 'mainnet',
   host: process.env.BITCOIN_CORE_HOST,
-  port: process.BITCOIN_CORE_PORT,
-  username: process.BITCOIN_CORE_USER,
-  password: process.BITCOIN_CORE_PASS
+  port: process.env.BITCOIN_CORE_PORT,
+  username: process.env.BITCOIN_CORE_USER,
+  password: process.env.BITCOIN_CORE_PASS
 })
 
 // get info from bitcoin node
