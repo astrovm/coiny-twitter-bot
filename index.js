@@ -21,8 +21,10 @@ const minFeeFor = (blocks) => {
   if (coreFee && bitGoFee) {
     return Math.min(coreFee, bitGoFee)
   } else if (coreFee) {
+    console.log('UNDEFINED BitGo fee')
     return coreFee
   } else if (bitGoFee) {
+    console.log('UNDEFINED Bitcoin Core fee')
     return bitGoFee
   } else {
     throw new Error('minFeeFor index.js')
