@@ -44,8 +44,8 @@ const buildTweet = () =>
 // hourly tweet
 const tweetJob = schedule.scheduleJob('0 * * * *', () => {
   tw.post('statuses/update', {status: buildTweet()},  function(err, tweet, res) {
-      ((err) ? throw new Error('tw.post index.js') : console.log(`Tweet created at: ${tweet.created_at}`))
-    })
+    (err) ? console.log('Error: tw.post index.js') : console.log(`Tweet created at: ${tweet.created_at}`)
+  })
 })
 
 // show fees in web sv

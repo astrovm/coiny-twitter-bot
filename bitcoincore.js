@@ -22,7 +22,7 @@ const getNodeInfo = () => {
   rpc.command(batch).then((res) => {
     console.log(res)
   }).catch((err) => {
-    throw new Error('getNodeInfo bitcoincore.js')
+    console.log('Error: getNodeInfo bitcoincore.js')
   })
 }
 
@@ -44,7 +44,7 @@ const getFees = () => {
     fees = buildFeesObj(res)
     console.log(`Updated Core fees: ${new Date()}`)
   }).catch((err) => {
-    throw new Error('getFees bitcoincore.js')
+    console.log('Error: getFees bitcoincore.js')
   })
 }
 

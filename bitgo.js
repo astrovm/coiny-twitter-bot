@@ -13,7 +13,7 @@ const getFees = () => {
       console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
-      throw new Error('getFees bitgo.js')
+      console.log('Error: getFees bitgo.js')
     })
 }
 
