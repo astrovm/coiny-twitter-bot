@@ -7,10 +7,10 @@ const schedule = require('node-schedule')
 // conf bitcoin rpc
 const rpc = new Bitcoin({
   network: 'mainnet',
-  host: '',
-  port: '',
-  username: '',
-  password: ''
+  host: process.env.BITCOIN_CORE_HOST,
+  port: process.BITCOIN_CORE_PORT,
+  username: process.BITCOIN_CORE_USER,
+  password: process.BITCOIN_CORE_PASS
 })
 
 // get info from bitcoin node
@@ -19,7 +19,11 @@ const getNodeInfo = () => {
     { method: 'getblockchaininfo', parameters: [] },
     { method: 'getnetworkinfo', parameters: [] }
   ]
-  rpc.command(batch).then((res) => console.log(res))
+  rpc.command(batch).then((res) => {
+    console.log(res)
+  }).catch((err) => {
+    throw new Error('getNodeInfo bitcoincore.js')
+  })
 }
 
 // request fees
@@ -40,7 +44,7 @@ const getFees = () => {
     fees = buildFeesObj(res)
     console.log(`Updated Core fees: ${new Date()}`)
   }).catch((err) => {
-    console.error(err)
+    throw new Error('getFees bitcoincore.js')
   })
 }
 
@@ -63,17 +67,18 @@ const feeFor = (blocks) => {
   }
 }
 
-// init fees data
+// init fees data, get node info
 getFees()
+getNodeInfo()
 
 // get core fees every 3 minutes job
 const getFeesJob = schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
-  console.log(fees)
 })
 
-const asd = schedule.scheduleJob('*/1 * * * *', () => {
-  console.log(feeFor(2))
+// hourly get node info
+const getNodeInfoJob = schedule.scheduleJob('0 * * * *', () => {
+  getNodeInfo()
 })
 
 // export feeFor function
