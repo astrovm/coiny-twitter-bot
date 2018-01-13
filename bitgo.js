@@ -34,7 +34,7 @@ const feeFor = (blocks) => {
   const keysSorted = Object.keys(fees).sort((a,b) => fees[a] - fees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
-      const satB = fees[keysSorted[key]]/1000
+      const satB = Math.floor(fees[keysSorted[key]]/1000)
       return satB
     }
   }
