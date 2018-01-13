@@ -1,4 +1,4 @@
-"use strict"
+'use strict'
 
 // require libs
 const bitcoincore = require('./bitcoincore.js')
@@ -21,13 +21,13 @@ const minFeeFor = (blocks) => {
   if (coreFee && bitGoFee) {
     return Math.min(coreFee, bitGoFee)
   } else if (coreFee) {
-    console.log('UNDEFINED BitGo fee')
+    console.log('Undefined BitGo fee')
     return coreFee
   } else if (bitGoFee) {
-    console.log('UNDEFINED Bitcoin Core fee')
+    console.log('Undefined Core fee')
     return bitGoFee
   } else {
-    throw new Error('minFeeFor index.js')
+    throw new Error('minFeeFor index.js:30')
   }
 }
 
@@ -44,9 +44,9 @@ const buildTweet = () =>
 7 days ${minFeeFor(1008)} sat/B`
 
 // hourly tweet
-const tweetJob = schedule.scheduleJob('0 * * * *', () => {
-  tw.post('statuses/update', {status: buildTweet()},  function(err, tweet, res) {
-    (err) ? console.log('Error: tw.post index.js') : console.log(`Tweet created at: ${tweet.created_at}`)
+schedule.scheduleJob('0 * * * *', () => {
+  tw.post('statuses/update', {status: buildTweet()}, (err, tweet, res) => {
+    (err) ? console.error(err) : console.log(`Tweet created at: ${tweet.created_at}`)
   })
 })
 

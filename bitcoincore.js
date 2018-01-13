@@ -1,4 +1,4 @@
-"use strict"
+'use strict'
 
 // require libs
 const Bitcoin = require('bitcoin-core')
@@ -19,13 +19,14 @@ const getNodeInfo = () => {
     { method: 'getblockchaininfo', parameters: [] },
     { method: 'getnetworkinfo', parameters: [] }
   ]
-  rpc.command(batch).then((res) => {
-    console.log(`Node version: ${res[1].subversion}`)
-    console.log(`Node blocks: ${res[0].blocks} (${(res[0].verificationprogress * 100).toFixed(2)}%)`)
-    console.log(`Node connections: ${res[1].connections}`)
-  }).catch((err) => {
-    console.log('Error: getNodeInfo bitcoincore.js')
-  })
+  rpc.command(batch)
+    .then((res) => {
+      console.log(`Node version: ${res[1].subversion}`)
+      console.log(`Node blocks: ${res[0].blocks} (${(res[0].verificationprogress * 100).toFixed(2)}%)`)
+      console.log(`Node connections: ${res[1].connections}`)
+    }).catch((err) => {
+      console.error(err)
+    })
 }
 
 // request fees
@@ -42,26 +43,27 @@ const getFees = () => {
     { method: 'estimatesmartfee', parameters: [504] },
     { method: 'estimatesmartfee', parameters: [1008] }
   ]
-  rpc.command(batch).then((res) => {
-    fees = buildFeesObj(res)
-    console.log(`Updated Core fees: ${new Date()}`)
-  }).catch((err) => {
-    console.log('Error: getFees bitcoincore.js')
-  })
+  rpc.command(batch)
+    .then((res) => {
+      fees = buildFeesObj(res)
+      console.log(`Updated Core fees: ${new Date()}`)
+    }).catch((err) => {
+      console.error(err)
+    })
 }
 
 // build fees obj
 const buildFeesObj = (resfees) => {
   let tempFees = {}
   for (let fee in resfees) {
-    tempFees[resfees[fee].blocks] = Math.floor(resfees[fee].feerate*100000)
+    tempFees[resfees[fee].blocks] = Math.floor(resfees[fee].feerate * 100000)
   }
   return tempFees
 }
 
 // select fee for specific block target
 const feeFor = (blocks) => {
-  const keysSorted = Object.keys(fees).sort((a,b) => fees[a] - fees[b])
+  const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
       return fees[keysSorted[key]]
@@ -74,12 +76,12 @@ getFees()
 getNodeInfo()
 
 // get core fees every 3 minutes job
-const getFeesJob = schedule.scheduleJob('*/3 * * * *', () => {
+schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
 })
 
 // hourly get node info
-const getNodeInfoJob = schedule.scheduleJob('0 * * * *', () => {
+schedule.scheduleJob('0 * * * *', () => {
   getNodeInfo()
 })
 

@@ -1,4 +1,4 @@
-"use strict"
+'use strict'
 
 // require libs
 const trae = require('trae')
@@ -13,7 +13,7 @@ const getFees = () => {
       console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
-      console.log('Error: getFees bitgo.js')
+      console.error(err)
     })
 }
 
@@ -24,14 +24,14 @@ const sortFees = (resFees) => {
   // recreate fees object by matching sorted blocks with sorted fees
   let tempFees = {}
   for (let i = 0; i < feesSorted.length; i++) {
-    tempFees[blocksSorted[i]] = Math.floor(resFees[feesSorted[i]]/1000)
+    tempFees[blocksSorted[i]] = Math.floor(resFees[feesSorted[i]] / 1000)
   }
   return tempFees
 }
 
 // select bitgo fee for specific block target
 const feeFor = (blocks) => {
-  const keysSorted = Object.keys(fees).sort((a,b) => fees[a] - fees[b])
+  const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
       return fees[keysSorted[key]]
@@ -43,7 +43,7 @@ const feeFor = (blocks) => {
 getFees()
 
 // get bitgo fees every 3 minutes job
-const getFeesJob = schedule.scheduleJob('*/3 * * * *', () => {
+schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
 })
 
