@@ -20,7 +20,9 @@ const getNodeInfo = () => {
     { method: 'getnetworkinfo', parameters: [] }
   ]
   rpc.command(batch).then((res) => {
-    console.log(res)
+    console.log(`Node version: ${res[1].subversion}`)
+    console.log(`Node blocks: ${res[0].blocks} (${(res[0].verificationprogress * 100).toFixed(2)}%)`)
+    console.log(`Node connections: ${res[1].connections}`)
   }).catch((err) => {
     console.log('Error: getNodeInfo bitcoincore.js')
   })
