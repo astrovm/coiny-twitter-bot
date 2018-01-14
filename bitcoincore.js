@@ -39,8 +39,20 @@ const getFees = () => {
     { method: 'estimatesmartfee', parameters: [12] },
     { method: 'estimatesmartfee', parameters: [24] },
     { method: 'estimatesmartfee', parameters: [48] },
+    { method: 'estimatesmartfee', parameters: [72] },
+    { method: 'estimatesmartfee', parameters: [108] },
     { method: 'estimatesmartfee', parameters: [144] },
+    { method: 'estimatesmartfee', parameters: [216] },
+    { method: 'estimatesmartfee', parameters: [288] },
+    { method: 'estimatesmartfee', parameters: [360] },
+    { method: 'estimatesmartfee', parameters: [432] },
     { method: 'estimatesmartfee', parameters: [504] },
+    { method: 'estimatesmartfee', parameters: [576] },
+    { method: 'estimatesmartfee', parameters: [648] },
+    { method: 'estimatesmartfee', parameters: [720] },
+    { method: 'estimatesmartfee', parameters: [792] },
+    { method: 'estimatesmartfee', parameters: [864] },
+    { method: 'estimatesmartfee', parameters: [936] },
     { method: 'estimatesmartfee', parameters: [1008] }
   ]
   rpc.command(batch)

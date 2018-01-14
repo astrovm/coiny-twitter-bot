@@ -4,6 +4,7 @@
 const bitcoincore = require('./bitcoincore.js')
 const bitgo = require('./bitgo.js')
 const Twitter = require('twitter')
+const url = require('url-parse')
 const schedule = require('node-schedule')
 
 // conf twitter
@@ -16,8 +17,8 @@ const tw = new Twitter({
 
 // get min fee for x block target
 const minFeeFor = (blocks) => {
-  const coreFee = bitcoincore.feeFor(blocks)
-  const bitGoFee = bitgo.feeFor(blocks)
+  const coreFee = bitcoincore.feeFor(parseInt(blocks))
+  const bitGoFee = bitgo.feeFor(parseInt(blocks))
   if (coreFee && bitGoFee) {
     return Math.min(coreFee, bitGoFee)
   } else if (coreFee) {
@@ -43,6 +44,31 @@ const buildTweet = () =>
 3 days ${minFeeFor(504)} sat/B
 7 days ${minFeeFor(1008)} sat/B`
 
+// build json
+const buildJSON = (blocks) => {
+  let res =
+    { 'feeByBlockTarget':
+      {
+        '2': minFeeFor(2),
+        '4': minFeeFor(4),
+        '6': minFeeFor(6),
+        '12': minFeeFor(12),
+        '24': minFeeFor(24),
+        '48': minFeeFor(48),
+        '144': minFeeFor(144),
+        '504': minFeeFor(504),
+        '1008': minFeeFor(1008)
+      }
+    }
+  if (blocks) {
+    res.feePerB = minFeeFor(blocks)
+    res.numBlocks = parseInt(blocks)
+    return res
+  } else {
+    return res
+  }
+}
+
 // hourly tweet
 schedule.scheduleJob('0 * * * *', () => {
   tw.post('statuses/update', {status: buildTweet()}, (err, tweet, res) => {
@@ -51,4 +77,15 @@ schedule.scheduleJob('0 * * * *', () => {
 })
 
 // show fees in web sv
-module.exports = () => buildTweet()
+module.exports = (req, res) => {
+  const parse = url(req.url, true)
+  if (parse.pathname === '/api/fee') {
+    try {
+      res.end(JSON.stringify(buildJSON(parseInt(parse.query.numBlocks))))
+    } catch (e) {
+      res.end(buildJSON())
+    }
+  } else {
+    res.end(buildTweet())
+  }
+}
