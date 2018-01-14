@@ -3,6 +3,13 @@
 
 Bitcoin fees bot tweets every hour the minimum fee to get a confirmation in x time using the estimates of my Bitcoin Core node and the BitGo API.
 
+## API
+You can also request fees through the API:
+
+> GET https://bitfees.now.sh/api/v1/tx/fee?numBlocks={target}
+
+Example: https://bitfees.now.sh/api/v1/tx/fee?numBlocks=144 for 144 blocks confirmation target (24 hours)
+
 ## Deploy
 [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/astrolince/bitfees&env=BITFEES_TW_CONSUMER_KEY&env=BITFEES_TW_CONSUMER_SECRET&env=BITFEES_TW_ACCESS_TOKEN_KEY&env=BITFEES_TW_ACCESS_TOKEN_SECRET&env=BITCOIN_CORE_HOST&env=BITCOIN_CORE_PORT&env=BITCOIN_CORE_USER&env=BITCOIN_CORE_PASS)
 
