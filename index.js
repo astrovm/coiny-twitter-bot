@@ -47,7 +47,8 @@ const buildTweet = () =>
 // build json
 const buildJSON = (blocks) => {
   let res =
-    { 'feeByBlockTarget':
+    {
+      'feeByBlockTarget':
       {
         '2': minFeeFor(2),
         '4': minFeeFor(4),
@@ -76,10 +77,10 @@ schedule.scheduleJob('0 * * * *', () => {
   })
 })
 
-// show fees in web sv
+// show fees in web sv, handle api requests
 module.exports = (req, res) => {
   const parse = url(req.url, true)
-  if (parse.pathname === '/api/fee') {
+  if (parse.pathname === '/api/v1/tx/fee') {
     try {
       res.end(JSON.stringify(buildJSON(parseInt(parse.query.numBlocks))))
     } catch (e) {
