@@ -17,7 +17,7 @@ const minFeeFor = (blocks) => {
     console.log('Undefined Core fee')
     return bitGoFee
   } else {
-    throw new Error('minFeeFor index.js:30')
+    throw new Error('minFeeFor fees.js')
   }
 }
 
