@@ -58,7 +58,7 @@ const getFees = () => {
   rpc.command(batch)
     .then((res) => {
       fees = buildFeesObj(res)
-      console.log(`Updated Core fees: ${new Date()}`)
+      // console.log(`Updated Core fees: ${new Date()}`)
     }).catch((err) => {
       console.error(err)
     })
@@ -90,11 +90,6 @@ getNodeInfo()
 // get core fees every 3 minutes job
 schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
-})
-
-// hourly get node info
-schedule.scheduleJob('0 * * * *', () => {
-  getNodeInfo()
 })
 
 // export feeFor function

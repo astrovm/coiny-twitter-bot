@@ -10,7 +10,7 @@ const getFees = () => {
   trae.get('https://www.bitgo.com/api/v1/tx/fee')
     .then((res) => {
       fees = sortFees(res.data.feeByBlockTarget)
-      console.log(`Updated BitGo fees: ${new Date()}`)
+      // console.log(`Updated BitGo fees: ${new Date()}`)
     })
     .catch((err) => {
       console.error(err)
