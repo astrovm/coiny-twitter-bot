@@ -57,7 +57,8 @@ const getBuyPrices = async () => {
   const rates = {
     bank: {
       ripio: ripioBuyRate * (1.5 / 100 + 1) * (0.5 / 100 + 1),
-      satoshiTango: satoshiTangoBuyRate * (1.21 / 100 + 1) * (2 / 100 + 1)
+      satoshiTango: satoshiTangoBuyRate * (1.21 / 100 + 1) * (2 / 100 + 1),
+      bitInka: bitInkaBuyRate * (1 / 100 + 1) * (0.5 / 100 + 1) * (0.15 / 100 + 1)
     },
     rapiPago: {
       ripio: ripioBuyRate * (2.5 / 100 + 1) * (0.5 / 100 + 1),
@@ -65,7 +66,8 @@ const getBuyPrices = async () => {
     },
     pagoFacil: {
       ripio: ripioBuyRate * (3 / 100 + 1) * (0.5 / 100 + 1),
-      satoshiTango: satoshiTangoBuyRate * (5.8 / 100 + 1) * (2 / 100 + 1)
+      satoshiTango: satoshiTangoBuyRate * (5.8 / 100 + 1) * (2 / 100 + 1),
+      bitInka: bitInkaBuyRate * (3.5 / 100 + 1) * (0.5 / 100 + 1) * (0.15 / 100 + 1)
     },
     provincia: {
       satoshiTango: satoshiTangoBuyRate * (5.2 / 100 + 1) * (2 / 100 + 1)
@@ -79,7 +81,8 @@ const getBuyPrices = async () => {
   }
   const fees = {
     ripio: priceData.ripio.fees.fee.low,
-    satoshiTango: 0
+    satoshiTango: 0,
+    bitInka: 0.00064876
   }
   return {'rates': rates, 'fees': fees}
 }
