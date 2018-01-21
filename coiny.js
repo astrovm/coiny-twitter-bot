@@ -12,8 +12,8 @@ const apis = {
   satoshiTango: {
     rates: 'https://api.satoshitango.com/v2/ticker'
   },
-  bitinka: {
-    rates: 'https://www.bitinka.com.ar/bitinka/refreshMarket'
+  bitInka: {
+    rates: 'https://www.bitinka.pe/api/apinka/ticker?format=json'
   }
 }
 
@@ -53,6 +53,7 @@ const getBuyPrices = async () => {
   const priceData = await data
   const ripioBuyRate = priceData.ripio.rates.rates.ARS_BUY
   const satoshiTangoBuyRate = priceData.satoshiTango.rates.data.compra.arsbtc
+  const bitInkaBuyRate = priceData.bitInka.rates.ARS.ask
   const rates = {
     bank: {
       ripio: ripioBuyRate * (1.5 / 100 + 1) * (0.5 / 100 + 1),
