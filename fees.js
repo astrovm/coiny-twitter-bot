@@ -6,19 +6,23 @@ const bitgo = require('./bitgo.js')
 
 // get min fee for x block target
 const minFeeFor = (blocks) => {
-  const coreFee = bitcoincore.feeFor(parseInt(blocks))
-  const bitGoFee = bitgo.feeFor(parseInt(blocks))
-  if (coreFee && bitGoFee) {
-    return Math.min(coreFee, bitGoFee)
-  } else if (coreFee) {
-    console.log('Undefined BitGo fee')
-    return coreFee
-  } else if (bitGoFee) {
-    console.log('Undefined Core fee')
-    return bitGoFee
-  } else {
-    throw new Error('minFeeFor fees.js')
+  const coreFee = bitcoincore.feeFor(blocks)
+  const bitGoFee = bitgo.feeFor(blocks)
+  const tempFees = {}
+  for (let block in blocks) {
+    if (coreFee[blocks[block]] && bitGoFee[blocks[block]]) {
+      tempFees[[blocks[block]]] = Math.min(coreFee[blocks[block]], bitGoFee[blocks[block]])
+    } else if (coreFee) {
+      console.log('Undefined BitGo fee')
+      tempFees[[blocks[block]]] = coreFee[blocks[block]]
+    } else if (bitGoFee) {
+      console.log('Undefined Core fee')
+      tempFees[[blocks[block]]] = bitGoFee[blocks[block]]
+    } else {
+      throw new Error('minFeeFor fees.js')
+    }
   }
+  return tempFees
 }
 
 // build json
