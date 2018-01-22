@@ -40,9 +40,9 @@ const feeFor = async (blocks) => {
   }
   const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
   let res = {}
-  for (let block in blocks) {
-    for (let key in keysSorted) {
-      if (keysSorted[key] <= blocks[block]) {
+  for (let key in keysSorted) {
+    for (let block in blocks) {
+      if (keysSorted[key] >= blocks[block]) {
         res[blocks[block]] = tempFees[keysSorted[key]]
       }
     }
