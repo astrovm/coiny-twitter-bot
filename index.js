@@ -24,9 +24,10 @@ schedule.scheduleJob('0 * * * *', () => {
 const server = micro(async (req, res) => {
   const parse = url(req.url, true)
   if (parse.pathname === '/api/v1/tx/fee') {
-    try {
-      res.end(JSON.stringify(await fees.buildJSON([parseInt(parse.query.numBlocks)])))
-    } catch (e) {
+    const blocks = parse.query.numBlocks
+    if (blocks) {
+      res.end(JSON.stringify(await fees.buildJSON([blocks])))
+    } else {
       res.end(JSON.stringify(await fees.buildJSON()))
     }
   } else {
