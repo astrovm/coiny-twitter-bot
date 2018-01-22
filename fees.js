@@ -5,19 +5,19 @@ const bitcoincore = require('./bitcoincore.js')
 const bitgo = require('./bitgo.js')
 
 // get min fee for x block target
-const minFeeFor = (blocks) => {
-  const coreFee = bitcoincore.feeFor(blocks)
-  const bitGoFee = bitgo.feeFor(blocks)
-  const tempFees = {}
+const minFeeFor = async (blocks) => {
+  const bitGoFee = await bitgo.feeFor(blocks)
+  const coreFee = await bitcoincore.feeFor(blocks)
+  let tempFees = {}
   for (let block in blocks) {
     if (coreFee[blocks[block]] && bitGoFee[blocks[block]]) {
       tempFees[[blocks[block]]] = Math.min(coreFee[blocks[block]], bitGoFee[blocks[block]])
-    } else if (coreFee) {
-      console.log('Undefined BitGo fee')
-      tempFees[[blocks[block]]] = coreFee[blocks[block]]
-    } else if (bitGoFee) {
+    } else if (bitGoFee[blocks[block]]) {
       console.log('Undefined Core fee')
       tempFees[[blocks[block]]] = bitGoFee[blocks[block]]
+    } else if (coreFee[blocks[block]]) {
+      console.log('Undefined BitGo fee')
+      tempFees[[blocks[block]]] = coreFee[blocks[block]]
     } else {
       throw new Error('minFeeFor fees.js')
     }
@@ -26,31 +26,34 @@ const minFeeFor = (blocks) => {
 }
 
 // build json
-const buildJSON = async (reqBlocks = [2]) => {
+const buildJSON = (reqBlocks = [2]) => {
   const presetBlocks = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
   const blocks = presetBlocks.concat(reqBlocks.filter((block) => {
     return presetBlocks.indexOf(block) < 0
   }))
-  const res = await minFeeFor(blocks)
+  const res = minFeeFor(blocks)
   return res
 }
 
 // compare new fees with last tweet fees
-let lastTweetJson = buildJSON()
-setTimeout(function () {
-  console.log(JSON.stringify(lastTweetJson))
-}, 5000)
-const checkDiff = () => {
-  const fees = buildJSON()
+let lastTweetJson = {}
+const checkDiff = async () => {
+  const fees = await buildJSON()
+  if (Object.keys(lastTweetJson).length === 0) {
+    lastTweetJson = fees
+    return null
+  }
   for (let fee in lastTweetJson) {
     const diff = lastTweetJson[fee] / fees[fee]
     if (diff < 0.95 || diff > 1.05) return fees
   }
   return null
 }
+checkDiff()
 
 // build text
-const buildText = (fees = buildJSON()) => {
+const buildText = async (fees = {}) => {
+  if (Object.keys(fees).length === 0) fees = await buildJSON()
   const text =
 `20 min ${fees[2]} sat/B
 40 min ${fees[4]} sat/B
