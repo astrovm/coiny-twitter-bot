@@ -29,17 +29,21 @@ const sortFees = (resFees) => {
   return tempFees
 }
 
-// select bitgo fee for specific block target
+// select fee for specific block target
 const feeFor = async (blocks) => {
   if (fees === {}) {
     fees = await getFees()
   }
   const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
-  for (let key in keysSorted) {
-    if (keysSorted[key] <= blocks) {
-      return fees[keysSorted[key]]
+  let tempFees = {}
+  for (let block in blocks) {
+    for (let key in keysSorted) {
+      if (keysSorted[key] <= blocks[block]) {
+        tempFees[blocks[block]] = fees[keysSorted[key]]
+      }
     }
   }
+  return tempFees
 }
 
 // init fees data
