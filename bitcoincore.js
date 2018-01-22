@@ -57,6 +57,7 @@ const getFees = async () => {
     ]
     const res = await rpc.command(batch)
     const newFees = buildFeesObj(res)
+    fees = newFees
     return newFees
   } catch (e) {
     console.error(e)
@@ -76,19 +77,22 @@ const buildFeesObj = (resfees) => {
 
 // select fee for specific block target
 const feeFor = async (blocks) => {
-  if (fees === {}) {
-    fees = await getFees()
-  }
-  const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
   let tempFees = {}
+  if (fees) {
+    tempFees = fees
+  } else {
+    tempFees = await getFees()
+  }
+  const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
+  let res = {}
   for (let block in blocks) {
     for (let key in keysSorted) {
       if (keysSorted[key] <= blocks[block]) {
-        tempFees[blocks[block]] = fees[keysSorted[key]]
+        res[blocks[block]] = tempFees[keysSorted[key]]
       }
     }
   }
-  return tempFees
+  return res
 }
 
 // init fees data, get node info
@@ -96,8 +100,8 @@ let fees = {}
 getNodeInfo()
 
 // get core fees every 3 minutes job
-schedule.scheduleJob('*/3 * * * *', async () => {
-  fees = await getFees()
+schedule.scheduleJob('*/3 * * * *', () => {
+  getFees()
 })
 
 // export feeFor function

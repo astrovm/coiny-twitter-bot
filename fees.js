@@ -26,24 +26,12 @@ const minFeeFor = (blocks) => {
 }
 
 // build json
-const buildJSON = (blocks = 2) => {
-  const res =
-    {
-      'feePerB': minFeeFor(blocks),
-      'numBlocks': parseInt(blocks),
-      'feeByBlockTarget':
-      {
-        '2': minFeeFor(2),
-        '4': minFeeFor(4),
-        '6': minFeeFor(6),
-        '12': minFeeFor(12),
-        '24': minFeeFor(24),
-        '48': minFeeFor(48),
-        '144': minFeeFor(144),
-        '504': minFeeFor(504),
-        '1008': minFeeFor(1008)
-      }
-    }
+const buildJSON = async (reqBlocks = [2]) => {
+  const presetBlocks = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
+  const blocks = presetBlocks.concat(reqBlocks.filter((block) => {
+    return presetBlocks.indexOf(block) < 0
+  }))
+  const res = await minFeeFor(blocks)
   return res
 }
 
@@ -53,19 +41,16 @@ setTimeout(function () {
   console.log(JSON.stringify(lastTweetJson))
 }, 5000)
 const checkDiff = () => {
-  const json = buildJSON()
-  const lastTweetFees = lastTweetJson.feeByBlockTarget
-  const newFees = json.feeByBlockTarget
-  for (let fee in lastTweetFees) {
-    const diff = lastTweetFees[fee] / newFees[fee]
-    if (diff < 0.95 || diff > 1.05) return json
+  const fees = buildJSON()
+  for (let fee in lastTweetJson) {
+    const diff = lastTweetJson[fee] / fees[fee]
+    if (diff < 0.95 || diff > 1.05) return fees
   }
   return null
 }
 
 // build text
-const buildText = (json = buildJSON()) => {
-  const fees = json.feeByBlockTarget
+const buildText = (fees = buildJSON()) => {
   const text =
 `20 min ${fees[2]} sat/B
 40 min ${fees[4]} sat/B
