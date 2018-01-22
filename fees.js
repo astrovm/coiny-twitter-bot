@@ -37,6 +37,7 @@ const buildJSON = (reqBlocks = [2]) => {
 
 // compare new fees with last tweet fees
 let lastTweetJson = {}
+
 const checkDiff = async () => {
   const fees = await buildJSON()
   if (Object.keys(lastTweetJson).length === 0) {
@@ -49,6 +50,7 @@ const checkDiff = async () => {
   }
   return null
 }
+
 checkDiff()
 
 // build text
