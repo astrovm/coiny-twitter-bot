@@ -16,9 +16,7 @@ const tw = new Twitter({
 
 // hourly tweet
 schedule.scheduleJob('0 * * * *', () => {
-  tw.post('statuses/update', {status: fees.buildTweet()}, (err, tweet, res) => {
-    (err) ? console.error(err) : console.log(`Tweet created at: ${tweet.created_at}`)
-  })
+  fees.makeTweet(tw)
 })
 
 // show fees in web sv, handle api requests
@@ -31,6 +29,6 @@ module.exports = (req, res) => {
       res.end(JSON.stringify(fees.buildJSON()))
     }
   } else {
-    res.end(fees.buildTweet())
+    res.end(fees.buildText())
   }
 }
