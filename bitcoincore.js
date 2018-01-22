@@ -70,8 +70,8 @@ const getFees = async () => {
 // build fees obj
 const buildFeesObj = (req) => {
   let res = {}
-  for (let fee in req) {
-    res[req[fee].blocks] = Math.floor(req[fee].feerate * 10 ** 8)
+  for (let i in req) {
+    res[req[i].blocks] = Math.floor(req[i].feerate * 10 ** 8)
   }
   return res
 }
