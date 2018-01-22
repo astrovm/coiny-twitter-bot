@@ -37,11 +37,9 @@ const minFeeFor = async (blocks) => {
 }
 
 // build json
-const buildJSON = async (req = [2]) => {
-  const presetBlocks = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-  const blocks = presetBlocks.concat(req.filter((block) => {
-    return presetBlocks.indexOf(block) < 0
-  }))
+const buildJSON = async (req) => {
+  const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
+  const blocks = (req) ? defaults.concat(req.filter((i) => defaults.indexOf(i) < 0)) : defaults
   const res = await minFeeFor(blocks)
   return res
 }

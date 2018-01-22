@@ -25,7 +25,7 @@ const server = micro(async (req, res) => {
   const parse = url(req.url, true)
   if (parse.pathname === '/api/v1/tx/fee') {
     const blocks = parse.query.numBlocks
-    if (blocks) {
+    if (blocks.length < 5) {
       res.end(JSON.stringify(await fees.buildJSON([blocks])))
     } else {
       res.end(JSON.stringify(await fees.buildJSON()))
