@@ -20,15 +20,15 @@ schedule.scheduleJob('0 * * * *', () => {
 })
 
 // show fees in web sv, handle api requests
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   const parse = url(req.url, true)
   if (parse.pathname === '/api/v1/tx/fee') {
     try {
-      res.end(JSON.stringify(fees.buildJSON([parseInt(parse.query.numBlocks)])))
+      res.end(JSON.stringify(await fees.buildJSON([parseInt(parse.query.numBlocks)])))
     } catch (e) {
-      res.end(JSON.stringify(fees.buildJSON()))
+      res.end(JSON.stringify(await fees.buildJSON()))
     }
   } else {
-    res.end(fees.buildText())
+    res.end(await fees.buildText())
   }
 }

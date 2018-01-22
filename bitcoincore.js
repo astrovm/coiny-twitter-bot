@@ -78,10 +78,10 @@ const buildFeesObj = (resfees) => {
 // select fee for specific block target
 const feeFor = async (blocks) => {
   let tempFees = {}
-  if (Object.keys(fees).length > 0) {
-    tempFees = fees
-  } else {
+  if (Object.keys(fees).length === 0) {
     tempFees = await getFees()
+  } else {
+    tempFees = fees
   }
   const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
   let res = {}
