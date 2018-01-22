@@ -9,10 +9,10 @@ const schedule = require('node-schedule')
 
 // conf twitter
 const tw = new Twitter({
-  consumer_key: process.env.BITFEES_TW_CONSUMER_KEY,
-  consumer_secret: process.env.BITFEES_TW_CONSUMER_SECRET,
-  access_token_key: process.env.BITFEES_TW_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.BITFEES_TW_ACCESS_TOKEN_SECRET
+  consumer_key: process.env.TW_CONSUMER_KEY,
+  consumer_secret: process.env.TW_CONSUMER_SECRET,
+  access_token_key: process.env.TW_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TW_ACCESS_TOKEN_SECRET
 })
 
 // hourly tweet

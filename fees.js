@@ -1,8 +1,15 @@
 'use strict'
 
-// require libs
+// conf libs
 const bitcoincore = require('./bitcoincore.js')
 const bitgo = require('./bitgo.js')
+const redis = require('redis')
+const redisClient = redis.createClient(
+  process.env.REDIS_URL,
+  {
+    'auth_pass': process.env.REDIS_PASS
+  }
+).on('error', (err) => console.error('ERR:REDIS:', err))
 
 // get min fee for x block target
 const minFeeFor = async (blocks) => {
@@ -41,14 +48,14 @@ const buildJSON = async (req = [2]) => {
 
 // compare new fees with last tweet fees
 let lastTweetJson = {}
+redisClient.get('lastTweetJson', (err, reply) => {
+  (err) ? console.error('ERR:REDIS:', err) : lastTweetJson = JSON.parse(reply)
+})
 
 const checkDiff = async (used = lastTweetJson) => {
   const fresh = await buildJSON()
-  if (Object.keys(lastTweetJson).length === 0) {
-    lastTweetJson = fresh
-    return null
-  }
   if (fresh.error) return null
+  if (Object.keys(used).length === 0) return fresh
   if (used.error) return fresh
   for (let i in used) {
     const diff = used[i] / fresh[i]
@@ -56,8 +63,6 @@ const checkDiff = async (used = lastTweetJson) => {
   }
   return null
 }
-
-checkDiff()
 
 // build text
 const buildText = async (fees = {}) => {
@@ -86,6 +91,7 @@ const makeTweet = async (tw) => {
         console.error(err)
       } else {
         lastTweetJson = json
+        redisClient.set('lastTweetJson', JSON.stringify(json), redis.print)
         console.log(`Tweet created at: ${tweet.created_at}`)
       }
     })
