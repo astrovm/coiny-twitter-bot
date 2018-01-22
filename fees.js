@@ -68,10 +68,10 @@ const buildText = async (fees = {}) => {
 }
 
 // make tweet
-const makeTweet = (tw) => {
-  const json = checkDiff()
-  if (json) {
-    const tweet = buildText(json)
+const makeTweet = async (tw) => {
+  const json = await checkDiff()
+  if (json !== null) {
+    const tweet = await buildText(json)
     tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
       if (err) {
         console.error(err)
