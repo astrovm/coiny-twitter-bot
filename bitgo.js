@@ -8,13 +8,13 @@ const schedule = require('node-schedule')
 const getFees = async () => {
   try {
     const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    const newFees = sortFees(res.data.feeByBlockTarget)
+    const newFees = await sortFees(res.data.feeByBlockTarget)
     fees = newFees
     return newFees
-  } catch (e) {
-    console.error(e)
+  } catch (err) {
+    console.error(err)
     if (fees) return fees
-    return e
+    return err
   }
 }
 

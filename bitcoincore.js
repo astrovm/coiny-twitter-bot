@@ -57,13 +57,13 @@ const getFees = async () => {
     ]
     const res = await rpc.command(batch)
     const feesObj = await buildFeesObj(res)
-    const newFees = sortFees(feesObj)
+    const newFees = await sortFees(feesObj)
     fees = newFees
     return newFees
-  } catch (e) {
-    console.error(e)
+  } catch (err) {
+    console.error(err)
     if (fees) return fees
-    return e
+    return err
   }
 }
 

@@ -15,40 +15,44 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       tempFees[[blocks[i]]] = Math.min(bitGoFee, coreFee)
     } else if (bitGoFee) {
-      console.log('Undefined Core fee')
+      console.error(new Error(`Undefined Core fee (~${coreFee}~) (fallback: ~${bitGoFee}~)`))
       tempFees[[blocks[i]]] = bitGoFee
     } else if (coreFee) {
-      console.log('Undefined BitGo fee')
+      console.error(new Error(`Undefined BitGo fee (~${bitGoFee}~) (fallback: ~${coreFee}~)`))
       tempFees[[blocks[i]]] = coreFee
     } else {
-      throw new Error('minFeeFor fees.js')
+      const err = `Undefined fees (BitGo: ~${bitGoFee}~) (Core: ~${coreFee}~)`
+      console.error(new Error(err))
+      return {'error': err}
     }
   }
   return tempFees
 }
 
 // build json
-const buildJSON = (req = [2]) => {
+const buildJSON = async (req = [2]) => {
   const presetBlocks = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
   const blocks = presetBlocks.concat(req.filter((block) => {
     return presetBlocks.indexOf(block) < 0
   }))
-  const res = minFeeFor(blocks)
+  const res = await minFeeFor(blocks)
   return res
 }
 
 // compare new fees with last tweet fees
 let lastTweetJson = {}
 
-const checkDiff = async () => {
-  const fees = await buildJSON()
+const checkDiff = async (used = lastTweetJson) => {
+  const fresh = await buildJSON()
   if (Object.keys(lastTweetJson).length === 0) {
-    lastTweetJson = fees
+    lastTweetJson = fresh
     return null
   }
-  for (let fee in lastTweetJson) {
-    const diff = lastTweetJson[fee] / fees[fee]
-    if (diff < 0.95 || diff > 1.05) return fees
+  if (fresh.error) return null
+  if (used.error) return fresh
+  for (let i in used) {
+    const diff = used[i] / fresh[i]
+    if (diff < 0.85 || diff > 1.15) return fresh
   }
   return null
 }
@@ -58,6 +62,7 @@ checkDiff()
 // build text
 const buildText = async (fees = {}) => {
   if (Object.keys(fees).length === 0) fees = await buildJSON()
+  if (fees.error) return `Error: ${fees.error}`
   const text =
 `20 min ${fees[2]} sat/B
 40 min ${fees[4]} sat/B
