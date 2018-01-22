@@ -1,6 +1,7 @@
 'use strict'
 
 // require libs
+const micro = require('micro')
 const fees = require('./fees.js')
 const Twitter = require('twitter')
 const url = require('url-parse')
@@ -32,3 +33,18 @@ module.exports = async (req, res) => {
     res.end(await fees.buildText())
   }
 }
+// show fees in web sv, handle api requests
+const server = micro(async (req, res) => {
+  const parse = url(req.url, true)
+  if (parse.pathname === '/api/v1/tx/fee') {
+    try {
+      res.end(JSON.stringify(await fees.buildJSON([parseInt(parse.query.numBlocks)])))
+    } catch (e) {
+      res.end(JSON.stringify(await fees.buildJSON()))
+    }
+  } else {
+    res.end(await fees.buildText())
+  }
+})
+
+server.listen(3000)
