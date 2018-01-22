@@ -30,38 +30,40 @@ const getNodeInfo = () => {
 }
 
 // request fees
-let fees = {}
-const getFees = () => {
-  const batch = [
-    { method: 'estimatesmartfee', parameters: [2] },
-    { method: 'estimatesmartfee', parameters: [4] },
-    { method: 'estimatesmartfee', parameters: [6] },
-    { method: 'estimatesmartfee', parameters: [12] },
-    { method: 'estimatesmartfee', parameters: [24] },
-    { method: 'estimatesmartfee', parameters: [48] },
-    { method: 'estimatesmartfee', parameters: [72] },
-    { method: 'estimatesmartfee', parameters: [108] },
-    { method: 'estimatesmartfee', parameters: [144] },
-    { method: 'estimatesmartfee', parameters: [216] },
-    { method: 'estimatesmartfee', parameters: [288] },
-    { method: 'estimatesmartfee', parameters: [360] },
-    { method: 'estimatesmartfee', parameters: [432] },
-    { method: 'estimatesmartfee', parameters: [504] },
-    { method: 'estimatesmartfee', parameters: [576] },
-    { method: 'estimatesmartfee', parameters: [648] },
-    { method: 'estimatesmartfee', parameters: [720] },
-    { method: 'estimatesmartfee', parameters: [792] },
-    { method: 'estimatesmartfee', parameters: [864] },
-    { method: 'estimatesmartfee', parameters: [936] },
-    { method: 'estimatesmartfee', parameters: [1008] }
-  ]
-  rpc.command(batch)
-    .then((res) => {
-      fees = buildFeesObj(res)
-      // console.log(`Updated Core fees: ${new Date()}`)
-    }).catch((err) => {
-      console.error(err)
-    })
+const getFees = async () => {
+  try {
+    const batch = [
+      { method: 'estimatesmartfee', parameters: [2] },
+      { method: 'estimatesmartfee', parameters: [4] },
+      { method: 'estimatesmartfee', parameters: [6] },
+      { method: 'estimatesmartfee', parameters: [12] },
+      { method: 'estimatesmartfee', parameters: [24] },
+      { method: 'estimatesmartfee', parameters: [48] },
+      { method: 'estimatesmartfee', parameters: [72] },
+      { method: 'estimatesmartfee', parameters: [108] },
+      { method: 'estimatesmartfee', parameters: [144] },
+      { method: 'estimatesmartfee', parameters: [216] },
+      { method: 'estimatesmartfee', parameters: [288] },
+      { method: 'estimatesmartfee', parameters: [360] },
+      { method: 'estimatesmartfee', parameters: [432] },
+      { method: 'estimatesmartfee', parameters: [504] },
+      { method: 'estimatesmartfee', parameters: [576] },
+      { method: 'estimatesmartfee', parameters: [648] },
+      { method: 'estimatesmartfee', parameters: [720] },
+      { method: 'estimatesmartfee', parameters: [792] },
+      { method: 'estimatesmartfee', parameters: [864] },
+      { method: 'estimatesmartfee', parameters: [936] },
+      { method: 'estimatesmartfee', parameters: [1008] }
+    ]
+    const res = await rpc.command(batch)
+    const newFees = buildFeesObj(res)
+    fees = newFees
+    return newFees
+  } catch (e) {
+    console.error(e)
+    if (fees) return fees
+    return e
+  }
 }
 
 // build fees obj
@@ -74,17 +76,28 @@ const buildFeesObj = (resfees) => {
 }
 
 // select fee for specific block target
-const feeFor = (blocks) => {
-  const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
-  for (let key in keysSorted) {
-    if (keysSorted[key] <= blocks) {
-      return fees[keysSorted[key]]
+const feeFor = async (blocks) => {
+  let tempFees = {}
+  if (Object.keys(fees).length === 0) {
+    tempFees = await getFees()
+  } else {
+    tempFees = fees
+  }
+  const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
+  let res = {}
+  for (let block in blocks) {
+    for (let key in keysSorted) {
+      if (blocks[block] >= keysSorted[key]) {
+        res[blocks[block]] = tempFees[keysSorted[key]]
+        break
+      }
     }
   }
+  return res
 }
 
 // init fees data, get node info
-getFees()
+let fees = {}
 getNodeInfo()
 
 // get core fees every 3 minutes job

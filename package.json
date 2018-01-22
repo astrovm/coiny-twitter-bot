@@ -4,8 +4,8 @@
   "description": "bitcoin fees bot",
   "main": "index.js",
   "scripts": {
-    "start": "micro",
-    "test": "standard"
+    "start": "node .",
+    "test": "standard && node -r dotenv/config ."
   },
   "now": {
     "alias": "bitfees"
@@ -25,6 +25,7 @@
     "url-parse": "^1.2.0"
   },
   "devDependencies": {
+    "dotenv": "*",
     "standard": "*"
   }
 }

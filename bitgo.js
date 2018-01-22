@@ -5,42 +5,54 @@ const trae = require('trae')
 const schedule = require('node-schedule')
 
 // request bitgo api fees
-let fees = {}
-const getFees = () => {
-  trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    .then((res) => {
-      fees = sortFees(res.data.feeByBlockTarget)
-      // console.log(`Updated BitGo fees: ${new Date()}`)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+const getFees = async () => {
+  try {
+    const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const newFees = sortFees(res.data.feeByBlockTarget)
+    fees = newFees
+    return newFees
+  } catch (e) {
+    console.error(e)
+    if (fees) return fees
+    return e
+  }
 }
 
 // sort fees object
-const sortFees = (resFees) => {
-  const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a]) // sort fee numbers
-  const blocksSorted = Object.keys(resFees).sort((a, b) => a - b) // sort block target numbers
+const sortFees = (req) => {
+  const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
+  const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
   // recreate fees object by matching sorted blocks with sorted fees
-  let tempFees = {}
+  let res = {}
   for (let i = 0; i < feesSorted.length; i++) {
-    tempFees[blocksSorted[i]] = Math.floor(resFees[feesSorted[i]] / 1000)
+    res[blocksSorted[i]] = Math.floor(req[feesSorted[i]] / 1000)
   }
-  return tempFees
+  return res
 }
 
-// select bitgo fee for specific block target
-const feeFor = (blocks) => {
-  const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
-  for (let key in keysSorted) {
-    if (keysSorted[key] <= blocks) {
-      return fees[keysSorted[key]]
+// select fee for specific block target
+const feeFor = async (blocks) => {
+  let tempFees = {}
+  if (Object.keys(fees).length === 0) {
+    tempFees = await getFees()
+  } else {
+    tempFees = fees
+  }
+  const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
+  let res = {}
+  for (let block in blocks) {
+    for (let key in keysSorted) {
+      if (blocks[block] >= keysSorted[key]) {
+        res[blocks[block]] = tempFees[keysSorted[key]]
+        break
+      }
     }
   }
+  return res
 }
 
 // init fees data
-getFees()
+let fees = {}
 
 // get bitgo fees every 3 minutes job
 schedule.scheduleJob('*/3 * * * *', () => {

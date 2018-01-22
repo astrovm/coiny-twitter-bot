@@ -1,6 +1,7 @@
 'use strict'
 
 // require libs
+const micro = require('micro')
 const fees = require('./fees.js')
 const Twitter = require('twitter')
 const url = require('url-parse')
@@ -16,21 +17,21 @@ const tw = new Twitter({
 
 // hourly tweet
 schedule.scheduleJob('0 * * * *', () => {
-  tw.post('statuses/update', {status: fees.buildTweet()}, (err, tweet, res) => {
-    (err) ? console.error(err) : console.log(`Tweet created at: ${tweet.created_at}`)
-  })
+  fees.makeTweet(tw)
 })
 
 // show fees in web sv, handle api requests
-module.exports = (req, res) => {
+const server = micro(async (req, res) => {
   const parse = url(req.url, true)
   if (parse.pathname === '/api/v1/tx/fee') {
     try {
-      res.end(JSON.stringify(fees.buildJSON(parseInt(parse.query.numBlocks))))
+      res.end(JSON.stringify(await fees.buildJSON([parseInt(parse.query.numBlocks)])))
     } catch (e) {
-      res.end(JSON.stringify(fees.buildJSON()))
+      res.end(JSON.stringify(await fees.buildJSON()))
     }
   } else {
-    res.end(fees.buildTweet())
+    res.end(await fees.buildText())
   }
-}
+})
+
+server.listen(process.env.PORT || 3000)
