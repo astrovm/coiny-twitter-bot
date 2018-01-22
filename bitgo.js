@@ -32,17 +32,14 @@ const sortFees = (req) => {
 
 // select fee for specific block target
 const feeFor = async (blocks) => {
-  let tempFees = {}
-  if (Object.keys(fees).length === 0) {
-    tempFees = await getFees()
-  } else {
-    tempFees = fees
-  }
-  const keys = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
+  let tempFees = fees
+  if (Object.keys(tempFees).length === 0) tempFees = await getFees() // handle empty fees obj case
+  const keys = Object.keys(tempFees).sort((a, b) => b - a) // order fees from lowest to highest
   let res = {}
   for (let b in blocks) {
     for (let k in keys) {
-      if (blocks[b] >= keys[k]) {
+      const target = (blocks[b] < 1) ? 1 : blocks[b]
+      if (target >= keys[k]) {
         res[blocks[b]] = tempFees[keys[k]]
         break
       }
@@ -53,6 +50,7 @@ const feeFor = async (blocks) => {
 
 // init fees data
 let fees = {}
+getFees()
 
 // get bitgo fees every 3 minutes job
 schedule.scheduleJob('*/3 * * * *', () => {
