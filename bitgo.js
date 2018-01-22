@@ -37,8 +37,9 @@ const feeFor = async (blocks) => {
   const keys = Object.keys(tempFees).sort((a, b) => b - a) // order fees from lowest to highest
   let res = {}
   for (let b in blocks) {
+    const int = parseInt(blocks[b])
+    const target = (int < 1) ? 1 : (isNaN(int)) ? blocks[b] : int
     for (let k in keys) {
-      const target = (blocks[b] < 1) ? 1 : blocks[b]
       if (target >= keys[k]) {
         res[blocks[b]] = tempFees[keys[k]]
         break

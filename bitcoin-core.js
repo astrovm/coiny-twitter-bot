@@ -21,9 +21,9 @@ const getNodeInfo = () => {
   ]
   rpc.command(batch)
     .then((res) => {
-      console.log(`Node version: ${res[1].subversion}`)
-      console.log(`Node blocks: ${res[0].blocks} (${(res[0].verificationprogress * 100).toFixed(2)}%)`)
-      console.log(`Node connections: ${res[1].connections}`)
+      console.log(`Bitcoin ${res[1].subversion}`)
+      console.log(`Blocks: ${res[0].blocks} (${(res[0].verificationprogress * 100).toFixed(2)}%)`)
+      console.log(`Connections: ${res[1].connections}`)
     }).catch((err) => {
       console.error(err)
     })
@@ -95,8 +95,9 @@ const feeFor = async (blocks) => {
   const keys = Object.keys(tempFees).sort((a, b) => b - a) // order fees from lowest to highest
   let res = {}
   for (let b in blocks) {
+    const int = parseInt(blocks[b])
+    const target = (int < 1) ? 1 : (isNaN(int)) ? blocks[b] : int
     for (let k in keys) {
-      const target = (blocks[b] < 1) ? 1 : blocks[b]
       if (target >= keys[k]) {
         res[blocks[b]] = tempFees[keys[k]]
         break

@@ -1,8 +1,8 @@
 'use strict'
 
 // conf libs
-const bitcoincore = require('./bitcoincore.js')
-const bitgo = require('./bitgo.js')
+const bitcoinCore = require('./bitcoin-core.js')
+const bitGo = require('./bitgo.js')
 const redis = require('redis')
 const redisClient = redis.createClient(
   process.env.REDIS_URL,
@@ -13,8 +13,8 @@ const redisClient = redis.createClient(
 
 // get min fee for x block target
 const minFeeFor = async (blocks) => {
-  const getBitGo = await bitgo.feeFor(blocks)
-  const getCore = await bitcoincore.feeFor(blocks)
+  const getBitGo = await bitGo.feeFor(blocks)
+  const getCore = await bitcoinCore.feeFor(blocks)
   let tempFees = {}
   for (let i in blocks) {
     const bitGoFee = getBitGo[blocks[i]]
