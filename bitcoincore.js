@@ -56,7 +56,8 @@ const getFees = async () => {
       { method: 'estimatesmartfee', parameters: [1008] }
     ]
     const res = await rpc.command(batch)
-    const newFees = buildFeesObj(res)
+    const feesObj = await buildFeesObj(res)
+    const newFees = sortFees(feesObj)
     fees = newFees
     return newFees
   } catch (e) {
@@ -67,12 +68,24 @@ const getFees = async () => {
 }
 
 // build fees obj
-const buildFeesObj = (resfees) => {
-  let tempFees = {}
-  for (let fee in resfees) {
-    tempFees[resfees[fee].blocks] = Math.floor(resfees[fee].feerate * 100000)
+const buildFeesObj = (req) => {
+  let res = {}
+  for (let fee in req) {
+    res[req[fee].blocks] = Math.floor(req[fee].feerate * 100000)
   }
-  return tempFees
+  return res
+}
+
+// sort fees object
+const sortFees = (req) => {
+  const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
+  const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
+  // recreate fees object by matching sorted blocks with sorted fees
+  let res = {}
+  for (let i = 0; i < feesSorted.length; i++) {
+    res[blocksSorted[i]] = Math.floor(req[feesSorted[i]])
+  }
+  return res
 }
 
 // select fee for specific block target
