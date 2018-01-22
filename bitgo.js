@@ -19,21 +19,21 @@ const getFees = async () => {
 }
 
 // sort fees object
-const sortFees = (resFees) => {
-  const feesSorted = Object.keys(resFees).sort((a, b) => resFees[b] - resFees[a]) // sort fee numbers
-  const blocksSorted = Object.keys(resFees).sort((a, b) => a - b) // sort block target numbers
+const sortFees = (req) => {
+  const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
+  const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
   // recreate fees object by matching sorted blocks with sorted fees
-  let tempFees = {}
+  let res = {}
   for (let i = 0; i < feesSorted.length; i++) {
-    tempFees[blocksSorted[i]] = Math.floor(resFees[feesSorted[i]] / 1000)
+    res[blocksSorted[i]] = Math.floor(req[feesSorted[i]] / 1000)
   }
-  return tempFees
+  return res
 }
 
 // select fee for specific block target
 const feeFor = async (blocks) => {
   let tempFees = {}
-  if (fees) {
+  if (Object.keys(fees).length > 0) {
     tempFees = fees
   } else {
     tempFees = await getFees()
