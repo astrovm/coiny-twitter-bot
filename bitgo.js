@@ -5,16 +5,16 @@ const trae = require('trae')
 const schedule = require('node-schedule')
 
 // request bitgo api fees
-let fees = {}
-const getFees = () => {
-  trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    .then((res) => {
-      fees = sortFees(res.data.feeByBlockTarget)
-      // console.log(`Updated BitGo fees: ${new Date()}`)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+const getFees = async () => {
+  try {
+    const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const newfees = sortFees(res.data.feeByBlockTarget)
+    return newfees
+  } catch (e) {
+    console.error(e)
+    if (fees) return fees
+    return e
+  }
 }
 
 // sort fees object
@@ -30,7 +30,10 @@ const sortFees = (resFees) => {
 }
 
 // select bitgo fee for specific block target
-const feeFor = (blocks) => {
+const feeFor = async (blocks) => {
+  if (fees === {}) {
+    fees = await getFees()
+  }
   const keysSorted = Object.keys(fees).sort((a, b) => fees[a] - fees[b])
   for (let key in keysSorted) {
     if (keysSorted[key] <= blocks) {
@@ -40,11 +43,11 @@ const feeFor = (blocks) => {
 }
 
 // init fees data
-getFees()
+let fees = {}
 
 // get bitgo fees every 3 minutes job
-schedule.scheduleJob('*/3 * * * *', () => {
-  getFees()
+schedule.scheduleJob('*/3 * * * *', async () => {
+  fees = await getFees()
 })
 
 // export feeFor function

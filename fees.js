@@ -45,6 +45,9 @@ const buildJSON = (blocks = 2) => {
 
 // compare new fees with last tweet fees
 let lastTweetJson = buildJSON()
+setTimeout(function () {
+  console.log(JSON.stringify(lastTweetJson))
+}, 5000)
 const checkDiff = () => {
   const json = buildJSON()
   const lastTweetFees = lastTweetJson.feeByBlockTarget
@@ -73,8 +76,8 @@ const buildText = (json = buildJSON()) => {
 }
 
 // make tweet
-const makeTweet = async (tw) => {
-  const json = await checkDiff()
+const makeTweet = (tw) => {
+  const json = checkDiff()
   if (json) {
     const tweet = buildText(json)
     tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
