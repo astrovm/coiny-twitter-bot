@@ -24,7 +24,7 @@ const sortFees = (req) => {
   const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
   // recreate fees object by matching sorted blocks with sorted fees
   let res = {}
-  for (let i = 0; i < feesSorted.length; i++) {
+  for (let i in feesSorted) {
     res[blocksSorted[i]] = Math.floor(req[feesSorted[i]] / 1000)
   }
   return res
@@ -38,12 +38,12 @@ const feeFor = async (blocks) => {
   } else {
     tempFees = fees
   }
-  const keysSorted = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
+  const keys = Object.keys(tempFees).sort((a, b) => tempFees[a] - tempFees[b])
   let res = {}
-  for (let block in blocks) {
-    for (let key in keysSorted) {
-      if (blocks[block] >= keysSorted[key]) {
-        res[blocks[block]] = tempFees[keysSorted[key]]
+  for (let b in blocks) {
+    for (let k in keys) {
+      if (blocks[b] >= keys[k]) {
+        res[blocks[b]] = tempFees[keys[k]]
         break
       }
     }

@@ -6,18 +6,20 @@ const bitgo = require('./bitgo.js')
 
 // get min fee for x block target
 const minFeeFor = async (blocks) => {
-  const bitGoFee = await bitgo.feeFor(blocks)
-  const coreFee = await bitcoincore.feeFor(blocks)
+  const getBitGo = await bitgo.feeFor(blocks)
+  const getCore = await bitcoincore.feeFor(blocks)
   let tempFees = {}
-  for (let block in blocks) {
-    if (coreFee[blocks[block]] && bitGoFee[blocks[block]]) {
-      tempFees[[blocks[block]]] = Math.min(coreFee[blocks[block]], bitGoFee[blocks[block]])
-    } else if (bitGoFee[blocks[block]]) {
+  for (let i in blocks) {
+    const bitGoFee = getBitGo[blocks[i]]
+    const coreFee = getCore[blocks[i]]
+    if (bitGoFee && coreFee) {
+      tempFees[[blocks[i]]] = Math.min(bitGoFee, coreFee)
+    } else if (bitGoFee) {
       console.log('Undefined Core fee')
-      tempFees[[blocks[block]]] = bitGoFee[blocks[block]]
-    } else if (coreFee[blocks[block]]) {
+      tempFees[[blocks[i]]] = bitGoFee
+    } else if (coreFee) {
       console.log('Undefined BitGo fee')
-      tempFees[[blocks[block]]] = coreFee[blocks[block]]
+      tempFees[[blocks[i]]] = coreFee
     } else {
       throw new Error('minFeeFor fees.js')
     }
@@ -26,9 +28,9 @@ const minFeeFor = async (blocks) => {
 }
 
 // build json
-const buildJSON = (reqBlocks = [2]) => {
+const buildJSON = (req = [2]) => {
   const presetBlocks = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-  const blocks = presetBlocks.concat(reqBlocks.filter((block) => {
+  const blocks = presetBlocks.concat(req.filter((block) => {
     return presetBlocks.indexOf(block) < 0
   }))
   const res = minFeeFor(blocks)
