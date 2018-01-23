@@ -33,26 +33,39 @@ const getNodeInfo = () => {
 const getFees = async () => {
   try {
     const batch = [
+      { method: 'estimatesmartfee', parameters: [1] },
       { method: 'estimatesmartfee', parameters: [2] },
+      { method: 'estimatesmartfee', parameters: [3] },
       { method: 'estimatesmartfee', parameters: [4] },
+      { method: 'estimatesmartfee', parameters: [5] },
       { method: 'estimatesmartfee', parameters: [6] },
+      { method: 'estimatesmartfee', parameters: [8] },
       { method: 'estimatesmartfee', parameters: [12] },
+      { method: 'estimatesmartfee', parameters: [13] },
+      { method: 'estimatesmartfee', parameters: [21] },
       { method: 'estimatesmartfee', parameters: [24] },
+      { method: 'estimatesmartfee', parameters: [34] },
       { method: 'estimatesmartfee', parameters: [48] },
+      { method: 'estimatesmartfee', parameters: [55] },
       { method: 'estimatesmartfee', parameters: [72] },
+      { method: 'estimatesmartfee', parameters: [89] },
       { method: 'estimatesmartfee', parameters: [108] },
       { method: 'estimatesmartfee', parameters: [144] },
       { method: 'estimatesmartfee', parameters: [216] },
+      { method: 'estimatesmartfee', parameters: [233] },
       { method: 'estimatesmartfee', parameters: [288] },
       { method: 'estimatesmartfee', parameters: [360] },
+      { method: 'estimatesmartfee', parameters: [377] },
       { method: 'estimatesmartfee', parameters: [432] },
       { method: 'estimatesmartfee', parameters: [504] },
+      { method: 'estimatesmartfee', parameters: [610] },
       { method: 'estimatesmartfee', parameters: [576] },
       { method: 'estimatesmartfee', parameters: [648] },
       { method: 'estimatesmartfee', parameters: [720] },
       { method: 'estimatesmartfee', parameters: [792] },
       { method: 'estimatesmartfee', parameters: [864] },
       { method: 'estimatesmartfee', parameters: [936] },
+      { method: 'estimatesmartfee', parameters: [987] },
       { method: 'estimatesmartfee', parameters: [1008] }
     ]
     const res = await rpc.command(batch)
@@ -95,8 +108,7 @@ const feeFor = async (blocks) => {
   const minBlock = parseInt(feeDataSorted.slice(-1)[0])
   let res = {}
   for (let b in blocks) {
-    const intTarget = parseInt(blocks[b])
-    const target = (intTarget < minBlock) ? minBlock : (isNaN(intTarget)) ? blocks[b] : intTarget
+    const target = (blocks[b] < minBlock) ? minBlock : blocks[b]
     for (let i in feeDataSorted) {
       if (target >= feeDataSorted[i]) {
         res[blocks[b]] = feeData[feeDataSorted[i]]

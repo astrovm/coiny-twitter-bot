@@ -37,8 +37,7 @@ const feeFor = async (blocks) => {
   const minBlock = parseInt(feeDataSorted.slice(-1)[0])
   let res = {}
   for (let b in blocks) {
-    const intTarget = parseInt(blocks[b])
-    const target = (intTarget < minBlock) ? minBlock : (isNaN(intTarget)) ? blocks[b] : intTarget
+    const target = (blocks[b] < minBlock) ? minBlock : blocks[b]
     for (let i in feeDataSorted) {
       if (target >= feeDataSorted[i]) {
         res[blocks[b]] = feeData[feeDataSorted[i]]
