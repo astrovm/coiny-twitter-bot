@@ -3,6 +3,7 @@
 // conf libs
 const bitcoinCore = require('./bitcoin-core.js')
 const bitGo = require('./bitgo.js')
+const price = require('./price.js')
 const redis = require('redis')
 const redisClient = redis.createClient(
   process.env.REDIS_URL,
@@ -66,16 +67,17 @@ const checkDiff = async (used = lastTweetJson) => {
 const buildText = async (fees = {}) => {
   if (Object.keys(fees).length === 0) fees = await buildJSON()
   if (fees.error) return `Error: ${fees.error}`
+  const usd = price() * 225 / 10 ** 8
   const text =
-`20 min ${fees[2]} sat/B
-40 min ${fees[4]} sat/B
-60 min ${fees[6]} sat/B
-2 hours ${fees[12]} sat/B
-4 hours ${fees[24]} sat/B
-8 hours ${fees[48]} sat/B
-24 hours ${fees[144]} sat/B
-3 days ${fees[504]} sat/B
-7 days ${fees[1008]} sat/B`
+`20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})
+40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})
+60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})
+2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})
+4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})
+8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})
+24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})
+3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})
+7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
   return text
 }
 
