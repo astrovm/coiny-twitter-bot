@@ -4,7 +4,7 @@
 const trae = require('trae')
 const schedule = require('node-schedule')
 
-// request bitgo api fees
+// request bitstamp api price
 const getPrice = async () => {
   try {
     const res = await trae.get('https://www.bitstamp.net/api/ticker/')
@@ -17,11 +17,11 @@ const getPrice = async () => {
   }
 }
 
-// init fees data
+// init price data
 let price = {}
 getPrice()
 
-// get bitgo fees every 3 minutes job
+// get bitstamp price every 3 minutes job
 schedule.scheduleJob('*/3 * * * *', () => {
   getPrice()
 })
