@@ -13,7 +13,5 @@ Example: https://bitfees.now.sh/api/v1/tx/fee?numBlocks=144 for 144 blocks confi
 ## Deploy
 [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/astrolince/bitfees&env=TW_CONSUMER_KEY&env=TW_CONSUMER_SECRET&env=TW_ACCESS_TOKEN_KEY&env=TW_ACCESS_TOKEN_SECRET&env=BITCOIN_CORE_HOST&env=BITCOIN_CORE_PORT&env=BITCOIN_CORE_USER&env=BITCOIN_CORE_PASS&env=REDIS_URL&env=REDIS_PASS)
 
-> $ now -e TW_CONSUMER_KEY=@bitfees_tw_consumer_key -e TW_CONSUMER_SECRET=@bitfees_tw_consumer_secret -e TW_ACCESS_TOKEN_KEY=@bitfees_tw_access_token_key -e TW_ACCESS_TOKEN_SECRET=@bitfees_tw_access_token_secret -e BITCOIN_CORE_HOST=@bitcoin_core_host -e BITCOIN_CORE_PORT=@bitcoin_core_port -e BITCOIN_CORE_USER=@bitcoin_core_user -e BITCOIN_CORE_PASS=@bitcoin_core_pass -e REDIS_URL=@bitfees_redis_url -e REDIS_PASS=@bitfees_redis_pass
-
 ## License
 bitfees is licensed under [Mozilla Public License 2.0](https://github.com/astrolince/bitfees/blob/master/LICENSE)

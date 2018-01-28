@@ -18,7 +18,7 @@ const getPrice = async () => {
 }
 
 // init price data
-let price = {}
+let price = 0
 getPrice()
 
 // get bitstamp price every 3 minutes job
