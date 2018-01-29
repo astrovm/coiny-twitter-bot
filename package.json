@@ -8,18 +8,18 @@
     "test": "standard && node -r dotenv/config ."
   },
   "now": {
-    "alias": "bitfees",
+    "alias": "coiny",
     "env": {
-      "TW_CONSUMER_KEY": "@bitfees_tw_consumer_key",
-      "TW_CONSUMER_SECRET": "@bitfees_tw_consumer_secret",
-      "TW_ACCESS_TOKEN_KEY": "@bitfees_tw_access_token_key",
-      "TW_ACCESS_TOKEN_SECRET": "@bitfees_tw_access_token_secret",
+      "TW_CONSUMER_KEY": "@coinyfees_tw_consumer_key",
+      "TW_CONSUMER_SECRET": "@coinyfees_tw_consumer_secret",
+      "TW_ACCESS_TOKEN_KEY": "@coinyfees_tw_access_token_key",
+      "TW_ACCESS_TOKEN_SECRET": "@coinyfees_tw_access_token_secret",
       "BITCOIN_CORE_HOST": "@bitcoin_core_host",
       "BITCOIN_CORE_PORT": "@bitcoin_core_port",
       "BITCOIN_CORE_USER": "@bitcoin_core_user",
       "BITCOIN_CORE_PASS": "@bitcoin_core_pass",
-      "REDIS_URL": "@bitfees_redis_url",
-      "REDIS_PASS": "@bitfees_redis_pass"
+      "REDIS_URL": "@coinyfees_redis_url",
+      "REDIS_PASS": "@coinyfees_redis_pass"
     }
   },
   "author": "astrolince",
