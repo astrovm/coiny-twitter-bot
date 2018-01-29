@@ -1,6 +1,6 @@
 {
-  "name": "bitfees",
-  "version": "1.0.0",
+  "name": "coiny",
+  "version": "0.0.1-alpha",
   "description": "Bitcoin fees bot",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "git://github.com/astrolince/bitfees.git"
+    "url": "git://github.com/astrolince/coiny.git"
   },
   "dependencies": {
     "bitcoin-core": "^2.0.0",
