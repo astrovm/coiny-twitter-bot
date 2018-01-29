@@ -25,7 +25,7 @@ const sortFees = (req) => {
   // recreate fees object by matching sorted blocks with sorted fees
   let res = {}
   for (let i in feesSorted) {
-    res[blocksSorted[i]] = Math.floor(req[feesSorted[i]] / 1000)
+    res[blocksSorted[i]] = Math.ceil(req[feesSorted[i]] / 1000)
   }
   return res
 }
