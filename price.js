@@ -22,7 +22,7 @@ let price = 0
 getPrice()
 
 // get bitstamp price every 3 minutes job
-schedule.scheduleJob('*/3 * * * *', () => {
+schedule.scheduleJob('*/1 * * * *', () => {
   getPrice()
 })
 
