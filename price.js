@@ -21,7 +21,7 @@ const getPrice = async () => {
 let price = 0
 getPrice()
 
-// get bitstamp price every 3 minutes job
+// get bitstamp price every minute job
 schedule.scheduleJob('*/1 * * * *', () => {
   getPrice()
 })

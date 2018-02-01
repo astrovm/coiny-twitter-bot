@@ -16,14 +16,14 @@ const redisClient = redis.createClient(
 const minFeeFor = async (blocks) => {
   const getBitGo = await bitGo.feeFor(blocks)
   const getCore = await bitcoinCore.feeFor(blocks)
-  let tempFees = {}
+  let tempFees = {bitGo: getBitGo, core: getCore}
   for (let i in blocks) {
     const bitGoFee = getBitGo[blocks[i]]
     const coreFee = getCore[blocks[i]]
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = 5 // larger number = lower fees
+      const lvl = 21 // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.round(soft)
     } else if (bitGoFee) {
@@ -69,19 +69,20 @@ const checkDiff = async (used = lastTweetJson) => {
 
 // build text
 const buildText = async (fees = {}) => {
-  if (Object.keys(fees).length === 0) fees = await buildJSON()
+  const index = (Object.keys(fees).length === 0)
+  if (index) fees = await buildJSON()
   if (fees.error) return `Error: ${fees.error}`
   const usd = price() * 265 / 10 ** 8
   const text =
-`20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})
-40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})
-60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})
-2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})
-4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})
-8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})
-24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})
-3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})
-7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
+`20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[2]}, BitGo: ${fees.bitGo[2]})` : ''}
+40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[4]}, BitGo: ${fees.bitGo[4]})` : ''}
+60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[6]}, BitGo: ${fees.bitGo[6]})` : ''}
+2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[12]}, BitGo: ${fees.bitGo[12]})` : ''}
+4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[24]}, BitGo: ${fees.bitGo[24]})` : ''}
+8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[48]}, BitGo: ${fees.bitGo[48]})` : ''}
+24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[144]}, BitGo: ${fees.bitGo[144]})` : ''}
+3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[504]}, BitGo: ${fees.bitGo[504]})` : ''}
+7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[1008]}, BitGo: ${fees.bitGo[1008]})` : ''}`
   return text
 }
 
