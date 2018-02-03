@@ -23,7 +23,7 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = 21 // larger number = lower fees
+      const lvl = 15 // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.round(soft)
     } else if (bitGoFee) {
@@ -62,7 +62,7 @@ const checkDiff = async (used = lastTweetJson) => {
   if (used.error) return fresh
   for (let i in used) {
     const diff = used[i] / fresh[i]
-    if (diff < 0.85 || diff > 1.15) return fresh
+    if (diff < 0.9 || diff > 1.1) return fresh
   }
   return null
 }
@@ -72,7 +72,7 @@ const buildText = async (fees = {}) => {
   const index = (Object.keys(fees).length === 0)
   if (index) fees = await buildJSON()
   if (fees.error) return `Error: ${fees.error}`
-  const usd = price() * 265 / 10 ** 8
+  const usd = price() * 263 / 10 ** 8
   const text =
 `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[2]}, BitGo: ${fees.bitGo[2]})` : ''}
 40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})${(index) ? ` (Core: ${fees.core[4]}, BitGo: ${fees.bitGo[4]})` : ''}
