@@ -8,8 +8,8 @@
     "start": "node .",
     "dev": "node -r dotenv/config .",
     "lint": "standard --fix",
-    "dev-vue": "webpack-dev-server --inline --progress --config front/build/webpack.dev.conf.js",
-    "build-vue": "node front/build/build.js"
+    "vue": "webpack-dev-server --inline --progress --config front/build/webpack.dev.conf.js",
+    "build": "node front/build/build.js"
   },
   "now": {
     "alias": "coiny",
