@@ -3,7 +3,7 @@
 // require libs
 const Koa = require('koa')
 const Router = require('koa-router')
-const fees = require('./fees.js')
+const fees = require('./api/fees.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
 const app = new Koa()

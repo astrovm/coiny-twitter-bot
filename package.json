@@ -1,11 +1,13 @@
 {
   "name": "coiny",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "Bitcoin fees bot",
+  "author": "astrolince <astro@astrolince.com>",
   "main": "app.js",
   "scripts": {
     "start": "node .",
-    "test": "standard && node -r dotenv/config ."
+    "dev": "node -r dotenv/config .",
+    "lint": "standard --fix"
   },
   "now": {
     "alias": "coiny",
@@ -22,7 +24,6 @@
       "REDIS_PASS": "@coinyfees_redis_pass"
     }
   },
-  "author": "astrolince",
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
@@ -38,7 +39,7 @@
     "twitter": "^1.7.1"
   },
   "devDependencies": {
-    "dotenv": "*",
-    "standard": "*"
+    "dotenv": "^5.0.0",
+    "standard": "^10.0.3"
   }
 }
