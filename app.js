@@ -1,12 +1,13 @@
 'use strict'
 
 // require libs
-const _ = require('koa-route')
 const Koa = require('koa')
-const app = new Koa()
+const Router = require('koa-router')
 const fees = require('./fees.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
+const app = new Koa()
+const router = new Router()
 
 // conf twitter
 const tw = new Twitter({
@@ -23,23 +24,25 @@ schedule.scheduleJob('0 * * * *', () => {
 
 // show fees in web sv, handle api requests
 const api = {
-  fee: {
-    list: async (ctx) => {
-      const block = parseInt(ctx.request.query.numBlocks)
-      if (block > 0 && block < 10 ** 4) {
-        const fee = JSON.stringify(await fees.buildJSON([block]))
-        ctx.body = fee
-      } else {
-        const fee = JSON.stringify(await fees.buildJSON())
-        ctx.body = fee
-      }
+  fee: async (ctx) => {
+    const block = parseInt(ctx.request.query.numBlocks)
+    if (block > 0 && block < 10 ** 4) {
+      const fee = JSON.stringify(await fees.buildJSON([block]))
+      ctx.body = fee
+    } else {
+      const fee = JSON.stringify(await fees.buildJSON())
+      ctx.body = fee
     }
   }
 }
-app.use(_.get('/api/v1/tx/fee', api.fee.list))
+const pages = {
+  homepage: async (ctx) => {
+    ctx.body = await fees.buildText()
+  }
+}
 
-app.use(async ctx => {
-  ctx.body = await fees.buildText()
-})
+router.get('/api/v1/tx/fee', api.fee)
+router.get('/', pages.homepage)
 
+app.use(router.routes())
 app.listen(process.env.PORT || 3000)
