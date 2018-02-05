@@ -130,7 +130,7 @@ schedule.scheduleJob('*/3 * * * *', () => {
 })
 
 // get node info every 30 minutes
-schedule.scheduleJob('0/30 * * * *', () => {
+schedule.scheduleJob('*/30 * * * *', () => {
   getNodeInfo()
 })
 
