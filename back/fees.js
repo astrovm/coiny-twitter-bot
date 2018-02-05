@@ -16,6 +16,7 @@ const redisClient = redis.createClient(
 const minFeeFor = async (blocks) => {
   const getBitGo = await bitGo.feeFor(blocks)
   const getCore = await bitcoinCore.feeFor(blocks)
+
   let tempFees = {}
   for (let i in blocks) {
     const bitGoFee = getBitGo[blocks[i]]
@@ -23,7 +24,7 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = 10 // larger number = lower fees
+      const lvl = max * min * 0.01 // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.round(soft)
     } else if (bitGoFee) {
@@ -38,7 +39,16 @@ const minFeeFor = async (blocks) => {
       return {'error': err}
     }
   }
-  return {coiny: tempFees, bitGo: getBitGo, core: getCore}
+
+  const feesSorted = Object.keys(tempFees).sort((a, b) => tempFees[b] - tempFees[a]) // sort fee numbers
+  const blocksSorted = Object.keys(tempFees).sort((a, b) => a - b) // sort block target numbers
+
+  let res = {}
+  for (let i in feesSorted) {
+    res[blocksSorted[i]] = tempFees[feesSorted[i]]
+  }
+
+  return {coiny: res, bitGo: getBitGo, core: getCore}
 }
 
 // build json
