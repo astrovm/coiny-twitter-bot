@@ -26,6 +26,7 @@ schedule.scheduleJob('0 * * * *', () => {
 const api = {
   fee: async (ctx) => {
     const block = parseInt(ctx.request.query.numBlocks)
+    ctx.type = 'application/json'
     if (block > 0 && block < 10 ** 4) {
       const fee = JSON.stringify(await fees.buildJSON([block]))
       ctx.body = fee
