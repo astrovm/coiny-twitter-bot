@@ -68,10 +68,9 @@ export default {
       price: 0
     }
   },
-  mounted: () => {
+  mounted: function () {
     const self = this
     api.getPrice().then((price) => {
-      console.log(price)
       self.price = price.last
     })
   }

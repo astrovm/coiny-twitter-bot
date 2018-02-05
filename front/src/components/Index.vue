@@ -41,7 +41,7 @@ export default {
       times: ['20 minutes', '40 minutes', '60 minutes', '2 hours', '4 hours', '8 hours', '24 hours', '3 days', '7 days']
     }
   },
-  mounted: () => {
+  mounted: function () {
     const self = this
     api.getFees().then((fees) => {
       self.fees = fees.coiny
