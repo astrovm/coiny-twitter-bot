@@ -16,7 +16,7 @@ const redisClient = redis.createClient(
 const minFeeFor = async (blocks) => {
   const getBitGo = await bitGo.feeFor(blocks)
   const getCore = await bitcoinCore.feeFor(blocks)
-  let tempFees = {bitGo: getBitGo, core: getCore}
+  let tempFees = {}
   for (let i in blocks) {
     const bitGoFee = getBitGo[blocks[i]]
     const coreFee = getCore[blocks[i]]
@@ -38,7 +38,7 @@ const minFeeFor = async (blocks) => {
       return {'error': err}
     }
   }
-  return tempFees
+  return {coiny: tempFees, bitGo: getBitGo, core: getCore}
 }
 
 // build json

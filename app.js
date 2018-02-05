@@ -2,6 +2,8 @@
 
 // require libs
 const Koa = require('koa')
+const cors = require('koa-cors')
+const serve = require('koa-static')
 const Router = require('koa-router')
 const fees = require('./back/fees.js')
 const Twitter = require('twitter')
@@ -36,14 +38,10 @@ const api = {
     }
   }
 }
-const pages = {
-  homepage: async (ctx) => {
-    ctx.body = await fees.buildText()
-  }
-}
 
 router.get('/api/v1/tx/fee', api.fee)
-router.get('/', pages.homepage)
+app.use(serve('./front/dist'))
 
+app.use(cors())
 app.use(router.routes())
 app.listen(process.env.PORT || 3000)
