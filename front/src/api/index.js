@@ -1,5 +1,9 @@
-const URL = 'https://coiny.sh/api/v1/tx/fee/'
+const URL = 'https://coiny.sh/api/v1/'
 
-export default function getFees() {
-  return fetch(URL).then(res => res.json())
+exports.getFees = () => {
+  return fetch(URL + 'tx/fee/').then(res => res.json())
+}
+
+exports.getPrice = () => {
+  return fetch(URL + 'price/btcusd/').then(res => res.json())
 }

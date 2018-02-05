@@ -6,6 +6,7 @@ const cors = require('koa-cors')
 const serve = require('koa-static')
 const Router = require('koa-router')
 const fees = require('./back/fees.js')
+const price = require('./back/price.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
 const app = new Koa()
@@ -36,10 +37,15 @@ const api = {
       const fee = JSON.stringify(await fees.buildJSON())
       ctx.body = fee
     }
+  },
+  price: async (ctx) => {
+    ctx.type = 'application/json'
+    ctx.body = { last: price() }
   }
 }
 
 router.get('/api/v1/tx/fee', api.fee)
+router.get('/api/v1/price/btcusd', api.price)
 app.use(serve('./front/dist'))
 
 app.use(cors())

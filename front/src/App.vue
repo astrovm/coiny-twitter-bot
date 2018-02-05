@@ -19,6 +19,9 @@
           <a class="navbar-item" href="https://coiny.sh/">
             Home
           </a>
+          <a class="navbar-item">
+            BTC: {{ price }} USD
+          </a>
         </div>
 
         <div class="navbar-end">
@@ -56,8 +59,22 @@
 </template>
 
 <script>
+import api from './api'
+
 export default {
-  name: 'App'
+  name: 'App',
+  data () {
+    return {
+      price: 0
+    }
+  },
+  mounted: () => {
+    const self = this
+    api.getPrice().then((price) => {
+      console.log(price)
+      self.price = price.last
+    })
+  }
 }
 </script>
 
