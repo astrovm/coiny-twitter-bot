@@ -66,9 +66,9 @@ redisClient.get('lastTweetJson', (err, reply) => {
 })
 
 const checkDiff = async (used = lastTweetJson) => {
-  const tempFees = await buildJSON()
-  if (tempFees.error) return null
-  const fresh = tempFees.coiny
+  const getFees = await buildJSON()
+  if (getFees.error) return null
+  const fresh = getFees.coiny
   if (Object.keys(used).length === 0) return fresh
   if (used.error) return fresh
   for (let i in used) {
@@ -79,10 +79,7 @@ const checkDiff = async (used = lastTweetJson) => {
 }
 
 // build text
-const buildText = async (fees = {}) => {
-  const index = (Object.keys(fees).length === 0)
-  if (index) fees = await buildJSON()
-  if (fees.error) return `Error: ${fees.error}`
+const buildText = async (fees) => {
   const usd = price() * 263 / 10 ** 8
   const text =
 `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})
