@@ -5,9 +5,9 @@
         <h1 class="title">
           Bitcoin fees
         </h1>
-        <div class="columns">
+        <div class="columns is-mobile">
           <div class="column"></div>
-          <div class="column is-one-fifth">
+          <div class="column is-narrow">
             Time
             <ul>
               <li v-for="time in times">
@@ -15,7 +15,7 @@
               </li>
             </ul>
           </div>
-          <div class="column is-one-fifth">
+          <div class="column is-narrow">
             Fee
             <ul>
               <li v-for="fee in fees">
