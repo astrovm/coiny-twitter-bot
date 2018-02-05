@@ -2,8 +2,10 @@
 
 // require libs
 const Koa = require('koa')
+const cors = require('koa-cors')
+const serve = require('koa-static')
 const Router = require('koa-router')
-const fees = require('./api/fees.js')
+const fees = require('./back/fees.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
 const app = new Koa()
@@ -26,6 +28,7 @@ schedule.scheduleJob('0 * * * *', () => {
 const api = {
   fee: async (ctx) => {
     const block = parseInt(ctx.request.query.numBlocks)
+    ctx.type = 'application/json'
     if (block > 0 && block < 10 ** 4) {
       const fee = JSON.stringify(await fees.buildJSON([block]))
       ctx.body = fee
@@ -35,14 +38,10 @@ const api = {
     }
   }
 }
-const pages = {
-  homepage: async (ctx) => {
-    ctx.body = await fees.buildText()
-  }
-}
 
 router.get('/api/v1/tx/fee', api.fee)
-router.get('/', pages.homepage)
+app.use(serve('./front/dist'))
 
+app.use(cors())
 app.use(router.routes())
 app.listen(process.env.PORT || 3000)

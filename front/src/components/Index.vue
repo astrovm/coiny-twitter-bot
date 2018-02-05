@@ -1,0 +1,56 @@
+<template>
+  <section class="hero is-medium is-success is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          Bitcoin fees
+        </h1>
+        <div class="columns">
+          <div class="column"></div>
+          <div class="column is-one-fifth">
+            Time
+            <ul>
+              <li v-for="time in times">
+                {{ time }}
+              </li>
+            </ul>
+          </div>
+          <div class="column is-one-fifth">
+            Fee
+            <ul>
+              <li v-for="fee in fees">
+                {{ fee }} sat/B
+              </li>
+            </ul>
+          </div>
+          <div class="column"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+import getFees from '../api'
+
+export default {
+  name: 'Index',
+  data () {
+    return {
+      fees: {},
+      times: ['20 minutes', '40 minutes', '60 minutes', '2 hours', '4 hours', '8 hours', '24 hours', '3 days', '7 days']
+    }
+  },
+  mounted: function () {
+    const self = this
+    getFees()
+      .then(function (fees) {
+        self.fees = fees.coiny
+      })
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+</style>
