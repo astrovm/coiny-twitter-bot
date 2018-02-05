@@ -66,8 +66,9 @@ redisClient.get('lastTweetJson', (err, reply) => {
 })
 
 const checkDiff = async (used = lastTweetJson) => {
-  const fresh = await buildJSON()
-  if (fresh.error) return null
+  const tempFees = await buildJSON()
+  if (tempFees.error) return null
+  const fresh = tempFees.coiny
   if (Object.keys(used).length === 0) return fresh
   if (used.error) return fresh
   for (let i in used) {
