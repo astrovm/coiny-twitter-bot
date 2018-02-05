@@ -108,10 +108,11 @@ const makeTweet = async (tw) => {
         console.log(`Tweet created at: ${tweet.created_at}`)
       }
     })
+  } else {
+    console.log('The last tweet is already updated.')
   }
 }
 
 // export functions
 exports.makeTweet = makeTweet
 exports.buildJSON = buildJSON
-exports.buildText = buildText

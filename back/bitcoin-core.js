@@ -124,9 +124,14 @@ let fees = {}
 getFees()
 getNodeInfo()
 
-// get core fees every 3 minutes job
+// get core fees every 3 minutes
 schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
+})
+
+// get node info every 30 minutes
+schedule.scheduleJob('0/30 * * * *', () => {
+  getNodeInfo()
 })
 
 // export feeFor function
