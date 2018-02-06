@@ -3,41 +3,32 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="https://coiny.sh/">
-          <p>
-            <img src="./assets/coiny-logo.png" alt="Coiny" width="100" height="28">
-          </p>
+          <img src="./assets/coiny-logo.png" alt="Coiny" width="100" height="28">
         </a>
-        <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
+        <a class="navbar-item">
+          BTC: {{ price }} USD
+        </a>
+        <button class="navbar-burger" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
           <span></span>
           <span></span>
           <span></span>
-        </div>
+        </button>
       </div>
 
-      <div id="navbarExampleTransparentExample" class="navbar-menu">
-        <div class="navbar-start">
+      <div class="navbar-menu" v-bind:class="{ 'is-active' : showNav }">
+        <div class="navbar-end">
           <a class="navbar-item" href="https://coiny.sh/">
             Home
           </a>
-          <a class="navbar-item">
-            BTC: {{ price }} USD
-          </a>
-        </div>
-
-        <div class="navbar-end">
           <div class="navbar-item">
-            <div class="field is-grouped">
-              <p class="control">
-                <a class="bd-tw-button button" data-social-network="Twitter" target="_blank" href="https://twitter.com/coinyfees">
-                  <span class="icon">
-                    <i class="fab fa-twitter"></i>
-                  </span>
-                  <span>
-                    Twitter
-                  </span>
-                </a>
-              </p>
-            </div>
+            <a class="bd-tw-button button" data-social-network="Twitter" target="_blank" href="https://twitter.com/coinyfees">
+              <span class="icon">
+                <i class="fab fa-twitter"></i>
+              </span>
+              <span>
+                Twitter
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -65,6 +56,7 @@ export default {
   name: 'App',
   data () {
     return {
+      showNav: false,
       price: 0
     }
   },
