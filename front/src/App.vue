@@ -49,7 +49,7 @@
       <div class="container">
         <div class="content has-text-centered">
           <p>
-            <strong>Coiny 2018</strong>. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. The source code is licensed
+            Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. The source code is licensed
             <a href="https://github.com/astrolince/coiny/blob/master/LICENSE">MPL 2.0</a>.
           </p>
         </div>
@@ -82,10 +82,16 @@ export default {
 @import "~bulma/sass/utilities/_all";
 
 // Set your colors
-$primary: #8c67ef;
+$primary: #16a085;
 $primary-invert: findColorInvert($primary);
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
+$footer-background-color: $dark;
+$background-color: $dark;
+
+$family-serif: "Avenir", Helvetica, Arial, sans-serif;
+
+$family-primary: $family-serif;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (
@@ -115,9 +121,9 @@ $link-focus-border: $primary;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  color: white;
 }
 </style>
