@@ -1,0 +1,8 @@
+{
+  "name": "coiny",
+  "description": "Bitcoin fee estimates and market info",
+  "website": "https://coiny.sh/",
+  "repository": "https://github.com/astrolince/coiny",
+  "logo": "https://coiny.sh/favicon.ico",
+  "keywords": [ "bitcoin", "transaction", "estimate", "fee", "twitter", "bot", "confirmation", "node", "vue" ]
+}
