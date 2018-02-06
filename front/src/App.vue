@@ -89,7 +89,7 @@ $twitter-invert: findColorInvert($twitter);
 $footer-background-color: $dark;
 $background-color: $dark;
 
-$family-serif: "Avenir", Helvetica, Arial, sans-serif;
+$family-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
 $family-primary: $family-serif;
 
