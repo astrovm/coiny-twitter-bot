@@ -28,7 +28,7 @@
               <i class="fab fa-github"></i>
             </span>
           </a>
-          <a class="navbar-item" href="https://twitter.com/astrolince" target="_blank">
+          <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
             <span class="icon">
               <i class="fab fa-twitter"></i>
             </span>
