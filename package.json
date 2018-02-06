@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "bitcoin-core": "^2.0.0",
+    "buefy": "^0.6.3",
     "koa": "^2.4.1",
     "koa-cors": "0.0.16",
     "koa-router": "^7.4.0",
