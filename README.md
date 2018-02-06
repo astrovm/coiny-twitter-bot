@@ -1,4 +1,6 @@
 # [Coiny](https://coiny.sh/)
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/astrolince/coiny.svg)](https://greenkeeper.io/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com) [![Twitter Follow](https://img.shields.io/twitter/follow/coinyfees.svg?style=social&label=Follow)](https://twitter.com/coinyfees)
 
 Bitcoin fee estimates and market info.
