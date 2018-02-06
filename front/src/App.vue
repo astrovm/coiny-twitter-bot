@@ -46,9 +46,9 @@
             Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
           </p>
           <p>
-            The source code is licensed under the
+            The source code is licensed under
             <a href="https://github.com/astrolince/coiny/blob/master/LICENSE">MPL 2.0</a>. The website content
-        is licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+        is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
           </p>
         </div>
       </div>
@@ -83,9 +83,12 @@ export default {
 // Set your colors
 $primary: #16a085;
 $primary-invert: findColorInvert($primary);
-$twitter: #4099FF;
-$twitter-invert: findColorInvert($twitter);
+$dark: #2d3436;
+$dark-invert: findColorInvert($dark);
+
 $background: $dark;
+
+$link-hover: #1abc9c;
 
 $navbar-background-color: $dark;
 $navbar-dropdown-background-color: $primary;
@@ -100,7 +103,6 @@ $navbar-dropdown-item-hover-color: $dark;
 $navbar-item-hover-color: $dark;
 
 $family-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-
 $family-primary: $family-serif;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
@@ -113,8 +115,7 @@ $colors: (
     "info": ($info, $info-invert),
     "success": ($success, $success-invert),
     "warning": ($warning, $warning-invert),
-    "danger": ($danger, $danger-invert),
-    "twitter": ($twitter, $twitter-invert)
+    "danger": ($danger, $danger-invert)
 );
 
 // Links
