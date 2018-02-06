@@ -8,28 +8,31 @@
         <a class="navbar-item">
           BTC: {{ price }} USD
         </a>
-        <button class="navbar-burger" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
+        <div class="button navbar-burger is-dark" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
           <span></span>
           <span></span>
           <span></span>
-        </button>
+        </div>
       </div>
 
       <div class="navbar-menu" v-bind:class="{ 'is-active' : showNav }">
         <div class="navbar-end">
-          <a class="navbar-item" href="https://coiny.sh/">
+          <router-link class="navbar-item" to="/">
             Home
+          </router-link>
+          <router-link class="navbar-item" to="about">
+            About
+          </router-link>
+          <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
           </a>
-          <div class="navbar-item">
-            <a class="bd-tw-button button" data-social-network="Twitter" target="_blank" href="https://twitter.com/coinyfees">
-              <span class="icon">
-                <i class="fab fa-twitter"></i>
-              </span>
-              <span>
-                Twitter
-              </span>
-            </a>
-          </div>
+          <a class="navbar-item" href="https://twitter.com/astrolince" target="_blank">
+            <span class="icon">
+              <i class="fab fa-twitter"></i>
+            </span>
+          </a>
         </div>
       </div>
     </nav>
@@ -40,8 +43,12 @@
       <div class="container">
         <div class="content has-text-centered">
           <p>
-            Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. The source code is licensed
-            <a href="https://github.com/astrolince/coiny/blob/master/LICENSE">MPL 2.0</a>.
+            Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
+          </p>
+          <p>
+            The source code is licensed under the
+            <a href="https://github.com/astrolince/coiny/blob/master/LICENSE">MPL 2.0</a>. The website content
+        is licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
           </p>
         </div>
       </div>
@@ -78,8 +85,19 @@ $primary: #16a085;
 $primary-invert: findColorInvert($primary);
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
-$footer-background-color: $dark;
-$background-color: $dark;
+$background: $dark;
+
+$navbar-background-color: $dark;
+$navbar-dropdown-background-color: $primary;
+$navbar-item-hover-background-color: $primary;
+$navbar-dropdown-item-hover-background-color: $primary;
+$navbar-dropdown-item-active-background-color: $primary;
+
+$navbar-dropdown-color: $white;
+$navbar-dropdown-arrow: $white;
+$navbar-item-color: $white;
+$navbar-dropdown-item-hover-color: $dark;
+$navbar-item-hover-color: $dark;
 
 $family-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 
