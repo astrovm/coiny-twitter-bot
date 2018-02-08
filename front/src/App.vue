@@ -6,7 +6,7 @@
           <img src="./assets/coiny-logo.png" alt="Coiny" width="100" height="28">
         </a>
         <a class="navbar-item">
-          BTC: {{ price.toFixed(2) }} USD
+          BTC: {{ parseFloat(price).toFixed(2) }} USD
         </a>
         <div class="button navbar-burger is-dark" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
           <span></span>
