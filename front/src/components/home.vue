@@ -14,7 +14,7 @@
             <p class="subtitle is-5 has-text-centered">Time</p>
             <ul>
               <li v-for="time in times">
-                <div class="level">
+                <div class="level is-mobile">
 
                   <div class="level-left">
                     <p class="level-item">
@@ -38,7 +38,7 @@
             <p class="subtitle is-5 has-text-centered">Fee</p>
             <ul>
               <li v-for="fee in fees">
-                <div class="level">
+                <div class="level is-mobile">
 
                   <div class="level-left">
                     <p class="level-item">
@@ -62,7 +62,7 @@
             <p class="subtitle is-5 has-text-centered">USD</p>
             <ul>
               <li v-for="fee in fees">
-                <div class="level">
+                <div class="level is-mobile">
 
                   <div class="level-left">
                     <p class="level-item">
