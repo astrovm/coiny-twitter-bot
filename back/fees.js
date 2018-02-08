@@ -24,7 +24,7 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = min / max * 150 // larger number = lower fees
+      const lvl = min / max * 175 // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.round(soft)
     } else if (bitGoFee) {
@@ -80,7 +80,7 @@ const checkDiff = async (used = lastTweetJson) => {
 
 // build text
 const buildText = async (fees) => {
-  const usd = price() * 263 / 10 ** 8
+  const usd = price() * 225 / 10 ** 8
   const text =
 `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})
 40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})

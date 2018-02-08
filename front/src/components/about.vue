@@ -3,18 +3,8 @@
     <div class="hero-body">
       <div class="container">
         <h1 class="title">
-          Bitcoin fees
+          WIP
         </h1>
-        <div class="columns is-mobile">
-          <div class="column"></div>
-          <div class="column is-narrow">
-            Time
-          </div>
-          <div class="column is-narrow">
-            Fee
-          </div>
-          <div class="column"></div>
-        </div>
       </div>
     </div>
   </section>
