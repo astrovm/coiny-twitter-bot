@@ -139,9 +139,6 @@ $link-focus-border: $primary;
 }
 
 #app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: white;
+  color: #b2bec3;
 }
 </style>
