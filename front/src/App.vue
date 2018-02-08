@@ -72,6 +72,13 @@ export default {
     api.getPrice().then((price) => {
       self.price = price.last
     })
+
+    const pusher = new Pusher('de504dc5763aeef9ff52')
+    const tradesChannel = pusher.subscribe('live_trades')
+
+    tradesChannel.bind('trade', data => {
+      self.price = data.price
+    })
   }
 }
 </script>

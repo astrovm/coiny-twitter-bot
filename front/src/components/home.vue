@@ -23,6 +23,14 @@
               </li>
             </ul>
           </div>
+          <div class="column is-narrow">
+            USD
+            <ul>
+              <li v-for="fee in fees">
+                ${{ (fee * $parent.price * 225 / 10 ** 8).toFixed(2) }}
+              </li>
+            </ul>
+          </div>
           <div class="column"></div>
         </div>
       </div>
