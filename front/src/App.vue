@@ -2,11 +2,11 @@
   <div id="app">
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://coiny.sh/">
+        <a class="navbar-item" href="/">
           <img src="./assets/coiny-logo.png" alt="Coiny" width="100" height="28">
         </a>
         <a class="navbar-item">
-          BTC: {{ price }} USD
+          BTC: {{ price.toFixed(2) }} USD
         </a>
         <div class="button navbar-burger is-dark" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
           <span></span>
@@ -23,14 +23,14 @@
           <router-link class="navbar-item" to="about">
             About
           </router-link>
-          <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
-            <span class="icon">
-              <i class="fab fa-github"></i>
-            </span>
-          </a>
           <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
             <span class="icon">
               <i class="fab fa-twitter"></i>
+            </span>
+          </a>
+          <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
+            <span class="icon">
+              <i class="fab fa-github"></i>
             </span>
           </a>
         </div>
@@ -43,12 +43,12 @@
       <div class="container">
         <div class="content has-text-centered">
           <p>
-            Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
+            Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince" target="_blank">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
           </p>
           <p>
             The source code is licensed under
-            <a href="https://github.com/astrolince/coiny/blob/master/LICENSE">MPL 2.0</a>. The website content
-        is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+            <a href="https://github.com/astrolince/coiny/blob/master/LICENSE" target="_blank">MPL 2.0</a>. The website content
+        is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
           </p>
         </div>
       </div>

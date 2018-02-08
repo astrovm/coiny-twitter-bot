@@ -2,7 +2,6 @@
   <section class="hero is-medium is-primary is-bold">
     <div class="hero-body">
       <div class="container">
-
         <h1 class="title is-3 has-text-centered">
           Bitcoin fee estimates
         </h1>
@@ -15,7 +14,6 @@
             <ul>
               <li v-for="time in times">
                 <div class="level is-mobile">
-
                   <div class="level-left">
                     <p class="level-item">
                       {{ time[0] }}
@@ -23,8 +21,6 @@
                   </div>
 
                   <div class="level-right">
-                    <p class="level-item"></p>
-
                     <p class="level-item">
                       {{ time[1] }}
                     </p>
@@ -39,7 +35,6 @@
             <ul>
               <li v-for="fee in fees">
                 <div class="level is-mobile">
-
                   <div class="level-left">
                     <p class="level-item">
                       {{ fee }}
@@ -47,8 +42,6 @@
                   </div>
 
                   <div class="level-right">
-                    <p class="level-item"></p>
-
                     <p class="level-item">
                       sat/B
                     </p>
@@ -63,7 +56,6 @@
             <ul>
               <li v-for="fee in fees">
                 <div class="level is-mobile">
-
                   <div class="level-left">
                     <p class="level-item">
                       $
