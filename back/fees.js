@@ -48,7 +48,7 @@ const minFeeFor = async (blocks) => {
     res[blocksSorted[i]] = tempFees[feesSorted[i]]
   }
 
-  return {coiny: res, bitGo: getBitGo, core: getCore}
+  return { coiny: res, _bitGo: getBitGo, _bitcoinCore: getCore }
 }
 
 // build json

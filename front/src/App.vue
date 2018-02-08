@@ -15,7 +15,7 @@
         </div>
       </div>
 
-      <div class="navbar-menu" v-bind:class="{ 'is-active' : showNav }">
+      <div class="navbar-menu has-text-centered" v-bind:class="{ 'is-active' : showNav }">
         <div class="navbar-end">
           <router-link class="navbar-item" to="/">
             Home

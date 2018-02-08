@@ -1,8 +1,8 @@
 <template>
-  <section class="hero is-medium is-primary is-bold">
+  <section class="hero is-fullheight is-primary is-bold">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">
+        <h1 class="title has-text-centered">
           WIP
         </h1>
       </div>
