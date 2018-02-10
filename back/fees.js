@@ -39,16 +39,7 @@ const minFeeFor = async (blocks) => {
       return {'error': err}
     }
   }
-
-  const feesSorted = Object.keys(tempFees).sort((a, b) => tempFees[b] - tempFees[a]) // sort fee numbers
-  const blocksSorted = Object.keys(tempFees).sort((a, b) => a - b) // sort block target numbers
-
-  let res = {}
-  for (let i in feesSorted) {
-    res[blocksSorted[i]] = tempFees[feesSorted[i]]
-  }
-
-  return { coiny: res, _bitGo: getBitGo, _bitcoinCore: getCore }
+  return { coiny: tempFees, _bitGo: getBitGo, _bitcoinCore: getCore }
 }
 
 // build json

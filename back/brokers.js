@@ -7,7 +7,7 @@ const trae = require('trae')
 const apis = {
   ripio: {
     rates: 'https://www.ripio.com/api/v1/rates/',
-    fees: 'https://www.ripio.com/api/v1/accounts/estimate_fee/'
+    fees: 'https://www.ripio.com/api/v1/accounts/estimate_fee/?amount=1'
   },
   satoshiTango: {
     rates: 'https://api.satoshitango.com/v2/ticker'
@@ -49,40 +49,30 @@ const getAll = async () => {
 let data = getAll()
 
 // calc rates less fees
-const getBuyPrices = async (amount) => {
+const getBuyPrices = async () => {
   const priceData = await data
   const ripioBuyRate = priceData.ripio.rates.rates.ARS_BUY
   const satoshiTangoBuyRate = priceData.satoshiTango.rates.data.compra.arsbtc
   const bitInkaBuyRate = priceData.bitInka.rates.ARS.ask
   const rates = {
     bank: {
-      ripio: ripioBuyRate * (1.5 / 100 + 1) * (0.5 / 100 + 1),
-      satoshiTango: satoshiTangoBuyRate * (1.21 / 100 + 1) * (2 / 100 + 1),
-      bitInka: bitInkaBuyRate * (1 / 100 + 1) * (0.5 / 100 + 1) * (0.15 / 100 + 1)
+      ripio: ripioBuyRate * 1.015 * 1.005,
+      satoshiTango: satoshiTangoBuyRate * 1.012 * 1.02,
+      bitInka: bitInkaBuyRate * 1.01 * 1.005 * 1.0015
     },
     rapiPago: {
-      ripio: ripioBuyRate * (2.5 / 100 + 1) * (0.5 / 100 + 1),
-      satoshiTango: satoshiTangoBuyRate * (3.1 / 100 + 1) * (2 / 100 + 1)
+      ripio: ripioBuyRate * 1.025 * 1.005,
+      satoshiTango: satoshiTangoBuyRate * 1.031 * 1.02
     },
     pagoFacil: {
-      ripio: ripioBuyRate * (3 / 100 + 1) * (0.5 / 100 + 1),
-      satoshiTango: satoshiTangoBuyRate * (5.8 / 100 + 1) * (2 / 100 + 1),
-      bitInka: bitInkaBuyRate * (3.5 / 100 + 1) * (0.5 / 100 + 1) * (0.15 / 100 + 1)
-    },
-    provincia: {
-      satoshiTango: satoshiTangoBuyRate * (5.2 / 100 + 1) * (2 / 100 + 1)
-    },
-    efectivo: {
-      satoshiTango: satoshiTangoBuyRate * (13 / 100 + 1) * (2 / 100 + 1)
-    },
-    cuentaDigital: {
-      satoshiTango: satoshiTangoBuyRate * (0.6 / 100 + 1) * (2 / 100 + 1)
+      satoshiTango: satoshiTangoBuyRate * 1.07 * 1.02,
+      bitInka: bitInkaBuyRate * 1.035 * 1.005 * 1.0015
     }
   }
   const fees = {
     ripio: priceData.ripio.fees.fee.low,
     satoshiTango: 0,
-    bitInka: amount / bitInkaBuyRate * 0.0015
+    bitInka: 0
   }
   return {'rates': rates, 'fees': fees}
 }
