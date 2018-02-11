@@ -84,17 +84,26 @@ import api from '../api'
 
 export default {
   name: 'Home',
-  data () {
+  data() {
     return {
       fees: {},
-      times: [['20', 'minutes'], ['40', 'minutes'], ['60', 'minutes'], ['2', 'hours'], ['4', 'hours'], ['8', 'hours'], ['24', 'hours'], ['3', 'days'], ['7', 'days']]
+      times: [['20', 'minutes'], ['40', 'minutes'], ['60', 'minutes'], ['2', 'hours'], ['4', 'hours'], ['8', 'hours'], ['24', 'hours'], ['3', 'days'], ['7', 'days']],
+      timer: 100000
     }
   },
-  mounted: function () {
-    const self = this
-    api.getFees().then((fees) => {
-      self.fees = fees.coiny
-    })
+  methods: {
+    getFees() {
+      api.getFees().then((res) => {
+        this.fees = res.coiny
+      })
+    }
+  },
+  mounted() {
+    this.getFees()
+    this.timer = setInterval(this.getFees, 100000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   }
 }
 </script>
