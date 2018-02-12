@@ -88,7 +88,7 @@ export default {
     return {
       fees: {},
       times: [['20', 'minutes'], ['40', 'minutes'], ['60', 'minutes'], ['2', 'hours'], ['4', 'hours'], ['8', 'hours'], ['24', 'hours'], ['3', 'days'], ['7', 'days']],
-      timer: 100000
+      timer: 30000
     }
   },
   methods: {
@@ -100,7 +100,7 @@ export default {
   },
   mounted() {
     this.getFees()
-    this.timer = setInterval(this.getFees, 100000)
+    this.timer = setInterval(this.getFees, this.timer)
   },
   beforeDestroy() {
     clearInterval(this.timer)
