@@ -12,6 +12,18 @@ const redisClient = redis.createClient(
   }
 ).on('error', (err) => console.error('ERR:REDIS:', err))
 
+// sort fees object
+const sortFees = (req) => {
+  const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
+  const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
+  // recreate fees object by matching sorted blocks with sorted fees
+  let res = {}
+  for (let i in feesSorted) {
+    res[blocksSorted[i]] = req[feesSorted[i]]
+  }
+  return res
+}
+
 // get min fee for x block target
 const minFeeFor = async (blocks) => {
   const getBitGo = await bitGo.feeFor(blocks)
@@ -24,9 +36,9 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = min / max * 175 // larger number = lower fees
+      const lvl = min / max * 150 // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
-      tempFees[[blocks[i]]] = Math.round(soft)
+      tempFees[[blocks[i]]] = Math.ceil(soft)
     } else if (bitGoFee) {
       console.error(new Error(`Undefined Core fee (~${coreFee}~) (fallback: ~${bitGoFee}~)`))
       tempFees[[blocks[i]]] = bitGoFee
@@ -39,7 +51,10 @@ const minFeeFor = async (blocks) => {
       return {'error': err}
     }
   }
-  return { coiny: tempFees, _bitGo: getBitGo, _bitcoinCore: getCore }
+
+  const coinyFees = await sortFees(tempFees)
+
+  return { coiny: coinyFees, _bitGo: getBitGo, _bitcoinCore: getCore }
 }
 
 // build json
