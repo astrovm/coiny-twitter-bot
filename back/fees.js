@@ -40,13 +40,13 @@ const minFeeFor = async (blocks) => {
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.ceil(soft)
     } else if (bitGoFee) {
-      console.error(new Error(`Undefined Core fee (~${coreFee}~) (fallback: ~${bitGoFee}~)`))
+      console.error(new Error('Undefined Bitcoin Core fee.'))
       tempFees[[blocks[i]]] = bitGoFee
     } else if (coreFee) {
-      console.error(new Error(`Undefined BitGo fee (~${bitGoFee}~) (fallback: ~${coreFee}~)`))
+      console.error(new Error('Undefined BitGo fee.'))
       tempFees[[blocks[i]]] = coreFee
     } else {
-      const err = `Undefined fees (BitGo: ~${bitGoFee}~) (Core: ~${coreFee}~)`
+      const err = 'UNDEFINED FEES'
       console.error(new Error(err))
       return {'error': err}
     }
@@ -87,16 +87,15 @@ const checkDiff = async (used = lastTweetJson) => {
 // build text
 const buildText = async (fees) => {
   const usd = price() * 225 / 10 ** 8
-  const text =
-`20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})
-40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})
-60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})
-2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})
-4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})
-8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})
-24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})
-3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})
-7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
+  let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
+  if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
+  if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
+  if (fees[12] < fees[6]) text = text + `\n2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})`
+  if (fees[24] < fees[12]) text = text + `\n4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})`
+  if (fees[48] < fees[24]) text = text + `\n8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})`
+  if (fees[144] < fees[48]) text = text + `\n24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})`
+  if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
+  if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
   return text
 }
 
