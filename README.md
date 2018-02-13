@@ -18,6 +18,6 @@ Example: https://coiny.sh/api/v1/tx/fee?numBlocks=288 for 288 blocks confirmatio
 
 ## License
 
-Coiny source code is licensed under [Mozilla Public License 2.0](https://github.com/astrolince/coiny/blob/master/LICENSE).
+Coiny source code is licensed under a [Mozilla Public License 2.0](https://github.com/astrolince/coiny/blob/master/LICENSE).
 
-Coiny website content is licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
+Coiny website content is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
