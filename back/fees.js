@@ -33,7 +33,10 @@ const minFeeFor = async (blocks) => {
     if (bitGoFee && coreFee) {
       const max = Math.max(bitGoFee, coreFee)
       const min = Math.min(bitGoFee, coreFee)
-      const lvl = min / max * 150 // larger number = lower fees
+      const sumValues = obj => Object.values(obj).reduce((a, b) => a + b)
+      // const mean = (bitGoFee + coreFee) / 2
+      const mean = (sumValues(getBitGo) + sumValues(getCore)) / 18
+      const lvl = min / max * mean // larger number = lower fees
       const soft = (max + min * lvl) / (1 + lvl)
       tempFees[[blocks[i]]] = Math.ceil(soft)
     } else if (bitGoFee) {
