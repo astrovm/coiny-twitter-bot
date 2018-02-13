@@ -6,10 +6,7 @@ const bitGo = require('./bitgo.js')
 const price = require('./price.js')
 const redis = require('redis')
 const redisClient = redis.createClient(
-  process.env.REDIS_URL,
-  {
-    'auth_pass': process.env.REDIS_PASS
-  }
+  process.env.REDISCLOUD_URL
 ).on('error', (err) => console.error('ERR:REDIS:', err))
 
 // sort fees object
