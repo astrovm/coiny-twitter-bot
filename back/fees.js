@@ -66,6 +66,7 @@ const buildJSON = async (req) => {
 let lastTweetJson = {}
 redisClient.get('lastTweetJson', (err, reply) => {
   (err) ? console.error('ERR:REDIS:', err) : lastTweetJson = JSON.parse(reply)
+  console.log(JSON.parse(reply))
 })
 
 const checkDiff = async (used = lastTweetJson) => {
