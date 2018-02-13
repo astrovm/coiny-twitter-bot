@@ -13,11 +13,8 @@ You can also request fees through the API:
 
 > GET https://coiny.sh/api/v1/tx/fee?numBlocks={target}
 
-Example: https://coiny.sh/api/v1/tx/fee?numBlocks=288 for 288 blocks confirmation target (48 hours)
-
-## Deploy
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/astrolince/coiny&env=TW_CONSUMER_KEY&env=TW_CONSUMER_SECRET&env=TW_ACCESS_TOKEN_KEY&env=TW_ACCESS_TOKEN_SECRET&env=BITCOIN_CORE_HOST&env=BITCOIN_CORE_PORT&env=BITCOIN_CORE_USER&env=BITCOIN_CORE_PASS&env=REDIS_URL&env=REDIS_PASS)
+Example: https://coiny.sh/api/v1/tx/fee?numBlocks=288 for 288 blocks confirmation target (48 hours).
 
 ## License
-Coiny is licensed under [Mozilla Public License 2.0](https://github.com/astrolince/coiny/blob/master/LICENSE)
+Coiny source code is licensed under [Mozilla Public License 2.0](https://github.com/astrolince/coiny/blob/master/LICENSE).
+Coiny website content is licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
