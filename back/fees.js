@@ -72,7 +72,7 @@ const checkDiff = async (used = lastTweetJson) => {
   const getFees = await buildJSON()
   if (getFees.error) return null
   const fresh = getFees.coiny
-  if (used === null) return fresh
+  if (!used) return fresh
   if (Object.keys(used).length === 0) return fresh
   if (used.error) return fresh
   for (let i in used) {
