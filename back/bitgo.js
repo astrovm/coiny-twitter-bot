@@ -33,7 +33,7 @@ const sortFees = (req) => {
 // select fee for specific block target
 const feeFor = async (blocks) => {
   const feeData = (Object.keys(fees).length === 0) ? await getFees() : fees  // if fees obj is empty fill it
-  if (!feeData[2]) return {0: 0}
+  if (Object.keys(feeData).length === 0) return {0: 0}
   const feeDataSorted = Object.keys(feeData).sort((a, b) => b - a) // sort block targets from highest to lowest
   const minBlock = parseInt(feeDataSorted.slice(-1)[0])
   let res = {}
