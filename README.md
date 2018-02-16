@@ -1,6 +1,6 @@
 # coiny
 
-> Nuxt.js project
+> Bitcoin fee estimates and market info.
 
 ## Build Setup
 

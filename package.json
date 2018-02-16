@@ -1,7 +1,7 @@
 {
   "name": "coiny",
   "version": "1.1.0",
-  "description": "Nuxt.js project",
+  "description": "Bitcoin fee estimates and market info.",
   "author": "astro <astro@astrolince.com>",
   "private": true,
   "scripts": {
