@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
 
-async function start () {
+async function start() {
   const app = new Koa()
   const host = process.env.HOST || '127.0.0.1'
   const port = process.env.PORT || 3000
