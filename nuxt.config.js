@@ -13,6 +13,7 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  plugins: ['~plugins/buefy'],
   /*
   ** Global CSS
   */
@@ -25,6 +26,11 @@ module.exports = {
    ** Build configuration
    */
   build: {
+    postcss: {
+      plugins: {
+        'postcss-custom-properties': false
+      }
+    },
     /*
      ** Run ESLINT on save
      */
