@@ -1,9 +1,9 @@
 <template>
-  <section class="hero is-dark is-fullheight">
+  <div id="app">
     <my-header/>
     <nuxt/>
     <my-footer/>
-  </section>
+  </div>
 </template>
 
 <script>
