@@ -64,7 +64,7 @@
 
                   <div class="level-right">
                     <p class="level-item">
-                      {{ (fee * $parent.price * 225 / 10 ** 8).toFixed(2) }}
+                      {{ (fee * parseFloat($parent.$parent.price) * 225 / 10 ** 8).toFixed(2) }}
                     </p>
                   </div>
                 </div>
@@ -81,7 +81,6 @@
 
 <script>
 export default {
-  name: 'Index',
   data() {
     return {
       fees: {},
