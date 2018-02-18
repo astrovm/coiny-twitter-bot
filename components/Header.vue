@@ -24,12 +24,12 @@
         </router-link>
         <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
           <span class="icon">
-            <i class="fab fa-twitter"></i>
+            <font-awesome-icon :icon='twitterIcon' />
           </span>
         </a>
         <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
           <span class="icon">
-            <i class="fab fa-github"></i>
+            <font-awesome-icon :icon='githubIcon' />
           </span>
         </a>
       </div>
@@ -38,7 +38,24 @@
 </template>
 
 <script>
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { faTwitter, faGithub } from '@fortawesome/fontawesome-free-brands'
+
 export default {
+  computed: {
+    twitterIcon() {
+      return faTwitter
+    },
+    githubIcon() {
+      return faGithub
+    },
+    heartIcon() {
+      return faTwitter
+    }
+  },
+  components: {
+    FontAwesomeIcon
+  },
   data() {
     return {
       showNav: false,
