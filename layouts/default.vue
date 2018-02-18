@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-success is-fullheight">
+  <section class="hero is-dark is-fullheight">
     <my-header/>
     <nuxt/>
     <my-footer/>

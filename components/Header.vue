@@ -1,40 +1,76 @@
 <template>
-  <!-- Hero head: will stick at the top -->
-  <div class="hero-head">
-    <header class="navbar">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item">
-            <img src="https://bulma.io/images/bulma-type-white.png" alt="Logo">
-          </a>
-          <span class="navbar-burger burger" data-target="navbarMenuHeroC">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </div>
-        <div id="navbarMenuHeroC" class="navbar-menu">
-          <div class="navbar-end">
-            <a class="navbar-item is-active">
-              Home
-            </a>
-            <a class="navbar-item">
-              Examples
-            </a>
-            <a class="navbar-item">
-              Documentation
-            </a>
-            <span class="navbar-item">
-              <a class="button is-success is-inverted">
-                <span class="icon">
-                  <i class="fab fa-github"></i>
-                </span>
-                <span>Download</span>
-              </a>
-            </span>
-          </div>
-        </div>
+  <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="../assets/img/logo.png" alt="Coiny" width="100" height="28">
+      </a>
+      <a class="navbar-item">
+        BTC: {{ parseFloat(price).toFixed(2) }} USD
+      </a>
+      <div class="button navbar-burger is-dark" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-    </header>
-  </div>
+    </div>
+
+    <div class="navbar-menu has-text-centered" v-bind:class="{ 'is-active' : showNav }">
+      <div class="navbar-end">
+        <router-link class="navbar-item" to="/">
+          Home
+        </router-link>
+        <router-link class="navbar-item" to="about">
+          About
+        </router-link>
+        <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
+          <span class="icon">
+            <i class="fab fa-twitter"></i>
+          </span>
+        </a>
+        <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
+          <span class="icon">
+            <i class="fab fa-github"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
 </template>
+
+<script>
+export default {
+  name: 'Header',
+  head: {
+    script: [
+      { src: 'https://js.pusher.com/4.2/pusher.min.js' }
+    ]
+  },
+  data() {
+    return {
+      showNav: false,
+      price: 0
+    }
+  },
+  methods: {
+    getPrice() {
+      const URL = 'https://coiny.sh/api/v1/'
+      return fetch(URL + 'price/btcusd/').then(res => res.json())
+    },
+    updatePrice() {
+      this.getPrice().then((price) => {
+        this.price = price.last
+      })
+    }
+  },
+  mounted: function () {
+    this.updatePrice()
+
+    const self = this
+    const pusher = new Pusher('de504dc5763aeef9ff52')
+    const tradesChannel = pusher.subscribe('live_trades')
+    tradesChannel.bind('trade', data => {
+      self.price = data.price
+    })
+  }
+}
+</script>
