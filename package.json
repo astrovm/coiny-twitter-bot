@@ -1,13 +1,14 @@
 {
   "name": "coiny",
-  "version": "1.1.0",
+  "version": "0.2.0",
   "description": "Bitcoin fee estimates and market info.",
-  "author": "astro <astro@astrolince.com>",
+  "author": "astrolince <astro@astrolince.com>",
+  "main": "build/main.js",
   "private": true,
   "scripts": {
     "dev": "backpack dev",
     "build": "nuxt build && backpack build",
-    "start": "cross-env NODE_ENV=production node build/main.js",
+    "start": "cross-env NODE_ENV=production node .",
     "precommit": "npm run lint",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
@@ -16,11 +17,18 @@
     "@fortawesome/fontawesome-free-brands": "^5.0.6",
     "@fortawesome/fontawesome-free-solid": "^5.0.6",
     "@fortawesome/vue-fontawesome": "^0.0.22",
+    "bitcoin-core": "^2.0.0",
     "cross-env": "^5.0.1",
     "koa": "^2.5.0",
+    "koa-cors": "0.0.16",
+    "koa-router": "^7.4.0",
+    "node-schedule": "^1.3.0",
     "nuxt": "^1.3.0",
     "pusher-js": "^4.2.2",
-    "source-map-support": "^0.4.15"
+    "redis": "^2.8.0",
+    "source-map-support": "^0.4.15",
+    "trae": "^1.4.2",
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
@@ -39,5 +47,14 @@
     "postcss-custom-properties": "^7.0.0",
     "sass-loader": "^6.0.6",
     "scmp": "^2.0.0"
+  },
+  "engines": {
+    "node": "8",
+    "npm": ">= 5"
+  },
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/astrolince/coiny.git"
   }
 }
