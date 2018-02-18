@@ -7,7 +7,7 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'Nuxt.js project' },
+      { hid: 'description', name: 'description', content: 'Bitcoin fee estimates and market info.' },
       { name: 'apple-mobile-web-app-title', content: 'Coiny' },
       { name: 'application-name', content: 'Coiny' },
       { name: 'msapplication-TileColor', content: '#2d3436' },
