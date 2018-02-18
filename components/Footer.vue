@@ -34,4 +34,8 @@ export default {
 .fa-heart {
   color: #ff4081;
 }
+
+.footer {
+  color: #b2bec3;
+}
 </style>
