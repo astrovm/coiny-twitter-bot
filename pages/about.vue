@@ -14,7 +14,7 @@
 export default {
   head () {
     return {
-      title: `About - Coiny`
+      title: `Coiny / About`
     }
   }
 }
