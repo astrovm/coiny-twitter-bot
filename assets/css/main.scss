@@ -1,15 +1,13 @@
-// 1. Import the initial variables
 @import "~bulma/sass/utilities/initial-variables";
 @import "~bulma/sass/utilities/functions";
-
-// 2. Set your own initial variables
 
 $primary: #16a085;
 $primary-invert: findColorInvert($primary);
 $dark: #2d3436;
 $dark-invert: findColorInvert($dark);
+
 $background: $dark;
-$link-hover: #1abc9c;
+
 $navbar-background-color: $dark;
 $navbar-dropdown-background-color: $primary;
 $navbar-item-hover-background-color: $primary;
@@ -20,22 +18,14 @@ $navbar-dropdown-arrow: $white;
 $navbar-item-color: $white;
 $navbar-dropdown-item-hover-color: $dark;
 $navbar-item-hover-color: $dark;
+
 $family-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 $family-primary: $family-serif;
-// Links
+
 $link: $primary;
 $link-invert: $primary-invert;
+$link-hover: #1abc9c;
 $link-focus-border: $primary;
 
-$heart: #ff4081;
-$heart-invert: findColorInvert($heart);
-
-// 5. Add new color variables to the color map.
 @import "~bulma/sass/utilities/derived-variables.sass";
-$addColors: (
-  "heart": ($heart, $heart-invert)
-);
-$colors: map-merge($colors, $addColors);
-
-// 6. Import the rest of Bulma
 @import "~bulma";
