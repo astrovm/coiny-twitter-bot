@@ -84,7 +84,9 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: ['bulma', '@/assets/css/main.scss'],
+  css: [
+  // SCSS file in the project
+  '@/assets/css/main.scss'],
   /*
   ** Customize the progress-bar color
   */
