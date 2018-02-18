@@ -15,6 +15,6 @@
     ],
     "theme_color": "#2d3436",
     "background_color": "#2d3436",
-    "start_url": "https://coiny.sh",
+    "start_url": "https://coiny.sh/",
     "display": "standalone"
 }
