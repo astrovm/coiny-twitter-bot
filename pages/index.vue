@@ -80,8 +80,6 @@
 </template>
 
 <script>
-import api from '../api'
-
 export default {
   name: 'Home',
   data() {
@@ -93,14 +91,18 @@ export default {
   },
   methods: {
     getFees() {
-      api.getFees().then((res) => {
+      const URL = 'https://coiny.sh/api/v1/'
+      return fetch(URL + 'tx/fee/').then(res => res.json())
+    },
+    updateFees() {
+      this.getFees().then((res) => {
         this.fees = res.coiny
       })
     }
   },
   mounted() {
-    this.getFees()
-    this.timer = setInterval(this.getFees, this.timer)
+    this.updateFees()
+    this.timer = setInterval(this.updateFees, this.timer)
   },
   beforeDestroy() {
     clearInterval(this.timer)
