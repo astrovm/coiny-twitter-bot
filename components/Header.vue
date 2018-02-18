@@ -5,7 +5,7 @@
         <img src="../assets/img/logo.png" alt="Coiny" width="100" height="28">
       </a>
       <a class="navbar-item">
-        BTC: {{ parseFloat(price).toFixed(2) }} USD
+        BTC: {{ parseFloat($parent.price).toFixed(2) }} USD
       </a>
       <div class="button navbar-burger is-dark" v-on:click="showNav = !showNav" v-bind:class="{ 'is-active' : showNav }">
         <span></span>
@@ -24,12 +24,12 @@
         </router-link>
         <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
           <span class="icon">
-            <font-awesome-icon :icon='twitterIcon' />
+            <font-awesome-icon :icon="twitterIcon" />
           </span>
         </a>
         <a class="navbar-item" href="https://github.com/astrolince/coiny" target="_blank">
           <span class="icon">
-            <font-awesome-icon :icon='githubIcon' />
+            <font-awesome-icon :icon="githubIcon" />
           </span>
         </a>
       </div>
@@ -48,9 +48,6 @@ export default {
     },
     githubIcon() {
       return faGithub
-    },
-    heartIcon() {
-      return faTwitter
     }
   },
   components: {
@@ -58,32 +55,8 @@ export default {
   },
   data() {
     return {
-      showNav: false,
-      price: 0
+      showNav: false
     }
-  },
-  methods: {
-    getPrice() {
-      const URL = 'https://coiny.sh/api/v1/'
-      return fetch(URL + 'price/btcusd/').then(res => res.json())
-    },
-    updatePrice() {
-      this.getPrice().then((price) => {
-        this.price = price.last
-      })
-    },
-    livePrice() {
-      const Pusher = require('pusher-js')
-      const pusher = new Pusher('de504dc5763aeef9ff52')
-      const tradesChannel = pusher.subscribe('live_trades')
-      tradesChannel.bind('trade', data => {
-        this.price = data.price
-      })
-    }
-  },
-  mounted: function () {
-    this.updatePrice()
-    this.livePrice()
   }
 }
 </script>
