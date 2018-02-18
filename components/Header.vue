@@ -40,11 +40,6 @@
 <script>
 export default {
   name: 'Header',
-  head: {
-    script: [
-      { src: 'https://js.pusher.com/4.2/pusher.min.js' }
-    ]
-  },
   data() {
     return {
       showNav: false,
@@ -60,17 +55,19 @@ export default {
       this.getPrice().then((price) => {
         this.price = price.last
       })
+    },
+    livePrice() {
+      const Pusher = require('pusher-js')
+      const pusher = new Pusher('de504dc5763aeef9ff52')
+      const tradesChannel = pusher.subscribe('live_trades')
+      tradesChannel.bind('trade', data => {
+        this.price = data.price
+      })
     }
   },
   mounted: function () {
     this.updatePrice()
-
-    const self = this
-    const pusher = new Pusher('de504dc5763aeef9ff52')
-    const tradesChannel = pusher.subscribe('live_trades')
-    tradesChannel.bind('trade', data => {
-      self.price = data.price
-    })
+    this.livePrice()
   }
 }
 </script>
