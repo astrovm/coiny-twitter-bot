@@ -20,7 +20,7 @@ import { faHeart } from '@fortawesome/fontawesome-free-solid'
 
 export default {
   computed: {
-    heartIcon() {
+    heartIcon () {
       return faHeart
     }
   },

@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  head() {
+  head () {
     return {
       title: `About - Coiny`
     }

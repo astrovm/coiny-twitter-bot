@@ -43,17 +43,17 @@ import { faTwitter, faGithub } from '@fortawesome/fontawesome-free-brands'
 
 export default {
   computed: {
-    twitterIcon() {
+    twitterIcon () {
       return faTwitter
     },
-    githubIcon() {
+    githubIcon () {
       return faGithub
     }
   },
   components: {
     FontAwesomeIcon
   },
-  data() {
+  data () {
     return {
       showNav: false
     }

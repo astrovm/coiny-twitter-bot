@@ -81,7 +81,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       fees: {},
       times: [['20', 'minutes'], ['40', 'minutes'], ['60', 'minutes'], ['2', 'hours'], ['4', 'hours'], ['8', 'hours'], ['24', 'hours'], ['3', 'days'], ['7', 'days']],
@@ -89,21 +89,21 @@ export default {
     }
   },
   methods: {
-    getFees() {
+    getFees () {
       const URL = 'https://coiny.sh/api/v1/'
       return fetch(URL + 'tx/fee/').then(res => res.json())
     },
-    updateFees() {
+    updateFees () {
       this.getFees().then((res) => {
         this.fees = res.coiny
       })
     }
   },
-  mounted() {
+  mounted () {
     this.updateFees()
     this.timer = setInterval(this.updateFees, this.timer)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     clearInterval(this.timer)
   }
 }

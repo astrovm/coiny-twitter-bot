@@ -11,14 +11,6 @@ module.exports = {
     'html'
   ],
   // add your custom rules here
-  rules: {
-    'space-before-function-paren': [
-      2,
-      {
-        anonymous: 'always',
-        named: 'never'
-      }
-    ],
-  },
+  rules: {},
   globals: {}
 }

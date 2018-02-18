@@ -15,22 +15,22 @@ export default {
     MyHeader,
     MyFooter
   },
-  data() {
+  data () {
     return {
       price: 0
     }
   },
   methods: {
-    getPrice() {
+    getPrice () {
       const URL = 'https://coiny.sh/api/v1/'
       return fetch(URL + 'price/btcusd/').then(res => res.json())
     },
-    updatePrice() {
+    updatePrice () {
       this.getPrice().then((price) => {
         this.price = price.last
       })
     },
-    livePrice() {
+    livePrice () {
       const Pusher = require('pusher-js')
       const pusher = new Pusher('de504dc5763aeef9ff52')
       const tradesChannel = pusher.subscribe('live_trades')
