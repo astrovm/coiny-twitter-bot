@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          Coiny 2018. Developed with <i class="fas fa-heart"></i> by <a href="https://twitter.com/astrolince" target="_blank">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
+          Coiny 2018. Developed with <font-awesome-icon :icon="heartIcon" /> by <a href="https://twitter.com/astrolince" target="_blank">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
         </p>
         <p>
           The source code is licensed under a
@@ -13,3 +13,25 @@
     </div>
   </footer>
 </template>
+
+<script>
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+import { faHeart } from '@fortawesome/fontawesome-free-solid'
+
+export default {
+  computed: {
+    heartIcon() {
+      return faHeart
+    }
+  },
+  components: {
+    FontAwesomeIcon
+  }
+}
+</script>
+
+<style scoped>
+.fa-heart {
+  color: #ff4081;
+}
+</style>
