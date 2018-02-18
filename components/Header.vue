@@ -16,12 +16,12 @@
 
     <div class="navbar-menu has-text-centered" v-bind:class="{ 'is-active' : showNav }">
       <div class="navbar-end">
-        <router-link class="navbar-item" to="/">
+        <nuxt-link class="navbar-item" to="/">
           Home
-        </router-link>
-        <router-link class="navbar-item" to="about">
+        </nuxt-link>
+        <nuxt-link class="navbar-item" to="about">
           About
-        </router-link>
+        </nuxt-link>
         <a class="navbar-item" href="https://twitter.com/coinyfees" target="_blank">
           <span class="icon">
             <font-awesome-icon :icon="twitterIcon" />
