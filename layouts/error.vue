@@ -12,6 +12,11 @@
 
 <script>
 export default {
-  props: ['error']
+  props: ['error'],
+  head () {
+    return {
+      title: `Coiny / Error`
+    }
+  }
 }
 </script>
