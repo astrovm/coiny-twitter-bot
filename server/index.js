@@ -45,8 +45,10 @@ async function start () {
   // show fees in web sv, handle api requests
   const api = {
     fee: async (ctx) => {
-      const block = parseInt(ctx.request.query.numBlocks)
       ctx.type = 'application/json'
+      ctx.set('Cache-Control', 'max-age=300')
+
+      const block = parseInt(ctx.request.query.numBlocks)
       if (block > 0 && block < 10 ** 4) {
         const fee = JSON.stringify(await fees.buildJSON([block]))
         ctx.body = fee
@@ -57,6 +59,8 @@ async function start () {
     },
     price: async (ctx) => {
       ctx.type = 'application/json'
+      ctx.set('Cache-Control', 'max-age=300')
+      
       ctx.body = { last: price() }
     }
   }
