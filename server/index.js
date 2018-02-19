@@ -21,7 +21,7 @@ async function start () {
 
   //WIP
   // require libs
-  const cors = require('koa-cors')
+  const cors = require('@koa/cors')
   const Router = require('koa-router')
   const fees = require('./fees.js')
   const price = require('./price.js')
