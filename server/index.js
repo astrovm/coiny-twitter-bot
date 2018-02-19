@@ -27,7 +27,6 @@ async function start () {
   const price = require('./price.js')
   const Twitter = require('twitter')
   const schedule = require('node-schedule')
-  const crypto = require('crypto')
   const router = new Router()
 
   // conf twitter
@@ -46,6 +45,9 @@ async function start () {
   // show fees in web sv, handle api requests
   const api = {
     fee: async (ctx) => {
+      ctx.type = 'application/json'
+      ctx.set('Cache-Control', 'max-age=300')
+
       const block = parseInt(ctx.request.query.numBlocks)
       if (block > 0 && block < 10 ** 4) {
         const fee = JSON.stringify(await fees.buildJSON([block]))
@@ -54,15 +56,11 @@ async function start () {
         const fee = JSON.stringify(await fees.buildJSON())
         ctx.body = fee
       }
-      ctx.type = 'application/json'
-      ctx.set('Cache-Control', 'max-age=300')
-      ctx.response.etag = crypto.createHash('md5').update(ctx.body).digest('hex')
     },
     price: async (ctx) => {
-      ctx.body = { last: price() }
       ctx.type = 'application/json'
       ctx.set('Cache-Control', 'max-age=300')
-      ctx.response.etag = crypto.createHash('md5').update(ctx.body).digest('hex')
+      ctx.body = { last: price() }
     }
   }
 
