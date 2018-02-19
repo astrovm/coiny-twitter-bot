@@ -60,6 +60,7 @@ async function start () {
     price: async (ctx) => {
       ctx.type = 'application/json'
       ctx.set('Cache-Control', 'max-age=300')
+      
       ctx.body = { last: price() }
     }
   }
