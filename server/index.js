@@ -2,6 +2,7 @@ import Koa from 'koa'
 import { Nuxt, Builder } from 'nuxt'
 
 async function start () {
+  require('dotenv').config()
   const app = new Koa()
   const host = process.env.HOST || '127.0.0.1'
   const port = process.env.PORT || 3000
@@ -27,6 +28,7 @@ async function start () {
   const price = require('./price.js')
   const Twitter = require('twitter')
   const schedule = require('node-schedule')
+  const crypto = require('crypto')
   const router = new Router()
 
   // conf twitter
