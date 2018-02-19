@@ -46,7 +46,6 @@ async function start () {
   const api = {
     fee: async (ctx) => {
       const block = parseInt(ctx.request.query.numBlocks)
-      ctx.type = 'application/json'
       if (block > 0 && block < 10 ** 4) {
         const fee = JSON.stringify(await fees.buildJSON([block]))
         ctx.body = fee
@@ -54,10 +53,15 @@ async function start () {
         const fee = JSON.stringify(await fees.buildJSON())
         ctx.body = fee
       }
+      ctx.type = 'application/json'
+      ctx.set('Cache-Control', 'max-age=300')
+      ctx.response.etag = crypto.createHash('md5').update(ctx.body).digest('hex')
     },
     price: async (ctx) => {
-      ctx.type = 'application/json'
       ctx.body = { last: price() }
+      ctx.type = 'application/json'
+      ctx.set('Cache-Control', 'max-age=300')
+      ctx.response.etag = crypto.createHash('md5').update(ctx.body).digest('hex')
     }
   }
 
