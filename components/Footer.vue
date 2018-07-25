@@ -3,7 +3,7 @@
     <div class="container">
       <div class="content has-text-centered">
         <p>
-          Coiny 2018. Developed with <font-awesome-icon :icon="heartIcon" /> by <a href="https://twitter.com/astrolince" target="_blank">@astrolince</a>. 3A6wYhFxojTxVVAVKvm83yKzttgPQYXnQo
+          Coiny 2018. Developed with <font-awesome-icon :icon="heartIcon" /> by <a href="https://twitter.com/astrolince" target="_blank">@astrolince</a>. bc1qxu9qp82rqdsw3353r64yp059fvd66yawulpm6t
         </p>
         <p>
           The source code is licensed under a
