@@ -12,9 +12,9 @@ Bitcoin fee estimates and market info.
 
 You can also request fees through the API:
 
-> GET https://coiny.sh/api/v1/tx/fee?numBlocks={target}
+> GET https://coiny.cf/api/v1/tx/fee?numBlocks={target}
 
-Example: https://coiny.sh/api/v1/tx/fee?numBlocks=288 for 288 blocks confirmation target (48 hours).
+Example: https://coiny.cf/api/v1/tx/fee?numBlocks=288 for 288 blocks confirmation target (48 hours).
 
 ## License
 
