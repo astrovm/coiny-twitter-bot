@@ -79,5 +79,4 @@ schedule.scheduleJob('0 * * * *', () => {
   makeTweet(tw)
 })
 
-
 module.exports = () => lastTweetJson
