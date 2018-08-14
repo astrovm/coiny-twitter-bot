@@ -54,7 +54,7 @@ let fees = {}
 getFees()
 
 // get bitgo fees every x minutes job
-schedule.scheduleJob('*/3 * * * *', () => {
+schedule.scheduleJob('9-59/10 * * * *', () => {
   getFees()
 })
 
