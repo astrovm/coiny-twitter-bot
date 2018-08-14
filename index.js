@@ -77,7 +77,7 @@ const makeTweet = async (tw) => {
 }
 
 // hourly tweet
-schedule.scheduleJob('*/10 * * * *', () => {
+schedule.scheduleJob('0 * * * *', () => {
   makeTweet(tw)
 })
 
