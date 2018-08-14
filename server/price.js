@@ -26,8 +26,8 @@ const getPrice = () => {
 let price = 0
 getPrice()
 
-// get bitstamp price every x minutes job
-schedule.scheduleJob('*/9 * * * *', () => {
+// get bitcoinaverage price every x minutes job
+schedule.scheduleJob('9-59/10 * * * *', () => {
   getPrice()
 })
 
