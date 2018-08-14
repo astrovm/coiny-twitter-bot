@@ -53,7 +53,7 @@ const feeFor = async (blocks) => {
 let fees = {}
 getFees()
 
-// get bitgo fees every 3 minutes job
+// get bitgo fees every x minutes job
 schedule.scheduleJob('*/3 * * * *', () => {
   getFees()
 })

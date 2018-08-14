@@ -3,6 +3,7 @@
 // conf libs
 const bitGo = require('./server/bitgo.js')
 const price = require('./server/price.js')
+const getBlockchainInfo = require('./server/blockchain.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
 
@@ -42,6 +43,7 @@ const checkDiff = async (used = lastTweetJson) => {
 // build text
 const buildText = async (fees) => {
   const usd = price() * 225 / 10 ** 8
+  const block = getBlockchainInfo()
   let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
   if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
   if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
@@ -51,7 +53,8 @@ const buildText = async (fees) => {
   if (fees[144] < fees[48]) text = text + `\n24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})`
   if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
   if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
-  text = text + `\n\nbtc/usd $${price()}`
+  text = text + `\n\nblock ${block.block_count-1}`
+  text = text + `\nprice $${price()}`
   return text
 }
 
@@ -60,7 +63,6 @@ const makeTweet = async (tw) => {
   const json = await checkDiff()
   if (json !== null) {
     const tweet = await buildText(json)
-    console.log(tweet)
     tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
       if (err) {
         console.error(err)
@@ -75,7 +77,7 @@ const makeTweet = async (tw) => {
 }
 
 // hourly tweet
-schedule.scheduleJob('0 * * * *', () => {
+schedule.scheduleJob('*/10 * * * *', () => {
   makeTweet(tw)
 })
 
