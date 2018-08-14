@@ -1,20 +1,25 @@
 'use strict'
 
 // require libs
-const trae = require('trae')
 const schedule = require('node-schedule')
+const ba = require('bitcoinaverage');
 
-// request bitstamp api price
-const getPrice = async () => {
-  try {
-    const res = await trae.get('https://www.bitstamp.net/api/ticker/')
-    price = res.data.last
-    return price
-  } catch (err) {
-    console.error(err)
-    if (price) return price
-    return err
-  }
+var publicKey = process.env.BITCOINAVERAGE_PUBLIC
+var secretKey = process.env.BITCOINAVERAGE_SECRET
+
+var restClient = ba.restfulClient(publicKey, secretKey);
+var wsClient = ba.websocketClient(publicKey, secretKey);
+
+// request api price
+const getPrice = () => {
+  const symbol_set = 'global'
+  const symbol = 'BTCUSD'
+
+  restClient.getTickerDataPerSymbol('global', 'BTCUSD', (res) => {
+    price = JSON.parse(res).last
+  }, (err) => {
+    console.log(err)
+  })
 }
 
 // init price data
