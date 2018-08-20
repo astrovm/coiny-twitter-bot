@@ -44,7 +44,7 @@ const checkDiff = async (used = lastTweetJson) => {
 const buildText = async (fees) => {
   const usd = price() * 225 / 10 ** 8
   const block = blockchainInfo.totals
-  const size = blackchain.Info.blockchainSize
+  const size = blockchainInfo.blockchainSize
   let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
   if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
   if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
