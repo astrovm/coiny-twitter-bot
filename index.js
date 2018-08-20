@@ -65,13 +65,14 @@ const makeTweet = async (tw) => {
   const json = await checkDiff()
   if (json !== null) {
     const tweet = await buildText(json)
-    tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
-      if (err) {
-        console.error(err)
-      } else {
-        lastTweetJson = json
-        console.log(`Tweet created at: ${tweet.created_at}`)
-      }
+    console.log(tweet)
+    // tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
+    //   if (err) {
+    //     console.error(err)
+    //   } else {
+    //     lastTweetJson = json
+    //     console.log(`Tweet created at: ${tweet.created_at}`)
+    //   }
     })
   } else {
     console.log('The last tweet is already updated.')
