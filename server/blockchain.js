@@ -10,7 +10,7 @@ const getBlockchain = async () => {
     const resTotals = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals')
     const resBlockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2018-8-15')
     totals = resTotals.data.totals
-    blockchainSize = resBlockchainSize.data.chart.data.slice(-1)[0].y/1000000000
+    blockchainSize = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y)/1000000000).toFixed(2)
   } catch (err) {
     console.error(err)
     return err
