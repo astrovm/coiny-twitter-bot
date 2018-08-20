@@ -9,8 +9,8 @@ const getBlockchain = async () => {
   try {
     const resTotals = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals')
     const resBlockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2018-8-15')
-    totals = resTotals.data.totals
-    blockchainSize = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y)/1000000000).toFixed(2)
+    blockchain.lastBlockHeight = resTotals.data.totals.block_count-1
+    blockchain.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y)/1000000000).toFixed(2)
   } catch (err) {
     console.error(err)
     return err
@@ -18,8 +18,7 @@ const getBlockchain = async () => {
 }
 
 // init data
-let totals = {}
-let blockchainSize = 0
+let blockchain = {}
 getBlockchain()
 
 // get smartbit data every x minutes job
@@ -28,5 +27,4 @@ schedule.scheduleJob('9-59/10 * * * *', () => {
 })
 
 // export data
-exports.totals = totals
-exports.blockchainSize = blockchainSize
+module.exports = () => blockchain

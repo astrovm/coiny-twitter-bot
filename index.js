@@ -3,7 +3,7 @@
 // conf libs
 const bitGo = require('./server/bitgo.js')
 const price = require('./server/price.js')
-const blockchainInfo = require('./server/blockchain.js')
+const blockchain = require('./server/blockchain.js')
 const Twitter = require('twitter')
 const schedule = require('node-schedule')
 
@@ -43,8 +43,8 @@ const checkDiff = async (used = lastTweetJson) => {
 // build text
 const buildText = async (fees) => {
   const usd = price() * 225 / 10 ** 8
-  const block = blockchainInfo.totals
-  const size = blockchainInfo.blockchainSize
+  const height = blockchain.lastBlockHeight
+  const size = blockchain.size
   let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
   if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
   if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
@@ -54,7 +54,7 @@ const buildText = async (fees) => {
   if (fees[144] < fees[48]) text = text + `\n24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})`
   if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
   if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
-  text = text + `\n\nheight ${block.block_count-1}`
+  text = text + `\n\nheight ${height}`
   text = text + `\nblockchain size ${size} GB`
   text = text + `\nprice $${price()}`
   return text
