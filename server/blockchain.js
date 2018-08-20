@@ -19,7 +19,7 @@ const getBlockchain = async () => {
 
 // init data
 let totals = {}
-let blockchainSize = {}
+let blockchainSize = 0
 getBlockchain()
 
 // get smartbit data every x minutes job
