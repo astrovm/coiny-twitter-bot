@@ -43,8 +43,8 @@ const checkDiff = async (used = lastTweetJson) => {
 // build text
 const buildText = async (fees) => {
   const usd = price() * 225 / 10 ** 8
-  const block = blockchainInfo.totals
-  const size = blockchainInfo.blockchainSize
+  const block = blockchainInfo.totals()
+  const size = blockchainInfo.blockchainSize()
   let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
   if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
   if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
@@ -55,7 +55,7 @@ const buildText = async (fees) => {
   if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
   if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
   text = text + `\n\nheight ${block.block_count-1}`
-  text = text + `\nblockchain size ${Number(size).toFixed(2)} GB`
+  text = text + `\nblockchain size ${size} GB`
   text = text + `\nprice $${price()}`
   return text
 }
@@ -79,7 +79,7 @@ const makeTweet = async (tw) => {
 }
 
 // hourly tweet
-schedule.scheduleJob('0 * * * *', () => {
+schedule.scheduleJob('*/1 * * * *', () => {
   makeTweet(tw)
 })
 
