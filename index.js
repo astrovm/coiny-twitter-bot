@@ -73,7 +73,7 @@ const makeTweet = async (tw) => {
     //     lastTweetJson = json
     //     console.log(`Tweet created at: ${tweet.created_at}`)
     //   }
-    })
+    // })
   } else {
     console.log('The last tweet is already updated.')
   }
