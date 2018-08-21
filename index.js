@@ -5,6 +5,7 @@ const bitGo = require('./server/bitgo.js')
 const price = require('./server/price.js')
 const getBlockchainInfo = require('./server/blockchain.js')
 const Twitter = require('twitter')
+const Masto = require('mastodon')
 const schedule = require('node-schedule')
 
 // conf twitter
@@ -14,6 +15,14 @@ const tw = new Twitter({
   access_token_key: process.env.TW_ACCESS_TOKEN_KEY,
   access_token_secret: process.env.TW_ACCESS_TOKEN_SECRET
 })
+
+// conf mastodon
+var M = new Masto({
+  access_token: process.env.MASTODON_ACCESS_TOKEN,
+  timeout_ms: 60*1000,  // optional HTTP request timeout to apply to all requests.
+  api_url: 'https://bitcoinhackers.org/api/v1/', // optional, defaults to https://mastodon.social/api/v1/
+})
+
 
 // build json
 const buildJSON = async (req) => {
@@ -64,6 +73,13 @@ const makeTweet = async (tw) => {
   const json = await checkDiff()
   if (json !== null) {
     const tweet = await buildText(json)
+    M.post('statuses', {status: tweet}, (err, toot, res) => {
+      if (err) {
+        console.error(err)
+      } else {
+        console.log(`Toot created at: ${toot.created_at}`)
+      }
+    })
     tw.post('statuses/update', {status: tweet}, (err, tweet, res) => {
       if (err) {
         console.error(err)
