@@ -62,8 +62,8 @@ const buildText = async (fees) => {
   if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
   if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
   text = text + `\n\nheight ${blockchain.lastBlockHeight}`
-  text = text + `\nblockchain size ${blockchain.size} GB`
-  text = text + `\nprice $${price()}`
+  text = text + `\nchain size ${blockchain.size} GB`
+  text = text + `\nprice $${price()} (1 USD = ${(1/price()).toFixed(8)*10**8} sats)`
   return text
 }
 
