@@ -9,7 +9,7 @@
     "start": "micro"
   },
   "dependencies": {
-    "bitcoinaverage": "^1.1.0",
+    "bitcoinaverage": "^1.2.1",
     "mastodon": "^1.2.2",
     "micro": "^9.3.3",
     "node-schedule": "^1.3.0",
