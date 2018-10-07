@@ -50,20 +50,22 @@ const checkDiff = async (used = lastTweetJson) => {
 
 // build text
 const buildText = async (fees) => {
-  const usd = price() * 178 / 10 ** 8
+  const usdtobtc = (1/price()).toFixed(8)
+  const usdtosats = (usdtobtc*10**8).toFixed()
+  const feetousd = 178 / usdtosats
   const blockchain = getBlockchainInfo()
-  let text = `20 min ${fees[2]} sat/B ($${(fees[2] * usd).toFixed(2)})`
-  if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * usd).toFixed(2)})`
-  if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * usd).toFixed(2)})`
-  if (fees[12] < fees[6]) text = text + `\n2 hours ${fees[12]} sat/B ($${(fees[12] * usd).toFixed(2)})`
-  if (fees[24] < fees[12]) text = text + `\n4 hours ${fees[24]} sat/B ($${(fees[24] * usd).toFixed(2)})`
-  if (fees[48] < fees[24]) text = text + `\n8 hours ${fees[48]} sat/B ($${(fees[48] * usd).toFixed(2)})`
-  if (fees[144] < fees[48]) text = text + `\n24 hours ${fees[144]} sat/B ($${(fees[144] * usd).toFixed(2)})`
-  if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * usd).toFixed(2)})`
-  if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * usd).toFixed(2)})`
+  let text = `20 min ${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)})`
+  if (fees[4] < fees[2]) text = text + `\n40 min ${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)})`
+  if (fees[6] < fees[4]) text = text + `\n60 min ${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)})`
+  if (fees[12] < fees[6]) text = text + `\n2 hours ${fees[12]} sat/B ($${(fees[12] * feetousd).toFixed(2)})`
+  if (fees[24] < fees[12]) text = text + `\n4 hours ${fees[24]} sat/B ($${(fees[24] * feetousd).toFixed(2)})`
+  if (fees[48] < fees[24]) text = text + `\n8 hours ${fees[48]} sat/B ($${(fees[48] * feetousd).toFixed(2)})`
+  if (fees[144] < fees[48]) text = text + `\n24 hours ${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)})`
+  if (fees[504] < fees[144]) text = text + `\n3 days ${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)})`
+  if (fees[1008] < fees[504]) text = text + `\n7 days ${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)})`
   text = text + `\n\nheight ${blockchain.lastBlockHeight}`
   text = text + `\nchain size ${blockchain.size} GB`
-  text = text + `\nprice $${price()} (1 usd = ${((1/price()).toFixed(8)*10**8).toFixed(0)} sats)`
+  text = text + `\nprice $${price()} (1 usd = ${usdtosats} sats)`
   return text
 }
 
