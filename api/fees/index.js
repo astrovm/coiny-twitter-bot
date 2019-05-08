@@ -12,7 +12,8 @@ redisClient.on('error', function (err) {
 
 // select fee for specific block target
 const feeFor = async (blocks, feeData) => {
-    const feeDataSorted = Object.keys(feeData).sort((a, b) => b - a) // sort block targets from highest to lowest
+    const parsedFees = JSON.parse(feeData)
+    const feeDataSorted = Object.keys(parsedFees).sort((a, b) => b - a) // sort block targets from highest to lowest
     const minBlock = parseInt(feeDataSorted.slice(-1)[0])
 
     let res = {}
@@ -20,7 +21,7 @@ const feeFor = async (blocks, feeData) => {
         const target = (blocks[b] < minBlock) ? minBlock : blocks[b]
         for (let i in feeDataSorted) {
             if (target >= feeDataSorted[i]) {
-                res[blocks[b]] = feeData[feeDataSorted[i]]
+                res[blocks[b]] = parsedFees[feeDataSorted[i]]
                 break
             }
         }
@@ -30,12 +31,12 @@ const feeFor = async (blocks, feeData) => {
 
 // export api
 module.exports = (req, res) => {
-    redisClient.get('fees', (err, reply) => {
+    redisClient.get('fees', async (err, reply) => {
         const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008];
-        //const blocks = (req) ? defaults.concat(req.filter((i) => defaults.indexOf(i) < 0)) : defaults;
-        const blocks = defaults
-        console.log(req)
-        const resFees = feeFor(blocks, reply);
+        const { parse } = require('url');
+        const { query } = parse(req.url, true);
+        const blocks = (query.blocks) ? defaults.concat(query.blocks) : defaults;
+        const resFees = await feeFor(blocks, reply);
 
         let respond = {};
         respond.fees = resFees;
