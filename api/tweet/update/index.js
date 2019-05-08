@@ -1,6 +1,7 @@
 // conf libs
-const Twitter = require('twitter')
-const Masto = require('mastodon')
+const Twitter = require('twitter');
+const Masto = require('mastodon');
+const trae = require('trae');
 
 // require and config db
 const redis = require('redis');
@@ -90,12 +91,30 @@ const makeTweet = async (tw) => {
 
 // export api
 module.exports = (req, res) => {
-    redisClient.get('tweet', (err, reply) => {
-        let respond = {};
-        respond.tweet = reply;
-        respond.error = err;
-        respond.path = req.url;
+    // check last time updated
+    redisClient.get('fees:time', async (err, reply) => {
+        if (err) {
+            console.error('Error ' + err);
+        }
 
-        res.end(JSON.stringify(respond));
+        const ONE_HOUR = 60 * 60 * 1000;
+        const currentTime = Date.now();
+        const keyTime = ((reply == null) ? (currentTime - ONE_HOUR) : reply);
+
+        // if last time >= one hour, update it now
+        if ((currentTime - keyTime) >= ONE_HOUR) {
+            const fees = JSON.stringify(await getFees());
+            const currentTime = Date.now();
+
+            redisClient.set('fees', fees, (err, reply) => {
+                console.log(err, reply)
+                redisClient.set('fees:time', currentTime, (err, reply) => {
+                    console.log(err, reply)
+                    res.end('Updated ' + fees);
+                });
+            });
+        } else {
+            res.end('Already updated ' + req.url);
+        }
     });
 };
