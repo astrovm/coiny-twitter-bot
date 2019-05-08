@@ -14,12 +14,14 @@ redisClient.on('error', (err) => {
 });
 
 // request smartbit api
-const getBlockchain = async () => {
+const getBlocks = async () => {
     try {
         const resTotals = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals');
         const resBlockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2019-5-01');
-        blockchain.lastBlockHeight = resTotals.data.totals.block_count - 1;
-        blockchain.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2);
+        let blocks;
+        blocks.lastBlockHeight = resTotals.data.totals.block_count - 1;
+        blocks.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2);
+        return blocks;
     } catch (err) {
         console.error(err);
         return err;
@@ -29,7 +31,7 @@ const getBlockchain = async () => {
 // export api
 module.exports = (req, res) => {
     // check last time updated
-    redisClient.get('blockchain:time', async (err, reply) => {
+    redisClient.get('blocks:time', async (err, reply) => {
         if (err) {
             console.error('Error ' + err);
         }
@@ -40,14 +42,14 @@ module.exports = (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
-            const blockchain = await getBlockchain();
+            const blocks = await getBlocks();
             const currentTime = Date.now();
 
-            redisClient.set('blockchain', blockchain, (err, reply) => {
+            redisClient.set('blocks', blocks, (err, reply) => {
                 console.log(err, reply)
-                redisClient.set('blockchain:time', currentTime, (err, reply) => {
+                redisClient.set('blocks:time', currentTime, (err, reply) => {
                     console.log(err, reply)
-                    res.end('Updated ' + blockchain);
+                    res.end('Updated ' + blocks);
                 });
             });
         } else {

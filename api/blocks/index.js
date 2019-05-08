@@ -1,6 +1,3 @@
-// export data
-module.exports = () => blockchain
-
 // require and config db libs
 const redis = require('redis');
 const redisPort = process.env.REDIS_PORT;
@@ -15,9 +12,9 @@ redisClient.on('error', function (err) {
 
 // export api
 module.exports = (req, res) => {
-    redisClient.get('blockchain', (err, reply) => {
+    redisClient.get('blocks', (err, reply) => {
         res.end(`{
-            blockchain: ${reply},
+            blocks: ${reply},
             error: ${err},
             path: ${req.url}
         }`);
