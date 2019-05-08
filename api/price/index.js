@@ -13,10 +13,11 @@ redisClient.on('error', function (err) {
 // export aoi
 module.exports = (req, res) => {
     redisClient.get('price', (err, reply) => {
-        res.end(`{
-            price: ${reply},
-            error: ${err},
-            path: ${req.url}
-        }`);
+        let respond = {};
+        respond.price = reply;
+        respond.error = err;
+        respond.path = req.url;
+
+        res.end(JSON.stringify(respond));
     });
 };

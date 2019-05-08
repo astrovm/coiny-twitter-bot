@@ -13,10 +13,11 @@ redisClient.on('error', function (err) {
 // export api
 module.exports = (req, res) => {
     redisClient.get('blocks', (err, reply) => {
-        res.end(`{
-            blocks: ${reply},
-            error: ${err},
-            path: ${req.url}
-        }`);
+        let respond = {};
+        respond.blocks = reply;
+        respond.error = err;
+        respond.path = req.url;
+
+        res.end(JSON.stringify(respond));
     });
 };
