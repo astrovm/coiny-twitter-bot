@@ -42,7 +42,7 @@ module.exports = (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
-            const blocks = await getBlocks();
+            const blocks = JSON.stringify(await getBlocks());
             const currentTime = Date.now();
 
             redisClient.set('blocks', blocks, (err, reply) => {
