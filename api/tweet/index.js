@@ -1,12 +1,6 @@
-'use strict'
-
 // conf libs
-const bitGo = require('./server/bitgo.js')
-const price = require('./server/price.js')
-const getBlockchainInfo = require('./server/blockchain.js')
 const Twitter = require('twitter')
 const Masto = require('mastodon')
-const schedule = require('node-schedule')
 
 // conf twitter
 const tw = new Twitter({
@@ -22,17 +16,6 @@ var M = new Masto({
   timeout_ms: 60*1000,  // optional HTTP request timeout to apply to all requests.
   api_url: 'https://bitcoinhackers.org/api/v1/', // optional, defaults to https://mastodon.social/api/v1/
 })
-
-// build json
-const buildJSON = async (req) => {
-  const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-  const blocks = (req) ? defaults.concat(req.filter((i) => defaults.indexOf(i) < 0)) : defaults
-  const res = await bitGo.feeFor(blocks)
-  return res
-}
-
-// compare new fees with last tweet fees
-let lastTweetJson = {}
 
 const checkDiff = async (used = lastTweetJson) => {
   const getFees = await buildJSON()
@@ -92,10 +75,3 @@ const makeTweet = async (tw) => {
     console.log('The last tweet is already updated.')
   }
 }
-
-// hourly tweet
-schedule.scheduleJob('0 * * * *', () => {
-  makeTweet(tw)
-})
-
-module.exports = () => lastTweetJson

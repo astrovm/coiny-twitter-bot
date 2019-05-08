@@ -24,6 +24,10 @@
         {
             "src": "api/price/update/index.js",
             "use": "@now/node"
+        },
+        {
+            "src": "api/tweet/index.js",
+            "use": "@now/node"
         }
     ],
     "env": {
