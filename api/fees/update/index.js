@@ -13,18 +13,6 @@ redisClient.on('error', (err) => {
     console.error('Error ' + err);
 });
 
-// request bitgo api fees
-const getFees = async () => {
-    try {
-        const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
-        const newFees = await sortFees(res.data.feeByBlockTarget)
-        return newFees
-    } catch (err) {
-        console.error(err)
-        return err
-    }
-}
-
 // sort fees object
 const sortFees = (req) => {
     const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
@@ -35,6 +23,18 @@ const sortFees = (req) => {
         res[blocksSorted[i]] = Math.ceil(req[feesSorted[i]] / 1000)
     }
     return res
+}
+
+// request bitgo api fees
+const getFees = async () => {
+    try {
+        const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+        const newFees = await sortFees(res.data.feeByBlockTarget)
+        return newFees
+    } catch (err) {
+        console.error(err)
+        return err
+    }
 }
 
 // export api
