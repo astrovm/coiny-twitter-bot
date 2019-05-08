@@ -18,7 +18,7 @@ const getBlocks = async () => {
     try {
         const resTotals = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals');
         const resBlockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2019-5-01');
-        let blocks;
+        let blocks = {};
         blocks.lastBlockHeight = resTotals.data.totals.block_count - 1;
         blocks.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2);
         return blocks;
