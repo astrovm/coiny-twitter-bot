@@ -10,6 +10,14 @@
             "use": "@now/node"
         },
         {
+            "src": "api/fees/index.js",
+            "use": "@now/node"
+        },
+        {
+            "src": "api/fees/update/index.js",
+            "use": "@now/node"
+        },
+        {
             "src": "api/price/index.js",
             "use": "@now/node"
         },

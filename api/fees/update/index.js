@@ -18,11 +18,9 @@ const getFees = async () => {
     try {
         const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
         const newFees = await sortFees(res.data.feeByBlockTarget)
-        fees = newFees
         return newFees
     } catch (err) {
         console.error(err)
-        if (fees) return fees
         return err
     }
 }
@@ -39,29 +37,10 @@ const sortFees = (req) => {
     return res
 }
 
-// select fee for specific block target
-const feeFor = async (blocks) => {
-    const feeData = (Object.keys(fees).length === 0) ? await getFees() : fees  // if fees obj is empty fill it
-    if (Object.keys(feeData).length === 0) return { 0: 0 }
-    const feeDataSorted = Object.keys(feeData).sort((a, b) => b - a) // sort block targets from highest to lowest
-    const minBlock = parseInt(feeDataSorted.slice(-1)[0])
-    let res = {}
-    for (let b in blocks) {
-        const target = (blocks[b] < minBlock) ? minBlock : blocks[b]
-        for (let i in feeDataSorted) {
-            if (target >= feeDataSorted[i]) {
-                res[blocks[b]] = feeData[feeDataSorted[i]]
-                break
-            }
-        }
-    }
-    return res
-}
-
 // export api
 module.exports = (req, res) => {
     // check last time updated
-    redisClient.get('blocks:time', async (err, reply) => {
+    redisClient.get('fees:time', async (err, reply) => {
         if (err) {
             console.error('Error ' + err);
         }
@@ -72,14 +51,14 @@ module.exports = (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
-            const blocks = JSON.stringify(await getBlocks());
+            const fees = JSON.stringify(await getFees());
             const currentTime = Date.now();
 
-            redisClient.set('blocks', blocks, (err, reply) => {
+            redisClient.set('fees', fees, (err, reply) => {
                 console.log(err, reply)
-                redisClient.set('blocks:time', currentTime, (err, reply) => {
+                redisClient.set('fees:time', currentTime, (err, reply) => {
                     console.log(err, reply)
-                    res.end('Updated ' + blocks);
+                    res.end('Updated ' + fees);
                 });
             });
         } else {
