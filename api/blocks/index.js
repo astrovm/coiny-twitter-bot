@@ -1,8 +1,5 @@
-'use strict'
-
 // require libs
 const trae = require('trae')
-const schedule = require('node-schedule')
 
 // request smartbit api
 const getBlockchain = async () => {
@@ -20,11 +17,6 @@ const getBlockchain = async () => {
 // init data
 let blockchain = {}
 getBlockchain()
-
-// get smartbit data every x minutes job
-schedule.scheduleJob('9-59/10 * * * *', () => {
-  getBlockchain()
-})
 
 // export data
 module.exports = () => blockchain
