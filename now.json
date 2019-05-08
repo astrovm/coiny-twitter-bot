@@ -2,6 +2,14 @@
     "version": 2,
     "builds": [
         {
+            "src": "api/blocks/index.js",
+            "use": "@now/node"
+        },
+        {
+            "src": "api/blocks/update/index.js",
+            "use": "@now/node"
+        },
+        {
             "src": "api/price/index.js",
             "use": "@now/node"
         },
