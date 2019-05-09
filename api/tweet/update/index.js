@@ -81,21 +81,17 @@ const makeTweet = async () => {
     const json = await checkDiff();
     if (json !== null) {
         const tweet = await buildText(json);
-        mastodon.post('statuses', { status: tweet }, (err, toot, res) => {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log(`Toot created at: ${toot.created_at}`);
-            };
-        });
-        tw.post('statuses/update', { status: tweet }, (err, tweet, res) => {
-            if (err) {
-                console.error(err)
-            } else {
-                console.log(`Tweet created at: ${tweet.created_at}`)
-                return json;
-            };
-        });
+        try {
+            const doTweet = await tw.post('statuses/update', { status: tweet })
+            console.log(`Tweet created at: ${doTweet.created_at}`)
+
+            const doMast = await mastodon.post('statuses', { status: tweet })
+            console.log(`Toot created at: ${doMast.data.created_at}`);
+
+            return json;
+        } catch (err) {
+            console.error(err);
+        };
     } else {
         console.log('The last tweet is already updated.');
     };
