@@ -24,12 +24,12 @@ module.exports = (req, res) => {
             console.error('Error ' + err);
         }
 
-        const ONE_HOUR = 60 * 60 * 1000;
+        const TEN_MINUTES = 10 * 60 * 1000;
         const currentTime = Date.now();
-        const keyTime = ((reply == null) ? (currentTime - ONE_HOUR) : reply);
+        const keyTime = ((reply == null) ? (currentTime - TEN_MINUTES) : reply);
 
         // if last time >= one hour, update it now
-        if ((currentTime - keyTime) >= ONE_HOUR) {
+        if ((currentTime - keyTime) >= TEN_MINUTES) {
             const symbol_set = 'global';
             const symbol = 'BTCUSD';
 
