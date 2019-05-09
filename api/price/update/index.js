@@ -38,43 +38,38 @@ const getPrice = async () => {
 };
 
 // export api
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
     // check last time updated
-    redisGet('price:time', async (err, reply) => {
-        if (err) {
-            console.error('Error ' + err);
-            res.end('Error in redis get price:time');
-            return;
-        }
+    try {
+        const redisReplyPriceTimeGet = await redisGet('price:time');
 
         const TEN_MINUTES = 10 * 60 * 1000;
         const currentTime = Date.now();
-        const keyTime = ((reply == null) ? (currentTime - TEN_MINUTES) : reply);
+        const keyTime = ((redisReplyPriceTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyPriceTimeGet);
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= TEN_MINUTES) {
-            try {
-                const price = Number(await getPrice());
-                if (price > 0) {
-                    const currentTime = Date.now();
-                    redisSet('price', price, (err, reply) => {
-                        console.log(err, reply)
-                        redisSet('price:time', currentTime, (err, reply) => {
-                            console.log(err, reply)
-                            res.end('Updated ' + price);
-                        });
-                    });
-                } else {
-                    throw price;
-                }
-            } catch (err) {
-                console.error('Error ' + err);
-                res.end('Error in getPrice');
-                return;
+            const price = Number(await getPrice());
+            if (price > 0) {
+                const currentTime = Date.now();
+
+                const redisReplyPriceSet = await redisSet('price', price);
+                console.log(redisReplyPriceSet);
+
+                const redisReplyPriceTimeSet = awaitredisSet('price:time', currentTime);
+                console.log(redisReplyPriceTimeSet);
+
+                res.end('Updated ' + price);
+            } else {
+                throw price;
             };
         } else {
             res.end('Already updated ' + req.url);
             return;
         };
-    });
+    } catch (err) {
+        console.error('Error ' + err);
+        res.end('Error.');
+        return;
+    };
 };
