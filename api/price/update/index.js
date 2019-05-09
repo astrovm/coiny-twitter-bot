@@ -1,8 +1,10 @@
 // require and config bitcoinaverage libs
+const { promisify } = require('util');
 const ba = require('bitcoinaverage');
 const baPublicKey = process.env.BITCOINAVERAGE_PUBLIC;
 const baSecretKey = process.env.BITCOINAVERAGE_SECRET;
 const baRestClient = ba.restfulClient(baPublicKey, baSecretKey);
+const getTickerDataPerSymbol = promisify(baRestClient.getTickerDataPerSymbol).bind(baRestClient);
 
 // require and config db libs
 const redis = require('redis');
@@ -16,12 +18,32 @@ redisClient.on('error', (err) => {
     console.error('Error ' + err);
 });
 
+// request bitcoin average price
+const getPrice = async () => {
+    try {
+        const symbol_set = 'global';
+        const symbol = 'BTCUSD';
+        try {
+            const getPrice = await getTickerDataPerSymbol(symbol_set, symbol);
+            return getPrice;
+        } catch (result) {
+            price = JSON.parse(result).last;
+            return price;
+        }
+    } catch (err) {
+        console.error('Error ' + err);
+        throw err;
+    };
+};
+
 // export api
 module.exports = (req, res) => {
     // check last time updated
-    redisClient.get('price:time', (err, reply) => {
+    redisClient.get('price:time', async (err, reply) => {
         if (err) {
             console.error('Error ' + err);
+            res.end('Error in redis get price:time');
+            return;
         }
 
         const TEN_MINUTES = 10 * 60 * 1000;
@@ -30,26 +52,28 @@ module.exports = (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= TEN_MINUTES) {
-            const symbol_set = 'global';
-            const symbol = 'BTCUSD';
-
-            baRestClient.getTickerDataPerSymbol(symbol_set, symbol, (reply) => {
-                const price = JSON.parse(reply).last;
-                const currentTime = Date.now();
-
-                redisClient.set('price', price, (err, reply) => {
-                    console.log(err, reply)
-                    redisClient.set('price:time', currentTime, (err, reply) => {
+            try {
+                const price = Number(await getPrice());
+                if (price > 0) {
+                    const currentTime = Date.now();
+                    redisClient.set('price', price, (err, reply) => {
                         console.log(err, reply)
-                        res.end('Updated ' + price);
+                        redisClient.set('price:time', currentTime, (err, reply) => {
+                            console.log(err, reply)
+                            res.end('Updated ' + price);
+                        });
                     });
-                });
-            }, (err) => {
+                } else {
+                    throw price;
+                }
+            } catch (err) {
                 console.error('Error ' + err);
-                res.end('Error ' + err);
-            });
+                res.end('Error in getPrice');
+                return;
+            };
         } else {
             res.end('Already updated ' + req.url);
-        }
+            return;
+        };
     });
 };
