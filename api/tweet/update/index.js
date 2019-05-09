@@ -30,8 +30,8 @@ var M = new Masto({
     api_url: 'https://bitcoinhackers.org/api/v1/', // optional, defaults to https://mastodon.social/api/v1/
 })
 
-const checkDiff = async (used = lastTweetJson) => {
-    const getFees = await buildJSON()
+const checkDiff = async () => {
+    const getFees = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals');
     if (getFees.error) return null
     const fresh = getFees
     if (!used) return fresh

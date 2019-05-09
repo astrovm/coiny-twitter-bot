@@ -40,10 +40,10 @@
         "REDIS_PORT": "@coiny_redis_port",
         "REDIS_HOST": "@coiny_redis_host",
         "REDIS_PASS": "@coiny_redis_pass",
-        "TW_CONSUMER_KEY": "@coiny_TW_CONSUMER_KEY",
-        "TW_CONSUMER_SECRET": "@coiny_TW_CONSUMER_KEY",
-        "TW_ACCESS_TOKEN_KEY": "@coiny_TW_ACCESS_TOKEN_KEY",
-        "TW_ACCESS_TOKEN_SECRET": "@coiny_TW_ACCESS_TOKEN_SECRET",
-        "MASTODON_ACCESS_TOKEN": "@coiny_MASTODON_ACCESS_TOKEN"
+        "TW_CONSUMER_KEY": "@coiny_tw_consumer_key",
+        "TW_CONSUMER_SECRET": "@coiny_tw_consumer_secret",
+        "TW_ACCESS_TOKEN_KEY": "@coiny_tw_access_token_key",
+        "TW_ACCESS_TOKEN_SECRET": "@coiny_tw_access_token_secret",
+        "MASTODON_ACCESS_TOKEN": "@coiny_mastodon_access_token"
     }
 }
