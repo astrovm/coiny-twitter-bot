@@ -24,7 +24,7 @@ const tw = new Twitter({
 })
 
 // conf mastodon
-var mastodon = new Masto({
+const mastodon = new Masto({
     access_token: process.env.MASTODON_ACCESS_TOKEN,
     timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
     api_url: 'https://bitcoinhackers.org/api/v1/', // optional, defaults to https://mastodon.social/api/v1/
@@ -78,29 +78,29 @@ const buildText = async (fees) => {
 
 // make tweet
 const makeTweet = async () => {
-    const json = await checkDiff()
+    const json = await checkDiff();
     if (json !== null) {
-        const tweet = await buildText(json)
+        const tweet = await buildText(json);
         mastodon.post('statuses', { status: tweet }, (err, toot, res) => {
+            if (err) {
+                console.error(err);
+            } else {
+                console.log(`Toot created at: ${toot.created_at}`);
+            };
+        });
+        tw.post('statuses/update', { status: tweet }, (err, tweet, res) => {
             if (err) {
                 console.error(err)
             } else {
-                console.log(`Toot created at: ${toot.created_at}`)
-                tw.post('statuses/update', { status: tweet }, (err, tweet, res) => {
-                    if (err) {
-                        console.error(err)
-                    } else {
-                        console.log(`Tweet created at: ${tweet.created_at}`)
-                        return json;
-                    }
-                });
-            }
-        })
+                console.log(`Tweet created at: ${tweet.created_at}`)
+                return json;
+            };
+        });
     } else {
-        console.log('The last tweet is already updated.')
-        return null;
-    }
-}
+        console.log('The last tweet is already updated.');
+    };
+    return null;
+};
 
 // export api
 module.exports = async (req, res) => {
@@ -118,7 +118,7 @@ module.exports = async (req, res) => {
         if ((currentTime - keyTime) >= ONE_HOUR) {
             const getTweet = await makeTweet();
             if (!getTweet) {
-                res.end('Already updated ' + req.url);
+                res.end('Already tweeted ' + req.url);
                 return;
             }
             const tweet = JSON.stringify(getTweet);
