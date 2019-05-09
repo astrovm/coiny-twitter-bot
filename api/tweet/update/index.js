@@ -36,7 +36,7 @@ const checkDiff = async () => {
     const fresh = JSON.parse(getFees.data)
     const used = JSON.parse(getTweet.data)
 
-    if (fresh.error !== null) return null;
+    if (fresh.error !== false) return null;
     if (!used.tweet) return fresh.fees;
     if (used.tweet == "undefined") return fresh.fees;
     if (Object.keys(used.tweet).length === 0) return fresh.fees;
