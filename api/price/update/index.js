@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
                 const redisReplyPriceSet = await redisSet('price', price);
                 console.log(redisReplyPriceSet);
 
-                const redisReplyPriceTimeSet = awaitredisSet('price:time', currentTime);
+                const redisReplyPriceTimeSet = await redisSet('price:time', currentTime);
                 console.log(redisReplyPriceTimeSet);
 
                 res.end('Updated ' + price);
