@@ -24,32 +24,42 @@ const tw = new Twitter({
 })
 
 // conf mastodon
-var M = new Masto({
+var mastodon = new Masto({
     access_token: process.env.MASTODON_ACCESS_TOKEN,
     timeout_ms: 60 * 1000,  // optional HTTP request timeout to apply to all requests.
     api_url: 'https://bitcoinhackers.org/api/v1/', // optional, defaults to https://mastodon.social/api/v1/
 })
 
 const checkDiff = async () => {
-    const getFees = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals');
-    if (getFees.error) return null
-    const fresh = getFees
-    if (!used) return fresh
-    if (Object.keys(used).length === 0) return fresh
-    if (used.error) return fresh
-    for (let i in used) {
-        const diff = used[i] / fresh[i]
-        if (diff < 0.9 || diff > 1.1) return fresh
-    }
-    return null
+    const getFees = await trae.get('https://coiny.astrolince.now.sh/api/fees');
+    const getTweet = await trae.get('https://coiny.astrolince.now.sh/api/tweet');
+    const fresh = JSON.parse(getFees.data)
+    const used = JSON.parse(getTweet.data)
+
+    if (fresh.error) return null;
+    if (!used.tweet) return fresh;
+    if (Object.keys(used.tweet).length === 0) return fresh;
+    if (used.error) return fresh;
+
+    for (let i in used.tweet) {
+        const diff = used.tweet[i] / fresh[i];
+        if (diff < 0.9 || diff > 1.1) return fresh;
+    };
+    return null;
 }
 
 // build text
 const buildText = async (fees) => {
-    const usdtobtc = (1 / price()).toFixed(8)
+    const getPrice = await trae.get('https://coiny.astrolince.now.sh/api/price')
+    const { price } = JSON.parse(getPrice.data)
+
+    const usdtobtc = (1 / price).toFixed(8)
     const usdtosats = (usdtobtc * 10 ** 8).toFixed()
     const feetousd = 178 / usdtosats
-    const blockchain = getBlockchainInfo()
+
+    const getBlocks = await trae.get('https://coiny.astrolince.now.sh/api/blocks')
+    const { blocks } = JSON.parse(getBlocks.data)
+    
     let text = `${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20 min`
     if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40 min`
     if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60 min`
@@ -59,17 +69,17 @@ const buildText = async (fees) => {
     if (fees[144] < fees[48]) text = text + `\n${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)}) - 24 hours`
     if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3 days`
     if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7 days`
-    text = text + `\n\nheight ${blockchain.lastBlockHeight}`
-    text = text + `\nprice $${price()} (1 usd = ${usdtosats} sats)`
+    text = text + `\n\nheight ${blocks.lastBlockHeight}`
+    text = text + `\nprice $${price} (1 usd = ${usdtosats} sats)`
     return text
 }
 
 // make tweet
-const makeTweet = async (tw) => {
+const makeTweet = async () => {
     const json = await checkDiff()
     if (json !== null) {
         const tweet = await buildText(json)
-        M.post('statuses', { status: tweet }, (err, toot, res) => {
+        mastodon.post('statuses', { status: tweet }, (err, toot, res) => {
             if (err) {
                 console.error(err)
             } else {
@@ -80,8 +90,8 @@ const makeTweet = async (tw) => {
             if (err) {
                 console.error(err)
             } else {
-                lastTweetJson = json
                 console.log(`Tweet created at: ${tweet.created_at}`)
+                return json;
             }
         })
     } else {
@@ -90,9 +100,9 @@ const makeTweet = async (tw) => {
 }
 
 // export api
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
     // check last time updated
-    redisClient.get('fees:time', async (err, reply) => {
+    redisClient.get('tweet:time', async (err, reply) => {
         if (err) {
             console.error('Error ' + err);
         }
@@ -103,14 +113,14 @@ module.exports = (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
-            const fees = JSON.stringify(await getFees());
+            const tweet = JSON.stringify(await makeTweet());
             const currentTime = Date.now();
 
-            redisClient.set('fees', fees, (err, reply) => {
+            redisClient.set('tweet', tweet, (err, reply) => {
                 console.log(err, reply)
-                redisClient.set('fees:time', currentTime, (err, reply) => {
+                redisClient.set('tweet:time', currentTime, (err, reply) => {
                     console.log(err, reply)
-                    res.end('Updated ' + fees);
+                    res.end('Updated ' + tweet);
                 });
             });
         } else {
