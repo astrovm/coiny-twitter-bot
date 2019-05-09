@@ -4,7 +4,7 @@ const ba = require('bitcoinaverage');
 const baPublicKey = process.env.BITCOINAVERAGE_PUBLIC;
 const baSecretKey = process.env.BITCOINAVERAGE_SECRET;
 const baRestClient = ba.restfulClient(baPublicKey, baSecretKey);
-const getTickerDataPerSymbol = promisify(baRestClient.getTickerDataPerSymbol).bind(baRestClient);
+const baGetTickerDataPerSymbol = promisify(baRestClient.getTickerDataPerSymbol).bind(baRestClient);
 
 // require and config db libs
 const redis = require('redis');
@@ -13,10 +13,11 @@ const redisHost = process.env.REDIS_HOST;
 const redisPass = process.env.REDIS_PASS;
 const redisClient = redis.createClient(redisPort, redisHost);
 redisClient.auth(redisPass);
-
 redisClient.on('error', (err) => {
     console.error('Error ' + err);
 });
+const redisGet = promisify(redisClient.get).bind(redisClient);
+const redisSet = promisify(redisClient.set).bind(redisClient);
 
 // request bitcoin average price
 const getPrice = async () => {
@@ -24,7 +25,7 @@ const getPrice = async () => {
         const symbol_set = 'global';
         const symbol = 'BTCUSD';
         try {
-            const getPrice = await getTickerDataPerSymbol(symbol_set, symbol);
+            const getPrice = await baGetTickerDataPerSymbol(symbol_set, symbol);
             return getPrice;
         } catch (result) {
             price = JSON.parse(result).last;
@@ -39,7 +40,7 @@ const getPrice = async () => {
 // export api
 module.exports = (req, res) => {
     // check last time updated
-    redisClient.get('price:time', async (err, reply) => {
+    redisGet('price:time', async (err, reply) => {
         if (err) {
             console.error('Error ' + err);
             res.end('Error in redis get price:time');
@@ -56,9 +57,9 @@ module.exports = (req, res) => {
                 const price = Number(await getPrice());
                 if (price > 0) {
                     const currentTime = Date.now();
-                    redisClient.set('price', price, (err, reply) => {
+                    redisSet('price', price, (err, reply) => {
                         console.log(err, reply)
-                        redisClient.set('price:time', currentTime, (err, reply) => {
+                        redisSet('price:time', currentTime, (err, reply) => {
                             console.log(err, reply)
                             res.end('Updated ' + price);
                         });
