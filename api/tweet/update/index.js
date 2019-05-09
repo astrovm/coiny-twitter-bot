@@ -34,18 +34,17 @@ const checkDiff = async () => {
     const getFees = await trae.get('https://coiny.astrolince.now.sh/api/fees');
     const getTweet = await trae.get('https://coiny.astrolince.now.sh/api/tweet');
     const fresh = JSON.parse(getFees.data)
-    const freshFees = JSON.parse(fresh.fees)
     const used = JSON.parse(getTweet.data)
-    const usedFees = JSON.parse(used.tweet)
 
-    if (fresh.error) return null;
-    if (!usedFees) return freshFees;
-    if (Object.keys(usedFees).length === 0) return freshFees;
-    if (used.error) return freshFees;
+    if (fresh.error !== null) return null;
+    if (!used.tweet) return fresh.fees;
+    if (used.tweet == "undefined") return fresh.fees;
+    if (Object.keys(used.tweet).length === 0) return fresh.fees;
+    if (used.error) return fresh.fees;
 
-    for (let i in usedFees) {
-        const diff = usedFees[i] / freshFees[i];
-        if (diff < 0.9 || diff > 1.1) return freshFees;
+    for (let i in used.tweet) {
+        const diff = used.tweet[i] / fresh.fees[i];
+        if (diff < 0.9 || diff > 1.1) return fresh.fees;
     };
     return null;
 }
