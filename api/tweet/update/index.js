@@ -34,16 +34,18 @@ const checkDiff = async () => {
     const getFees = await trae.get('https://coiny.astrolince.now.sh/api/fees');
     const getTweet = await trae.get('https://coiny.astrolince.now.sh/api/tweet');
     const fresh = JSON.parse(getFees.data)
+    const freshFees = JSON.parse(fresh.fees)
     const used = JSON.parse(getTweet.data)
+    const usedFees = JSON.parse(used.tweet)
 
     if (fresh.error) return null;
-    if (!used.tweet) return fresh;
-    if (Object.keys(used.tweet).length === 0) return fresh;
-    if (used.error) return fresh;
+    if (!usedFees) return freshFees;
+    if (Object.keys(usedFees).length === 0) return freshFees;
+    if (used.error) return freshFees;
 
-    for (let i in used.tweet) {
-        const diff = used.tweet[i] / fresh[i];
-        if (diff < 0.9 || diff > 1.1) return fresh;
+    for (let i in usedFees) {
+        const diff = usedFees[i] / freshFees[i];
+        if (diff < 0.9 || diff > 1.1) return freshFees;
     };
     return null;
 }
@@ -59,7 +61,8 @@ const buildText = async (fees) => {
 
     const getBlocks = await trae.get('https://coiny.astrolince.now.sh/api/blocks')
     const { blocks } = JSON.parse(getBlocks.data)
-    
+    const { lastBlockHeight } = JSON.parse(blocks)
+
     let text = `${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20 min`
     if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40 min`
     if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60 min`
@@ -69,7 +72,7 @@ const buildText = async (fees) => {
     if (fees[144] < fees[48]) text = text + `\n${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)}) - 24 hours`
     if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3 days`
     if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7 days`
-    text = text + `\n\nheight ${blocks.lastBlockHeight}`
+    text = text + `\n\nheight ${lastBlockHeight}`
     text = text + `\nprice $${price} (1 usd = ${usdtosats} sats)`
     return text
 }
@@ -84,18 +87,19 @@ const makeTweet = async () => {
                 console.error(err)
             } else {
                 console.log(`Toot created at: ${toot.created_at}`)
-            }
-        })
-        tw.post('statuses/update', { status: tweet }, (err, tweet, res) => {
-            if (err) {
-                console.error(err)
-            } else {
-                console.log(`Tweet created at: ${tweet.created_at}`)
-                return json;
+                tw.post('statuses/update', { status: tweet }, (err, tweet, res) => {
+                    if (err) {
+                        console.error(err)
+                    } else {
+                        console.log(`Tweet created at: ${tweet.created_at}`)
+                        return json;
+                    }
+                });
             }
         })
     } else {
         console.log('The last tweet is already updated.')
+        return null;
     }
 }
 
@@ -113,7 +117,12 @@ module.exports = async (req, res) => {
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
-            const tweet = JSON.stringify(await makeTweet());
+            const getTweet = await makeTweet();
+            if (!getTweet) {
+                res.end('Already updated ' + req.url);
+                return;
+            }
+            const tweet = JSON.stringify(getTweet);
             const currentTime = Date.now();
 
             redisClient.set('tweet', tweet, (err, reply) => {
