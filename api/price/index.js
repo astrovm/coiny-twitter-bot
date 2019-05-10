@@ -1,4 +1,4 @@
-// require promesify
+// require promisify
 const { promisify } = require('util');
 
 // require and config db libs
