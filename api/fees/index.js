@@ -40,7 +40,7 @@ module.exports = (req, res) => {
 
         let respond = {};
         respond.fees = resFees;
-        respond.error = err;
+        respond.error = false;
         respond.path = req.url;
 
         res.end(JSON.stringify(respond));
