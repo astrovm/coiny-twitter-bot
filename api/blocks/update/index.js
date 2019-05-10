@@ -31,31 +31,39 @@ const getBlocks = async () => {
 };
 
 // export api
-module.exports = (req, res) => {
-    // check last time updated
-    redisClient.get('blocks:time', async (err, reply) => {
-        if (err) {
-            console.error('Error ' + err);
-        }
+module.exports = async (req, res) => {
+    try {
+        // check last time updated
+        const redisReplyBlocksTimeGet = await redisGet('blocks:time');
 
         const TEN_MINUTES = 10 * 60 * 1000;
         const currentTime = Date.now();
-        const keyTime = ((reply == null) ? (currentTime - TEN_MINUTES) : reply);
 
-        // if last time >= one hour, update it now
+        // if blocks:time is empty, just run the update
+        const keyTime = ((redisReplyBlocksTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyBlocksTimeGet);
+
+        // if last time >= ten minutes, update it now
         if ((currentTime - keyTime) >= TEN_MINUTES) {
             const blocks = JSON.stringify(await getBlocks());
             const currentTime = Date.now();
 
-            redisClient.set('blocks', blocks, (err, reply) => {
-                console.log(err, reply)
-                redisClient.set('blocks:time', currentTime, (err, reply) => {
-                    console.log(err, reply)
-                    res.end('Updated ' + blocks);
-                });
-            });
+            // save blocks
+            const redisReplyBlocksSet = await redisSet('blocks', blocks);
+            console.log(redisReplyBlocksSet);
+
+            // save time of the update
+            const redisReplyBlocksTimeSet = await redisSet('blocks:time', currentTime);
+            console.log(redisReplyBlocksTimeSet);
+
+            res.end('Updated ' + blocks);
+            return;
         } else {
             res.end('Already updated ' + req.url);
-        }
-    });
+            return;
+        };
+    } catch (err) {
+        console.error('Error ' + err);
+        res.end('Error.');
+        return;
+    };
 };
