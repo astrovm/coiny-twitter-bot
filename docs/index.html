@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Coiny</title>
+    <script>
+        fetch('https://coiny.astrolince.now.sh/api/price')
+            .then(response => response.json())
+            .then((jsonData) => {
+                // jsonData is parsed json object received from url
+                console.log(jsonData);
+            })
+            .catch((error) => {
+                // handle your errors here
+                console.error(error);
+            });
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

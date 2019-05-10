@@ -2,36 +2,16 @@
     "version": 2,
     "builds": [
         {
-            "src": "api/blocks/index.js",
+            "src": "api/**/index.js",
             "use": "@now/node"
-        },
+        }
+    ],
+    "routes": [
         {
-            "src": "api/blocks/update/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/fees/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/fees/update/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/price/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/price/update/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/tweet/index.js",
-            "use": "@now/node"
-        },
-        {
-            "src": "api/tweet/update/index.js",
-            "use": "@now/node"
+            "src": "/api/.*",
+            "headers": {
+                "Access-Control-Allow-Origin": "*"
+            }
         }
     ],
     "env": {
