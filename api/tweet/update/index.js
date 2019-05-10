@@ -112,8 +112,11 @@ module.exports = async (req, res) => {
         // if tweet:time is empty, just run the update
         const keyTime = ((redisReplyTweetTimeGet == null) ? (currentTime - ONE_HOUR) : redisReplyTweetTimeGet);
 
+        // calc diff
+        const timeDiff = currentTime - keyTime;
+
         // if last time >= one hour, update it now
-        if ((currentTime - keyTime) >= ONE_HOUR) {
+        if (timeDiff >= ONE_HOUR) {
             const getTweet = await makeTweet();
             if (!getTweet) {
                 res.end('Already tweeted ' + req.url);
@@ -133,7 +136,8 @@ module.exports = async (req, res) => {
             res.end('Updated ' + tweet);
             return;
         } else {
-            res.end('Already updated ' + req.url);
+            const timeRemaining = new Date(ONE_HOUR - timeDiff);
+            res.end(`Wait ${timeRemaining.getUTCMinutes()}:${timeRemaining.getUTCSeconds()}`);
             return;
         };
     } catch (err) {

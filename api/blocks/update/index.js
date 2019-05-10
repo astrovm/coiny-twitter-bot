@@ -42,8 +42,11 @@ module.exports = async (req, res) => {
         // if blocks:time is empty, just run the update
         const keyTime = ((redisReplyBlocksTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyBlocksTimeGet);
 
+        // calc diff
+        const timeDiff = currentTime - keyTime;
+
         // if last time >= ten minutes, update it now
-        if ((currentTime - keyTime) >= TEN_MINUTES) {
+        if (timeDiff >= TEN_MINUTES) {
             const blocks = JSON.stringify(await getBlocks());
             const currentTime = Date.now();
 
@@ -58,7 +61,8 @@ module.exports = async (req, res) => {
             res.end('Updated ' + blocks);
             return;
         } else {
-            res.end('Already updated ' + req.url);
+            const timeRemaining = new Date(TEN_MINUTES - timeDiff);
+            res.end(`Wait ${timeRemaining.getUTCMinutes()}:${timeRemaining.getUTCSeconds()}`);
             return;
         };
     } catch (err) {
