@@ -15,7 +15,9 @@ So you need to install Node and Redis and then install Now with npm:
 Install the dependencies, set up env vars, and run:
 
 `$ npm i`
+
 `$ touch .env`
+
 `$ now dev`
 
 ## License
