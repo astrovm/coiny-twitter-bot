@@ -2,6 +2,7 @@
 const Twitter = require('twitter');
 const Masto = require('mastodon');
 const trae = require('trae');
+const { promisify } = require('util');
 
 // require and config db
 const redis = require('redis');
@@ -10,10 +11,11 @@ const redisHost = process.env.REDIS_HOST;
 const redisPass = process.env.REDIS_PASS;
 const redisClient = redis.createClient(redisPort, redisHost);
 redisClient.auth(redisPass);
-
-redisClient.on('error', function (err) {
+redisClient.on('error', (err) => {
     console.error('Error ' + err);
 });
+const redisGet = promisify(redisClient.get).bind(redisClient);
+const redisSet = promisify(redisClient.set).bind(redisClient);
 
 // conf twitter
 const tw = new Twitter({
@@ -100,15 +102,15 @@ const makeTweet = async () => {
 
 // export api
 module.exports = async (req, res) => {
-    // check last time updated
-    redisClient.get('tweet:time', async (err, reply) => {
-        if (err) {
-            console.error('Error ' + err);
-        }
+    try {
+        // check last time updated
+        const redisReplyTweetTimeGet = await redisGet('tweet:time');
 
         const ONE_HOUR = 60 * 60 * 1000;
         const currentTime = Date.now();
-        const keyTime = ((reply == null) ? (currentTime - ONE_HOUR) : reply);
+
+        // if tweet:time is empty, just run the update
+        const keyTime = ((redisReplyTweetTimeGet == null) ? (currentTime - ONE_HOUR) : redisReplyTweetTimeGet);
 
         // if last time >= one hour, update it now
         if ((currentTime - keyTime) >= ONE_HOUR) {
@@ -120,15 +122,23 @@ module.exports = async (req, res) => {
             const tweet = JSON.stringify(getTweet);
             const currentTime = Date.now();
 
-            redisClient.set('tweet', tweet, (err, reply) => {
-                console.log(err, reply)
-                redisClient.set('tweet:time', currentTime, (err, reply) => {
-                    console.log(err, reply)
-                    res.end('Updated ' + tweet);
-                });
-            });
+            // save tweet
+            const redisReplyTweetSet = await redisSet('tweet', tweet);
+            console.log(redisReplyTweetSet);
+
+            // save time of the update
+            const redisReplyTweetTimeSet = await redisSet('tweet:time', currentTime);
+            console.log(redisReplyTweetTimeSet);
+
+            res.end('Updated ' + tweet);
+            return;
         } else {
             res.end('Already updated ' + req.url);
-        }
-    });
+            return;
+        };
+    } catch (err) {
+        console.error('Error ' + err);
+        res.end('Error.');
+        return;
+    };
 };
