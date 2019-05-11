@@ -1,37 +1,37 @@
 // require promisify
-const { promisify } = require('util');
+const { promisify } = require('util')
 
 // require and config db libs
-const redis = require('redis');
-const redisPort = process.env.REDIS_PORT;
-const redisHost = process.env.REDIS_HOST;
-const redisPass = process.env.REDIS_PASS;
-const redisClient = redis.createClient(redisPort, redisHost);
-redisClient.auth(redisPass);
+const redis = require('redis')
+const redisPort = process.env.REDIS_PORT
+const redisHost = process.env.REDIS_HOST
+const redisPass = process.env.REDIS_PASS
+const redisClient = redis.createClient(redisPort, redisHost)
+redisClient.auth(redisPass)
 redisClient.on('error', (err) => {
-    console.error('Error ' + err);
-});
-const redisGet = promisify(redisClient.get).bind(redisClient);
+  console.error('Error ' + err)
+})
+const redisGet = promisify(redisClient.get).bind(redisClient)
 
 // export api
 module.exports = async (req, res) => {
-    try {
-        const redisReplyPriceGet = await redisGet('price');
+  try {
+    const redisReplyPriceGet = await redisGet('price')
 
-        let respond = {};
-        respond.price = redisReplyPriceGet;
-        respond.error = false;
-        respond.path = req.url;
+    let respond = {}
+    respond.price = redisReplyPriceGet
+    respond.error = false
+    respond.path = req.url
 
-        res.end(JSON.stringify(respond));
-    } catch (err) {
-        console.error(err)
+    res.end(JSON.stringify(respond))
+  } catch (err) {
+    console.error(err)
 
-        let respond = {};
-        respond.price = null;
-        respond.error = true;
-        respond.path = req.url;
+    let respond = {}
+    respond.price = null
+    respond.error = true
+    respond.path = req.url
 
-        res.end(JSON.stringify(respond));
-    };
-};
+    res.end(JSON.stringify(respond))
+  }
+}
