@@ -37,11 +37,11 @@ const feeFor = async (unsortedTargets, unparsedFees) => {
 // export api
 module.exports = async (req, res) => {
   try {
-    const redisReplyFeesGet = await redisGet('fees')
+    const rawFees = await redisGet('fees:raw')
     const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
     const { query } = parse(req.url, true)
-    const blocks = (query.blocks) ? defaults.concat(query.blocks) : defaults
-    const resFees = await feeFor(blocks, redisReplyFeesGet)
+    const targets = (query.target) ? defaults.concat(query.target) : defaults
+    const resFees = await feeFor(targets, rawFees)
 
     let respond = {}
     respond.data = resFees
