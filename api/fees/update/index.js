@@ -16,23 +16,25 @@ const redisGet = promisify(redisClient.get).bind(redisClient)
 const redisSet = promisify(redisClient.set).bind(redisClient)
 
 // sort fees object
-const sortFees = (req) => {
-  const feesSorted = Object.keys(req).sort((a, b) => req[b] - req[a]) // sort fee numbers
-  const blocksSorted = Object.keys(req).sort((a, b) => a - b) // sort block target numbers
+const sortFees = (unsortedFees) => {
+  const blocks = Object.keys(unsortedFees).sort((a, b) => a - b) // sort target numbers lower to higher
+  const fees = Object.keys(unsortedFees).sort((a, b) => unsortedFees[b] - unsortedFees[a]) // sort target numbers by higher to lower fee
+
   // recreate fees object by matching sorted blocks with sorted fees
-  let res = {}
-  for (let i in feesSorted) {
-    res[blocksSorted[i]] = Math.ceil(req[feesSorted[i]] / 1000)
+  let response = {}
+  for (let b in blocks) {
+    response[blocks[b]] = Math.ceil(unsortedFees[fees[b]] / 1000)
   }
-  return res
+  return response
 }
 
 // request bitgo api fees
 const getFees = async () => {
   try {
-    const res = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    const newFees = await sortFees(res.data.feeByBlockTarget)
-    return newFees
+    const bitGoFees = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const blockstreamFees = await trae.get('https://blockstream.info/api/fee-estimates')
+    const fees = await sortFees({ ...bitGoFees.data.feeByBlockTarget, ...blockstreamFees.data })
+    return fees
   } catch (err) {
     console.error('Error ' + err)
     throw err
