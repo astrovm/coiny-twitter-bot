@@ -42,16 +42,37 @@ const convertToSats = (fees) => {
 // request bitgo api fees
 const getFees = async () => {
   try {
-    const bitGo = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    const bitGoFees = await convertToSats(bitGo.data.feeByBlockTarget)
-    const blockstream = await trae.get('https://blockstream.info/api/fee-estimates')
-    const blockstreamFees = blockstream.data
-    const fees = await sortFees({ ...bitGoFees, ...blockstreamFees })
-    return fees
+    const _bitGo = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const _bitGoSats = await convertToSats(_bitGo.data.feeByBlockTarget)
+    const bitGoFees = await sortFees(_bitGoSats)
+    const _blockstream = await trae.get('https://blockstream.info/api/fee-estimates')
+    const blockstreamFees = await sortFees(_blockstream.data)
+    const rawFees = { ...bitGoFees, ...blockstreamFees }
+    return rawFees
   } catch (err) {
     console.error('Error ' + err)
     throw err
   }
+}
+
+// select fee for specific block target
+const feeFor = async (unsortedTargets, unparsedFees) => {
+  const targets = unsortedTargets.sort() // sort from lowest to highest
+  const fees = JSON.parse(unparsedFees)
+  const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
+  const minTarget = parseInt(feesBlocks.slice(-1)[0]) // take last 'feesBlocks' block
+
+  let response = {}
+  for (let t in targets) {
+    const target = (targets[t] < minTarget) ? minTarget : targets[t]
+    for (let b in feesBlocks) {
+      if (target >= feesBlocks[b]) {
+        response[targets[t]] = fees[feesBlocks[b]]
+        break
+      }
+    }
+  }
+  return response
 }
 
 // export api
@@ -71,12 +92,18 @@ module.exports = async (req, res) => {
 
     // if last time >= ten minutes, update it now
     if (timeDiff >= TEN_MINUTES) {
-      const fees = JSON.stringify(await getFees())
+      const rawFees = JSON.stringify(await getFees())
+      const targets = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
+      const fees = await feeFor(targets, rawFees)
       const currentTime = Date.now()
 
       // save fees
       const redisReplyFeesSet = await redisSet('fees', fees)
       console.log(redisReplyFeesSet)
+
+      // save raw fees
+      const redisReplyRawFeesSet = await redisSet('fees:raw', rawFees)
+      console.log(redisReplyRawFeesSet)
 
       // save time of the update
       const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
