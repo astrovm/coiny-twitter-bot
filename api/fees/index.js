@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
     const resFees = await feeFor(blocks, redisReplyFeesGet)
 
     let respond = {}
-    respond.fees = resFees
+    respond.data = resFees
     respond.error = false
     respond.path = req.url
 
@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
     console.error(err)
 
     let respond = {}
-    respond.fees = null
+    respond.data = null
     respond.error = true
     respond.path = req.url
 

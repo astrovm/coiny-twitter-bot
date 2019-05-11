@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     const redisReplyPriceGet = await redisGet('price')
 
     let respond = {}
-    respond.price = redisReplyPriceGet
+    respond.data = redisReplyPriceGet
     respond.error = false
     respond.path = req.url
 
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     console.error(err)
 
     let respond = {}
-    respond.price = null
+    respond.data = null
     respond.error = true
     respond.path = req.url
 

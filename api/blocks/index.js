@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     const redisReplyBlocksGet = await redisGet('blocks')
 
     let respond = {}
-    respond.blocks = JSON.parse(redisReplyBlocksGet)
+    respond.data = JSON.parse(redisReplyBlocksGet)
     respond.error = false
     respond.path = req.url
 
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     console.error(err)
 
     let respond = {}
-    respond.blocks = null
+    respond.data = null
     respond.error = true
     respond.path = req.url
 

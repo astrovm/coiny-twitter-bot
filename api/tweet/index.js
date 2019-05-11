@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
     const redisReplyTweetGet = await redisGet('tweet')
 
     let respond = {}
-    respond.tweet = JSON.parse(redisReplyTweetGet)
+    respond.data = JSON.parse(redisReplyTweetGet)
     respond.error = false
     respond.path = req.url
 
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     console.error(err)
 
     let respond = {}
-    respond.tweet = null
+    respond.data = null
     respond.error = true
     respond.path = req.url
 
