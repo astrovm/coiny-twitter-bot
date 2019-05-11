@@ -18,11 +18,11 @@ const redisSet = promisify(redisClient.set).bind(redisClient)
 // request smartbit api
 const getBlocks = async () => {
   try {
-    const resTotals = await trae.get('https://api.smartbit.com.au/v1/blockchain/totals')
-    const resBlockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2019-5-01')
+    const lastBlockHeight = await trae.get('https://blockstream.info/api/blocks/tip/height')
+    const blockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2019-5-10')
     let blocks = {}
-    blocks.lastBlockHeight = resTotals.data.totals.block_count - 1
-    blocks.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2)
+    blocks.height = lastBlockHeight.data
+    blocks.size = (Number(blockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2)
     return blocks
   } catch (err) {
     console.error('Error ' + err)
