@@ -23,7 +23,18 @@ const sortFees = (unsortedFees) => {
   // recreate fees object by matching sorted blocks with sorted fees
   let response = {}
   for (let b in blocks) {
-    response[blocks[b]] = Math.ceil(unsortedFees[fees[b]] / 1000)
+    response[blocks[b]] = Math.ceil(unsortedFees[fees[b]])
+  }
+  return response
+}
+
+// convert bitgo fees to satoshis
+const convertToSats = (fees) => {
+  const keys = Object.keys(fees)
+
+  let response = {}
+  for (let k in keys) {
+    response[keys[k]] = fees[keys[k]] / 1000
   }
   return response
 }
@@ -31,9 +42,11 @@ const sortFees = (unsortedFees) => {
 // request bitgo api fees
 const getFees = async () => {
   try {
-    const bitGoFees = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
-    const blockstreamFees = await trae.get('https://blockstream.info/api/fee-estimates')
-    const fees = await sortFees({ ...bitGoFees.data.feeByBlockTarget, ...blockstreamFees.data })
+    const bitGo = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const bitGoFees = await convertToSats(bitGo.data.feeByBlockTarget)
+    const blockstream = await trae.get('https://blockstream.info/api/fee-estimates')
+    const blockstreamFees = blockstream.data
+    const fees = await sortFees({ ...bitGoFees, ...blockstreamFees })
     return fees
   } catch (err) {
     console.error('Error ' + err)
