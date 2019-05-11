@@ -136,7 +136,7 @@ module.exports = async (req, res) => {
             return;
         } else {
             const timeRemaining = new Date(ONE_HOUR - timeDiff);
-            res.end(`Wait ${timeRemaining.getUTCMinutes()}:${timeRemaining.getUTCSeconds()}`);
+            res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`);
             return;
         };
     } catch (err) {
