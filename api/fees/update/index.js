@@ -56,7 +56,7 @@ const getFees = async () => {
 }
 
 // select fee for specific block target
-const feeFor = async (unsortedTargets, unparsedFees) => {
+const feeFor = (unsortedTargets, unparsedFees) => {
   const targets = unsortedTargets.sort() // sort from lowest to highest
   const fees = JSON.parse(unparsedFees)
   const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
@@ -94,7 +94,7 @@ module.exports = async (req, res) => {
     if (timeDiff >= TEN_MINUTES) {
       const rawFees = JSON.stringify(await getFees())
       const targets = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-      const fees = await feeFor(targets, rawFees)
+      const fees = JSON.stringify(feeFor(targets, rawFees))
       const currentTime = Date.now()
 
       // save fees
@@ -109,7 +109,7 @@ module.exports = async (req, res) => {
       const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
       console.log(redisReplyFeesTimeSet)
 
-      res.end('Updated ' + fees)
+      res.end('Updated ' + fees + rawFees)
       return
     } else {
       const timeRemaining = new Date(TEN_MINUTES - timeDiff)

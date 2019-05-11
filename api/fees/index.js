@@ -15,7 +15,7 @@ redisClient.on('error', (err) => {
 const redisGet = promisify(redisClient.get).bind(redisClient)
 
 // select fee for specific block target
-const feeFor = async (unsortedTargets, unparsedFees) => {
+const feeFor = (unsortedTargets, unparsedFees) => {
   const targets = unsortedTargets.sort() // sort from lowest to highest
   const fees = JSON.parse(unparsedFees)
   const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
     const { query } = parse(req.url, true)
     const targets = (query.target) ? defaults.concat(query.target) : defaults
-    const resFees = await feeFor(targets, rawFees)
+    const resFees = feeFor(targets, rawFees)
 
     let respond = {}
     respond.data = resFees
