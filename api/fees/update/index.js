@@ -34,8 +34,8 @@ const getFees = async () => {
     const newFees = await sortFees(res.data.feeByBlockTarget)
     return newFees
   } catch (err) {
-    console.error(err)
-    return err
+    console.error('Error ' + err)
+    throw err
   }
 }
 

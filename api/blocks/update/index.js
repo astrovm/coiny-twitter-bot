@@ -25,8 +25,8 @@ const getBlocks = async () => {
     blocks.size = (Number(resBlockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2)
     return blocks
   } catch (err) {
-    console.error(err)
-    return err
+    console.error('Error ' + err)
+    throw err
   }
 }
 
