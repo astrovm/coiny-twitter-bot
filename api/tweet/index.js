@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
         const redisReplyTweetGet = await redisGet('tweet');
 
         let respond = {};
-        respond.tweet = redisReplyTweetGet;
+        respond.tweet = JSON.parse(redisReplyTweetGet);
         respond.error = false;
         respond.path = req.url;
 

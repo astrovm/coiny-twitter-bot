@@ -17,9 +17,9 @@ const redisGet = promisify(redisClient.get).bind(redisClient);
 module.exports = async (req, res) => {
     try {
         const redisReplyBlocksGet = await redisGet('blocks');
-
+        
         let respond = {};
-        respond.blocks = redisReplyBlocksGet;
+        respond.blocks = JSON.parse(redisReplyBlocksGet);
         respond.error = false;
         respond.path = req.url;
 
