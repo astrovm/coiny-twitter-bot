@@ -1,5 +1,6 @@
 // require promisify
 const { promisify } = require('util')
+const { parse } = require('url')
 
 // require and config db libs
 const redis = require('redis')
@@ -14,22 +15,23 @@ redisClient.on('error', (err) => {
 const redisGet = promisify(redisClient.get).bind(redisClient)
 
 // select fee for specific block target
-const feeFor = async (blocks, feeData) => {
-  const parsedFees = JSON.parse(feeData)
-  const feeDataSorted = Object.keys(parsedFees).sort((a, b) => b - a) // sort block targets from highest to lowest
-  const minBlock = parseInt(feeDataSorted.slice(-1)[0])
+const feeFor = async (unsortedTargets, unparsedFees) => {
+  const targets = unsortedTargets.sort() // sort from lowest to highest
+  const fees = JSON.parse(unparsedFees)
+  const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
+  const minTarget = parseInt(feesBlocks.slice(-1)[0]) // take last 'feesBlocks' block
 
-  let res = {}
-  for (let b in blocks) {
-    const target = (blocks[b] < minBlock) ? minBlock : blocks[b]
-    for (let i in feeDataSorted) {
-      if (target >= feeDataSorted[i]) {
-        res[blocks[b]] = parsedFees[feeDataSorted[i]]
+  let response = {}
+  for (let t in targets) {
+    const target = (targets[t] < minTarget) ? minTarget : targets[t]
+    for (let b in feesBlocks) {
+      if (target >= feesBlocks[b]) {
+        response[targets[t]] = fees[feesBlocks[b]]
         break
       }
     }
   }
-  return res
+  return response
 }
 
 // export api
@@ -37,7 +39,6 @@ module.exports = async (req, res) => {
   try {
     const redisReplyFeesGet = await redisGet('fees')
     const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-    const { parse } = require('url')
     const { query } = parse(req.url, true)
     const blocks = (query.blocks) ? defaults.concat(query.blocks) : defaults
     const resFees = await feeFor(blocks, redisReplyFeesGet)
