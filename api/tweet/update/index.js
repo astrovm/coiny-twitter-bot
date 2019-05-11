@@ -1,7 +1,6 @@
 // conf libs
 const Twitter = require('twitter');
 const Masto = require('mastodon');
-const trae = require('trae');
 const { promisify } = require('util');
 
 // require and config db
@@ -33,48 +32,51 @@ const mastodon = new Masto({
 })
 
 const checkDiff = async () => {
-    const getFees = await trae.get('https://coiny.astrolince.now.sh/api/fees');
-    const getTweet = await trae.get('https://coiny.astrolince.now.sh/api/tweet');
-    const fresh = JSON.parse(getFees.data)
-    const used = JSON.parse(getTweet.data)
+    try {
+        const getFees = await redisGet('fees');
+        const getTweet = await redisGet('tweet');
+        const fresh = JSON.parse(getFees)
+        const used = JSON.parse(getTweet)
 
-    if (fresh.error !== false) return null;
-    if (!used.tweet) return fresh.fees;
-    if (used.tweet == "undefined") return fresh.fees;
-    if (Object.keys(used.tweet).length === 0) return fresh.fees;
-    if (used.error) return fresh.fees;
+        if (!used) return fresh;
+        if (Object.keys(used).length === 0) return fresh;
 
-    for (let i in used.tweet) {
-        const diff = used.tweet[i] / fresh.fees[i];
-        if (diff < 0.9 || diff > 1.1) return fresh.fees;
-    };
-    return null;
+        for (let i in used) {
+            const diff = used[i] / fresh[i];
+            if (diff < 0.9 || diff > 1.1) return fresh;
+        };
+
+        return null;
+    } catch (error) {
+        console.error(err);
+        return null;
+    }
 }
 
 // build text
 const buildText = async (fees) => {
-    const getPrice = await trae.get('https://coiny.astrolince.now.sh/api/price')
-    const { price } = JSON.parse(getPrice.data)
+    const getPrice = await redisGet('price');
+    const price = Number(getPrice);
 
-    const usdtobtc = (1 / price).toFixed(8)
-    const usdtosats = (usdtobtc * 10 ** 8).toFixed()
-    const feetousd = 178 / usdtosats
+    const usdtobtc = (1 / price).toFixed(8);
+    const usdtosats = (usdtobtc * 10 ** 8).toFixed();
+    const feetousd = 178 / usdtosats;
 
-    const getBlocks = await trae.get('https://coiny.astrolince.now.sh/api/blocks')
-    const { blocks } = JSON.parse(getBlocks.data)
+    const getBlocks = await redisGet('blocks');
+    const blocks = JSON.parse(getBlocks);
 
-    let text = `${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20m`
-    if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40m`
-    if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60m`
-    if (fees[12] < fees[6]) text = text + `\n${fees[12]} sat/B ($${(fees[12] * feetousd).toFixed(2)}) - 2h`
-    if (fees[24] < fees[12]) text = text + `\n${fees[24]} sat/B ($${(fees[24] * feetousd).toFixed(2)}) - 4h`
-    if (fees[48] < fees[24]) text = text + `\n${fees[48]} sat/B ($${(fees[48] * feetousd).toFixed(2)}) - 8h`
-    if (fees[144] < fees[48]) text = text + `\n${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)}) - 24h`
-    if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3d`
-    if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7d`
-    text = text + `\n\nheight ${blocks.lastBlockHeight}`
-    text = text + `\nprice $${price} (1 usd = ${usdtosats} sats)`
-    return text
+    let text = `${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20m`;
+    if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40m`;
+    if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60m`;
+    if (fees[12] < fees[6]) text = text + `\n${fees[12]} sat/B ($${(fees[12] * feetousd).toFixed(2)}) - 2h`;
+    if (fees[24] < fees[12]) text = text + `\n${fees[24]} sat/B ($${(fees[24] * feetousd).toFixed(2)}) - 4h`;
+    if (fees[48] < fees[24]) text = text + `\n${fees[48]} sat/B ($${(fees[48] * feetousd).toFixed(2)}) - 8h`;
+    if (fees[144] < fees[48]) text = text + `\n${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)}) - 24h`;
+    if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3d`;
+    if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7d`;
+    text = text + `\n\nheight ${blocks.lastBlockHeight}`;
+    text = text + `\nprice $${price} (1 usd = ${usdtosats} sats)`;
+    return text;
 }
 
 // make tweet
@@ -92,11 +94,12 @@ const makeTweet = async () => {
             return json;
         } catch (err) {
             console.error(err);
+            return null;
         };
     } else {
         console.log('The last tweet is already updated.');
+        return null;
     };
-    return null;
 };
 
 // export api
