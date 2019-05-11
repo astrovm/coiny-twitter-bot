@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
     const rawFees = await redisGet('fees:raw')
     const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
     const { query } = parse(req.url, true)
-    const targets = (query.target) ? defaults.concat(query.target) : defaults
+    const targets = (query.target) ? defaults.concat(parseInt(query.target)) : defaults
     const resFees = feeFor(targets, rawFees)
 
     let respond = {}
