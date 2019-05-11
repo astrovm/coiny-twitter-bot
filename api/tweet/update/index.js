@@ -31,11 +31,14 @@ const mastodon = new Masto({
   api_url: 'https://bitcoinhackers.org/api/v1/' // optional, defaults to https://mastodon.social/api/v1/
 })
 
-const checkDiff = async () => {
+const checkDiff = async (timeDiff, maxTime) => {
   try {
     const getFees = await redisGet('fees')
-    const getTweet = await redisGet('tweet')
     const fresh = JSON.parse(getFees)
+
+    if (timeDiff >= maxTime) return fresh // if last tweet is very old, tweet
+
+    const getTweet = await redisGet('tweet')
     const used = JSON.parse(getTweet)
 
     if (!used) return fresh
@@ -85,9 +88,9 @@ const buildText = async (fees) => {
 }
 
 // make tweet
-const makeTweet = async () => {
+const makeTweet = async (timeDiff, maxTime) => {
   try {
-    const json = await checkDiff()
+    const json = await checkDiff(timeDiff, maxTime)
     if (!json) {
       console.log('The last tweet is already updated.')
       return null
@@ -125,7 +128,7 @@ module.exports = async (req, res) => {
 
     // if last time >= one hour, update it now
     if (timeDiff >= ONE_HOUR) {
-      const getTweet = await makeTweet()
+      const getTweet = await makeTweet(timeDiff, ONE_HOUR * 3)
       if (!getTweet) {
         res.end('Already tweeted ' + req.url)
         return
