@@ -1,6 +1,6 @@
 {
   "name": "coiny",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Bitcoin fee estimates and market info.",
   "author": "astrolince <astro@astrolince.com>",
   "dependencies": {
