@@ -55,7 +55,11 @@ const getFees = async () => {
     const _blockstream = await trae.get('https://blockstream.info/api/fee-estimates')
     const blockstreamFees = _blockstream.data
 
-    const rawFees = mixFees(bitGoFees, blockstreamFees)
+    const rawFees = {
+      coiny: mixFees(bitGoFees, blockstreamFees),
+      bitgo: bitGoFees,
+      blockstream: blockstreamFees
+    }
 
     return rawFees
   } catch (err) {
@@ -65,9 +69,8 @@ const getFees = async () => {
 }
 
 // select fee for specific block target
-const feeFor = (unsortedTargets, unparsedFees) => {
+const feeFor = (unsortedTargets, fees) => {
   const targets = unsortedTargets.sort() // sort from lowest to highest
-  const fees = JSON.parse(unparsedFees)
   const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
   const minTarget = parseInt(feesBlocks.slice(-1)[0]) // take last 'feesBlocks' block
 
@@ -101,9 +104,10 @@ module.exports = async (req, res) => {
 
     // if last time >= ten minutes, update it now
     if (timeDiff >= TEN_MINUTES) {
-      const rawFees = JSON.stringify(await getFees())
+      const rawFees = await getFees()
+      const rawFeesString = JSON.stringify(rawFees)
       const targets = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
-      const fees = JSON.stringify(feeFor(targets, rawFees))
+      const fees = JSON.stringify(feeFor(targets, rawFees.coiny))
       const currentTime = Date.now()
 
       // save fees
@@ -111,7 +115,7 @@ module.exports = async (req, res) => {
       console.log(redisReplyFeesSet)
 
       // save raw fees
-      const redisReplyRawFeesSet = await redisSet('fees:raw', rawFees)
+      const redisReplyRawFeesSet = await redisSet('fees:raw', rawFeesString)
       console.log(redisReplyRawFeesSet)
 
       // save time of the update

@@ -15,9 +15,8 @@ redisClient.on('error', (err) => {
 const redisGet = promisify(redisClient.get).bind(redisClient)
 
 // select fee for specific block target
-const feeFor = (unsortedTargets, unparsedFees) => {
+const feeFor = (unsortedTargets, fees) => {
   const targets = unsortedTargets.sort() // sort from lowest to highest
-  const fees = JSON.parse(unparsedFees)
   const feesBlocks = Object.keys(fees).sort((a, b) => b - a) // sort from highest to lowest
   const minTarget = parseInt(feesBlocks.slice(-1)[0]) // take last 'feesBlocks' block
 
@@ -37,11 +36,16 @@ const feeFor = (unsortedTargets, unparsedFees) => {
 // export api
 module.exports = async (req, res) => {
   try {
-    const rawFees = await redisGet('fees:raw')
+    const rawFees = JSON.parse(await redisGet('fees:raw'))
     const defaults = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
     const { query } = parse(req.url, true)
     const targets = (query.target) ? defaults.concat(parseInt(query.target)) : defaults
-    const resFees = feeFor(targets, rawFees)
+
+    const resFees = {
+      coiny: feeFor(targets, rawFees.coiny),
+      bitgo: feeFor(targets, rawFees.bitgo),
+      blockstream: feeFor(targets, rawFees.blockstream)
+    }
 
     let respond = {}
     respond.data = resFees
