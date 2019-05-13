@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
       const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
       console.log(redisReplyFeesTimeSet)
 
-      res.end('Updated ' + fees + rawFees)
+      res.end('Updated ' + fees + rawFeesString)
       return
     } else {
       const timeRemaining = new Date(TEN_MINUTES - timeDiff)
