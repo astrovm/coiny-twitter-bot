@@ -104,8 +104,6 @@ module.exports = async (req, res) => {
 
     // if last time >= 10 minutes, update it now
     if (timeDiff >= TEN_MINUTES) {
-      const currentTime = Date.now()
-
       // save time of the update
       const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
       console.log(redisReplyFeesTimeSet)

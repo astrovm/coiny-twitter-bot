@@ -31,10 +31,23 @@ const mastodon = new Masto({
   api_url: 'https://bitcoinhackers.org/api/v1/' // optional, defaults to https://mastodon.social/api/v1/
 })
 
-const checkDiff = async (timeDiff, maxTime) => {
+const checkDiff = async (currentTime, maxTime) => {
   try {
     const getFees = await redisGet('fees')
     const fresh = JSON.parse(getFees)
+
+    // check last tweet creation time
+    const redisReplyTweetCreatedAtGet = await redisGet('tweet:created_at')
+
+    // if tweet:time is empty, just run the update
+    const keyTime = ((redisReplyTweetCreatedAtGet == null) ? (currentTime - maxTime) : redisReplyTweetCreatedAtGet)
+
+    // calc diff
+    const timeDiff = currentTime - keyTime
+    console.log('ZtimeDiff ' + timeDiff) // tmp
+    console.log('ZcurrentTime ' + currentTime) // tmp
+    console.log('ZkeyTime ' + keyTime) // tmp
+    console.log('ZmaxTime ' + maxTime) // tmp
 
     if (timeDiff >= maxTime) return fresh // if last tweet is very old, tweet
 
@@ -88,9 +101,9 @@ const buildText = async (fees) => {
 }
 
 // make tweet
-const makeTweet = async (timeDiff, maxTime) => {
+const makeTweet = async (currentTime, maxTime) => {
   try {
-    const json = await checkDiff(timeDiff, maxTime)
+    const json = await checkDiff(currentTime, maxTime)
     if (!json) {
       console.log('The last tweet is already updated.')
       return null
@@ -100,6 +113,10 @@ const makeTweet = async (timeDiff, maxTime) => {
 
     const doTweet = await tw.post('statuses/update', { status: tweet })
     console.log(`Tweet created at: ${doTweet.created_at}`)
+
+    // save creation time of the tweet
+    const redisReplyTweetCreatedAtSet = await redisSet('tweet:created_at', doTweet.created_at)
+    console.log(redisReplyTweetCreatedAtSet)
 
     const doMast = await mastodon.post('statuses', { status: tweet })
     console.log(`Toot created at: ${doMast.data.created_at}`)
@@ -130,14 +147,12 @@ module.exports = async (req, res) => {
 
     // if last time >= 20 minutes, update it now
     if (timeDiff >= TWENTY_MINUTES) {
-      const currentTime = Date.now()
-
       // save time of the update
       const redisReplyTweetTimeSet = await redisSet('tweet:time', currentTime)
       console.log(redisReplyTweetTimeSet)
 
       // generate tweet
-      const getTweet = await makeTweet(timeDiff, THREE_HOURS)
+      const getTweet = await makeTweet(currentTime, THREE_HOURS)
       const tweet = JSON.stringify(getTweet)
 
       // ff last tweeted fees are not too different from the current ones, cancel tweet
