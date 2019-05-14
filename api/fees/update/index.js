@@ -93,22 +93,28 @@ module.exports = async (req, res) => {
     // check last time updated
     const redisReplyFeesTimeGet = await redisGet('fees:time')
 
-    const FIVE_MINUTES = 5 * 60 * 1000
+    const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()
 
     // if fees:time is empty, just run the update
-    const keyTime = ((redisReplyFeesTimeGet == null) ? (currentTime - FIVE_MINUTES) : redisReplyFeesTimeGet)
+    const keyTime = ((redisReplyFeesTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyFeesTimeGet)
 
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    // if last time >= 5 minutes, update it now
-    if (timeDiff >= FIVE_MINUTES) {
+    // if last time >= 10 minutes, update it now
+    if (timeDiff >= TEN_MINUTES) {
+      const currentTime = Date.now()
+
+      // save time of the update
+      const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
+      console.log(redisReplyFeesTimeSet)
+
+      // generate fees update
       const rawFees = await getFees()
       const rawFeesString = JSON.stringify(rawFees)
       const targets = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
       const fees = JSON.stringify(feeFor(targets, rawFees.coiny))
-      const currentTime = Date.now()
 
       // save fees
       const redisReplyFeesSet = await redisSet('fees', fees)
@@ -118,14 +124,10 @@ module.exports = async (req, res) => {
       const redisReplyRawFeesSet = await redisSet('fees:raw', rawFeesString)
       console.log(redisReplyRawFeesSet)
 
-      // save time of the update
-      const redisReplyFeesTimeSet = await redisSet('fees:time', currentTime)
-      console.log(redisReplyFeesTimeSet)
-
       res.end('Updated ' + fees + rawFeesString)
       return
     } else {
-      const timeRemaining = new Date(FIVE_MINUTES - timeDiff)
+      const timeRemaining = new Date(TEN_MINUTES - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
       return
     }

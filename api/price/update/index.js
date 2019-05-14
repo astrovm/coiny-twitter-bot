@@ -58,19 +58,20 @@ module.exports = async (req, res) => {
 
     // if last time >= 15 minutes, update it now
     if (timeDiff >= FIFTEEN_MINUTES) {
+      const currentTime = Date.now()
+
+      // save time of the update
+      const redisReplyPriceTimeSet = await redisSet('price:time', currentTime)
+      console.log(redisReplyPriceTimeSet)
+
+      // get last price
       const price = Number(await getPrice())
 
       // we check that we have received a number
       if (price > 0) {
-        const currentTime = Date.now()
-
         // save price
         const redisReplyPriceSet = await redisSet('price', price)
         console.log(redisReplyPriceSet)
-
-        // save time of the update
-        const redisReplyPriceTimeSet = await redisSet('price:time', currentTime)
-        console.log(redisReplyPriceTimeSet)
 
         res.end('Updated ' + price)
         return

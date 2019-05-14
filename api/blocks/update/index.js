@@ -36,32 +36,34 @@ module.exports = async (req, res) => {
     // check last time updated
     const redisReplyBlocksTimeGet = await redisGet('blocks:time')
 
-    const FIVE_MINUTES = 5 * 60 * 1000
+    const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()
 
     // if blocks:time is empty, just run the update
-    const keyTime = ((redisReplyBlocksTimeGet == null) ? (currentTime - FIVE_MINUTES) : redisReplyBlocksTimeGet)
+    const keyTime = ((redisReplyBlocksTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyBlocksTimeGet)
 
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    // if last time >= 5 minutes, update it now
-    if (timeDiff >= FIVE_MINUTES) {
-      const blocks = JSON.stringify(await getBlocks())
+    // if last time >= 10 minutes, update it now
+    if (timeDiff >= TEN_MINUTES) {
       const currentTime = Date.now()
-
-      // save blocks
-      const redisReplyBlocksSet = await redisSet('blocks', blocks)
-      console.log(redisReplyBlocksSet)
 
       // save time of the update
       const redisReplyBlocksTimeSet = await redisSet('blocks:time', currentTime)
       console.log(redisReplyBlocksTimeSet)
 
+      // generate data update
+      const blocks = JSON.stringify(await getBlocks())
+
+      // save data
+      const redisReplyBlocksSet = await redisSet('blocks', blocks)
+      console.log(redisReplyBlocksSet)
+
       res.end('Updated ' + blocks)
       return
     } else {
-      const timeRemaining = new Date(FIVE_MINUTES - timeDiff)
+      const timeRemaining = new Date(TEN_MINUTES - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
       return
     }
