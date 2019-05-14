@@ -47,17 +47,17 @@ module.exports = async (req, res) => {
     // check last time updated
     const redisReplyPriceTimeGet = await redisGet('price:time')
 
-    const TEN_MINUTES = 10 * 60 * 1000
+    const FIFTEEN_MINUTES = 15 * 60 * 1000
     const currentTime = Date.now()
 
     // if price:time is empty, just run the price update
-    const keyTime = ((redisReplyPriceTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyPriceTimeGet)
+    const keyTime = ((redisReplyPriceTimeGet == null) ? (currentTime - FIFTEEN_MINUTES) : redisReplyPriceTimeGet)
 
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    // if last time >= one hour, update it now
-    if (timeDiff >= TEN_MINUTES) {
+    // if last time >= 15 minutes, update it now
+    if (timeDiff >= FIFTEEN_MINUTES) {
       const price = Number(await getPrice())
 
       // we check that we have received a number
@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
         throw price
       }
     } else {
-      const timeRemaining = new Date(TEN_MINUTES - timeDiff)
+      const timeRemaining = new Date(FIFTEEN_MINUTES - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
       return
     }

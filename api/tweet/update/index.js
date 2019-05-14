@@ -118,18 +118,20 @@ module.exports = async (req, res) => {
     const redisReplyTweetTimeGet = await redisGet('tweet:time')
 
     const ONE_HOUR = 60 * 60 * 1000
+    const THREE_HOURS = ONE_HOUR * 3
     const TEN_MINUTES = ONE_HOUR / 6
+    const TWENTY_MINUTES = TEN_MINUTES * 2
     const currentTime = Date.now()
 
     // if tweet:time is empty, just run the update
-    const keyTime = ((redisReplyTweetTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyTweetTimeGet)
+    const keyTime = ((redisReplyTweetTimeGet == null) ? (currentTime - TWENTY_MINUTES) : redisReplyTweetTimeGet)
 
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    // if last time >= 10 minutes, update it now
-    if (timeDiff >= TEN_MINUTES) {
-      const getTweet = await makeTweet(timeDiff, ONE_HOUR * 3)
+    // if last time >= 20 minutes, update it now
+    if (timeDiff >= TWENTY_MINUTES) {
+      const getTweet = await makeTweet(timeDiff, THREE_HOURS)
 
       // ff last tweeted fees are not too different from the current ones, cancel tweet
       if (!getTweet) {
@@ -151,7 +153,7 @@ module.exports = async (req, res) => {
       res.end('Updated ' + tweet)
       return
     } else {
-      const timeRemaining = new Date(TEN_MINUTES - timeDiff)
+      const timeRemaining = new Date(TWENTY_MINUTES - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
       return
     }
