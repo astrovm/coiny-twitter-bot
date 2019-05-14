@@ -119,8 +119,7 @@ module.exports = async (req, res) => {
 
     const ONE_HOUR = 60 * 60 * 1000
     const THREE_HOURS = ONE_HOUR * 3
-    const TEN_MINUTES = ONE_HOUR / 6
-    const TWENTY_MINUTES = TEN_MINUTES * 2
+    const TWENTY_MINUTES = 20 * 60 * 1000
     const currentTime = Date.now()
 
     // if tweet:time is empty, just run the update
@@ -131,7 +130,15 @@ module.exports = async (req, res) => {
 
     // if last time >= 20 minutes, update it now
     if (timeDiff >= TWENTY_MINUTES) {
+      const currentTime = Date.now()
+
+      // save time of the update
+      const redisReplyTweetTimeSet = await redisSet('tweet:time', currentTime)
+      console.log(redisReplyTweetTimeSet)
+
+      // generate tweet
       const getTweet = await makeTweet(timeDiff, THREE_HOURS)
+      const tweet = JSON.stringify(getTweet)
 
       // ff last tweeted fees are not too different from the current ones, cancel tweet
       if (!getTweet) {
@@ -139,16 +146,9 @@ module.exports = async (req, res) => {
         return
       }
 
-      const tweet = JSON.stringify(getTweet)
-      const currentTime = Date.now()
-
       // save tweet
       const redisReplyTweetSet = await redisSet('tweet', tweet)
       console.log(redisReplyTweetSet)
-
-      // save time of the update
-      const redisReplyTweetTimeSet = await redisSet('tweet:time', currentTime)
-      console.log(redisReplyTweetTimeSet)
 
       res.end('Updated ' + tweet)
       return
