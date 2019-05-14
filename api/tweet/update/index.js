@@ -44,10 +44,6 @@ const checkDiff = async (currentTime, maxTime) => {
 
     // calc diff
     const timeDiff = currentTime - keyTime
-    console.log('ZtimeDiff ' + timeDiff) // tmp
-    console.log('ZcurrentTime ' + currentTime) // tmp
-    console.log('ZkeyTime ' + keyTime) // tmp
-    console.log('ZmaxTime ' + maxTime) // tmp
 
     if (timeDiff >= maxTime) return fresh // if last tweet is very old, tweet
 
@@ -112,10 +108,11 @@ const makeTweet = async (currentTime, maxTime) => {
     const tweet = await buildText(json)
 
     const doTweet = await tw.post('statuses/update', { status: tweet })
-    console.log(`Tweet created at: ${doTweet.created_at}`)
+    const twCreatedAt = new Date(doTweet.created_at)
+    console.log(`Tweet created at: ${twCreatedAt}`)
 
     // save creation time of the tweet
-    const redisReplyTweetCreatedAtSet = await redisSet('tweet:created_at', doTweet.created_at)
+    const redisReplyTweetCreatedAtSet = await redisSet('tweet:created_at', twCreatedAt)
     console.log(redisReplyTweetCreatedAtSet)
 
     const doMast = await mastodon.post('statuses', { status: tweet })
