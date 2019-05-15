@@ -37,10 +37,10 @@ const checkDiff = async (currentTime, maxTime) => {
     const fresh = JSON.parse(getFees)
 
     // check last tweet creation time
-    const redisReplyTweetCreatedAtGet = await redisGet('tweet:created_at')
+    const lastTweetCreatedAt = new Date(await redisGet('tweet:created_at'))
 
     // if tweet:time is empty, just run the update
-    const keyTime = ((redisReplyTweetCreatedAtGet == null) ? (currentTime - maxTime) : redisReplyTweetCreatedAtGet)
+    const keyTime = ((lastTweetCreatedAt == null) ? (currentTime - maxTime) : lastTweetCreatedAt)
 
     // calc diff
     const timeDiff = currentTime - keyTime
@@ -108,11 +108,10 @@ const makeTweet = async (currentTime, maxTime) => {
     const tweet = await buildText(json)
 
     const doTweet = await tw.post('statuses/update', { status: tweet })
-    const twCreatedAt = new Date(doTweet.created_at)
-    console.log(`Tweet created at: ${twCreatedAt}`)
+    console.log(`Tweet created at: ${doTweet.created_at}`)
 
     // save creation time of the tweet
-    const redisReplyTweetCreatedAtSet = await redisSet('tweet:created_at', twCreatedAt)
+    const redisReplyTweetCreatedAtSet = await redisSet('tweet:created_at', doTweet.created_at)
     console.log(redisReplyTweetCreatedAtSet)
 
     const doMast = await mastodon.post('statuses', { status: tweet })
@@ -129,7 +128,7 @@ const makeTweet = async (currentTime, maxTime) => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const redisReplyTweetTimeGet = await redisGet('tweet:time')
+    const lastUpdateTime = new Date(await redisGet('tweet:time'))
 
     const ONE_HOUR = 60 * 60 * 1000
     const THREE_HOURS = ONE_HOUR * 3
@@ -137,7 +136,7 @@ module.exports = async (req, res) => {
     const currentTime = Date.now()
 
     // if tweet:time is empty, just run the update
-    const keyTime = ((redisReplyTweetTimeGet == null) ? (currentTime - TWENTY_MINUTES) : redisReplyTweetTimeGet)
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - TWENTY_MINUTES) : lastUpdateTime)
 
     // calc diff
     const timeDiff = currentTime - keyTime

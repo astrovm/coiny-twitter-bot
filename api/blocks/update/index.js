@@ -34,13 +34,13 @@ const getBlocks = async () => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const redisReplyBlocksTimeGet = await redisGet('blocks:time')
+    const lastUpdateTime = new Date(await redisGet('blocks:time'))
 
     const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()
 
     // if blocks:time is empty, just run the update
-    const keyTime = ((redisReplyBlocksTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyBlocksTimeGet)
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - TEN_MINUTES) : lastUpdateTime)
 
     // calc diff
     const timeDiff = currentTime - keyTime

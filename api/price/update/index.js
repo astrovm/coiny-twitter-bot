@@ -45,13 +45,13 @@ const getPrice = async () => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const redisReplyPriceTimeGet = await redisGet('price:time')
+    const lastUpdateTime = new Date(await redisGet('price:time'))
 
     const FIFTEEN_MINUTES = 15 * 60 * 1000
     const currentTime = Date.now()
 
     // if price:time is empty, just run the price update
-    const keyTime = ((redisReplyPriceTimeGet == null) ? (currentTime - FIFTEEN_MINUTES) : redisReplyPriceTimeGet)
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - FIFTEEN_MINUTES) : lastUpdateTime)
 
     // calc diff
     const timeDiff = currentTime - keyTime

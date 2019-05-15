@@ -91,13 +91,13 @@ const feeFor = (unsortedTargets, fees) => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const redisReplyFeesTimeGet = await redisGet('fees:time')
+    const lastUpdateTime = new Date(await redisGet('fees:time'))
 
     const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()
 
     // if fees:time is empty, just run the update
-    const keyTime = ((redisReplyFeesTimeGet == null) ? (currentTime - TEN_MINUTES) : redisReplyFeesTimeGet)
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - TEN_MINUTES) : lastUpdateTime)
 
     // calc diff
     const timeDiff = currentTime - keyTime
