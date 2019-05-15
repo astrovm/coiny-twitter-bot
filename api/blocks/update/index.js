@@ -34,7 +34,7 @@ const getBlocks = async () => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const lastUpdateTime = new Date(await redisGet('blocks:time'))
+    const lastUpdateTime = await redisGet('blocks:time')
 
     const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()

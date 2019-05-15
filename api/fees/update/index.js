@@ -91,7 +91,7 @@ const feeFor = (unsortedTargets, fees) => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const lastUpdateTime = new Date(await redisGet('fees:time'))
+    const lastUpdateTime = await redisGet('fees:time')
 
     const TEN_MINUTES = 10 * 60 * 1000
     const currentTime = Date.now()

@@ -128,7 +128,7 @@ const makeTweet = async (currentTime, maxTime) => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const lastUpdateTime = new Date(await redisGet('tweet:time'))
+    const lastUpdateTime = await redisGet('tweet:time')
 
     const ONE_HOUR = 60 * 60 * 1000
     const THREE_HOURS = ONE_HOUR * 3

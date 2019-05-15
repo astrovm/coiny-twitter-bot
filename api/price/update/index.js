@@ -45,7 +45,7 @@ const getPrice = async () => {
 module.exports = async (req, res) => {
   try {
     // check last time updated
-    const lastUpdateTime = new Date(await redisGet('price:time'))
+    const lastUpdateTime = await redisGet('price:time')
 
     const FIFTEEN_MINUTES = 15 * 60 * 1000
     const currentTime = Date.now()
