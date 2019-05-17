@@ -1,25 +1,13 @@
-// require promesify
+// require libs
 const { promisify } = require('util')
+const { redisGet, redisSet } = require('../../../modules/redis')
 
-// require and config bitcoinaverage libs
+// require and config bitcoinaverage
 const ba = require('bitcoinaverage')
 const baPublicKey = process.env.BITCOINAVERAGE_PUBLIC
 const baSecretKey = process.env.BITCOINAVERAGE_SECRET
 const baRestClient = ba.restfulClient(baPublicKey, baSecretKey)
 const baGetTickerDataPerSymbol = promisify(baRestClient.getTickerDataPerSymbol).bind(baRestClient)
-
-// require and config db libs
-const redis = require('redis')
-const redisPort = process.env.REDIS_PORT
-const redisHost = process.env.REDIS_HOST
-const redisPass = process.env.REDIS_PASS
-const redisClient = redis.createClient(redisPort, redisHost)
-redisClient.auth(redisPass)
-redisClient.on('error', (err) => {
-  console.error('Error ' + err)
-})
-const redisGet = promisify(redisClient.get).bind(redisClient)
-const redisSet = promisify(redisClient.set).bind(redisClient)
 
 // function to request bitcoin average price
 const getPrice = async () => {
