@@ -6,6 +6,7 @@
   "dependencies": {
     "bitcoinaverage": "1.2.1",
     "mastodon": "1.2.2",
+    "next": "8.1.0",
     "redis": "2.8.0",
     "trae": "1.4.2",
     "twitter": "1.7.1"
