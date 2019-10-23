@@ -65,7 +65,8 @@ const buildText = async (fees) => {
     const getBlocks = await redisGet('blocks')
     const blocks = JSON.parse(getBlocks)
 
-    let text = `${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20m`
+    let text = `price $${price} (1 usd = ${usdtosats} sats)`
+    text = text + `\n\n${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20m`
     if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40m`
     if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60m`
     if (fees[12] < fees[6]) text = text + `\n${fees[12]} sat/B ($${(fees[12] * feetousd).toFixed(2)}) - 2h`
@@ -75,7 +76,6 @@ const buildText = async (fees) => {
     if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3d`
     if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7d`
     text = text + `\n\nheight ${blocks.height}`
-    text = text + `\nprice $${price} (1 usd = ${usdtosats} sats)`
     return text
   } catch (err) {
     console.error('Error ' + err)
