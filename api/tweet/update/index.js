@@ -65,7 +65,7 @@ const buildText = async (fees) => {
     const getBlocks = await redisGet('blocks')
     const blocks = JSON.parse(getBlocks)
 
-    let text = `price $${price} (1 usd = ${usdtosats} sats)`
+    let text = `$${price} (1 usd = ${usdtosats} sats)`
     text = text + `\n\n${fees[2]} sat/B ($${(fees[2] * feetousd).toFixed(2)}) - 20m`
     if (fees[4] < fees[2]) text = text + `\n${fees[4]} sat/B ($${(fees[4] * feetousd).toFixed(2)}) - 40m`
     if (fees[6] < fees[4]) text = text + `\n${fees[6]} sat/B ($${(fees[6] * feetousd).toFixed(2)}) - 60m`
