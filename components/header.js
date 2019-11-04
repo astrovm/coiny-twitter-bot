@@ -1,5 +1,5 @@
 export default () => (
     <header>
-        <h1>Next.js Example</h1>
+        <h1>Coiny</h1>
     </header>
 );
