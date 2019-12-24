@@ -1,28 +1,13 @@
 // require libs
-const { promisify } = require('util')
+const trae = require('trae')
 const { redisGet, redisSet } = require('../../../modules/redis')
 
-// require and config bitcoinaverage
-const ba = require('bitcoinaverage')
-const baPublicKey = process.env.BITCOINAVERAGE_PUBLIC
-const baSecretKey = process.env.BITCOINAVERAGE_SECRET
-const baRestClient = ba.restfulClient(baPublicKey, baSecretKey)
-const baGetTickerDataPerSymbol = promisify(baRestClient.getTickerDataPerSymbol).bind(baRestClient)
-
-// function to request bitcoin average price
+// function to request bitstamp price
 const getPrice = async () => {
   try {
-    const SYMBOL_SET = 'global'
-    const SYMBOL = 'BTCUSD'
-
-    // this may look weird, when all goes fine bitcoinaverage throws an "error" that is the response
-    try {
-      const getPrice = await baGetTickerDataPerSymbol(SYMBOL_SET, SYMBOL)
-      return getPrice
-    } catch (result) {
-      const price = JSON.parse(result).last
-      return price
-    }
+    const bitstamp = await trae.get('https://www.bitstamp.net/api/ticker/')
+    const bitstampPrice = bitstamp.data.last
+    return bitstampPrice
   } catch (err) {
     console.error('Error ' + err)
     throw err

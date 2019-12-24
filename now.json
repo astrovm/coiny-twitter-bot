@@ -19,8 +19,6 @@
         }
     ],
     "env": {
-        "BITCOINAVERAGE_PUBLIC": "@bitcoinaverage_public",
-        "BITCOINAVERAGE_SECRET": "@bitcoinaverage_secret",
         "REDIS_PORT": "@coiny_redis_port",
         "REDIS_HOST": "@coiny_redis_host",
         "REDIS_PASS": "@coiny_redis_pass",
