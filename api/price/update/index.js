@@ -1,13 +1,26 @@
 // require libs
-const trae = require('trae')
+const rp = require('request-promise')
 const { redisGet, redisSet } = require('../../../modules/redis')
 
-// function to request bitstamp price
+// function to request coinmarketcap price
 const getPrice = async () => {
   try {
-    const bitstamp = await trae.get('https://www.bitstamp.net/api/ticker/')
-    const bitstampPrice = bitstamp.data.last
-    return bitstampPrice
+    const requestOptions = {
+      method: 'GET',
+      uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
+      qs: {
+        'id': '1'
+      },
+      headers: {
+        'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY
+      },
+      json: true,
+      gzip: true
+    }
+
+    const coinmarketcap = await rp(requestOptions)
+    const coinmarketcapPrice = coinmarketcap.data['1'].quote.USD.price
+    return coinmarketcapPrice
   } catch (err) {
     console.error('Error ' + err)
     throw err
