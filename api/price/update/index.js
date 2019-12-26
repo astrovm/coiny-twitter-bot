@@ -19,7 +19,7 @@ const getPrice = async () => {
     }
 
     const coinmarketcap = await rp(requestOptions)
-    const coinmarketcapPrice = coinmarketcap.data['1'].quote.USD.price
+    const coinmarketcapPrice = Number(coinmarketcap.data['1'].quote.USD.price).toFixed()
     return coinmarketcapPrice
   } catch (err) {
     console.error('Error ' + err)
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       console.log(redisReplyPriceTimeSet)
 
       // get last price
-      const price = Number(await getPrice()).toFixed(2)
+      const price = await getPrice()
 
       // we check that we have received a number
       if (price > 0) {
