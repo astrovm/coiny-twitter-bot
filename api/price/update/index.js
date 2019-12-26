@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       console.log(redisReplyPriceTimeSet)
 
       // get last price
-      const price = Number(await getPrice())
+      const price = Number(await getPrice()).toFixed(2)
 
       // we check that we have received a number
       if (price > 0) {
