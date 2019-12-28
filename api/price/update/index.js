@@ -49,18 +49,18 @@ module.exports = async (req, res) => {
       console.log(redisReplyPriceTimeSet)
 
       // get last price
-      const price = await getPrice()
+      const lastPrice = await getPrice()
 
       // we check that we have received a number
-      if (price.price > 0) {
+      if (lastPrice.price > 0) {
         // save price
-        const redisReplyPriceSet = await redisSet('price', JSON.stringify(price))
+        const redisReplyPriceSet = await redisSet('price', JSON.stringify(lastPrice))
         console.log(redisReplyPriceSet)
 
-        res.end('Updated ' + price)
+        res.end('Updated ' + lastPrice)
         return
       } else {
-        throw price
+        throw lastPrice
       }
     } else {
       const timeRemaining = new Date(FIFTEEN_MINUTES - timeDiff)
