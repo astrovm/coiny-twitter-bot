@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     const redisReplyPriceGet = await redisGet('price')
 
     let respond = {}
-    respond.data = redisReplyPriceGet
+    respond.data = JSON.parse(redisReplyPriceGet)
     respond.error = false
     respond.path = req.url
 

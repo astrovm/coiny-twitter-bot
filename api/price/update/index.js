@@ -19,7 +19,7 @@ const getPrice = async () => {
     }
 
     const coinmarketcap = await rp(requestOptions)
-    const coinmarketcapPrice = Number(coinmarketcap.data['1'].quote.USD.price).toFixed()
+    const coinmarketcapPrice = coinmarketcap.data['1'].quote.USD
     return coinmarketcapPrice
   } catch (err) {
     console.error('Error ' + err)
@@ -52,9 +52,9 @@ module.exports = async (req, res) => {
       const price = await getPrice()
 
       // we check that we have received a number
-      if (price > 0) {
+      if (price.price > 0) {
         // save price
-        const redisReplyPriceSet = await redisSet('price', price)
+        const redisReplyPriceSet = await redisSet('price', JSON.stringify(price))
         console.log(redisReplyPriceSet)
 
         res.end('Updated ' + price)
