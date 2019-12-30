@@ -1,26 +1,19 @@
 // require libs
-const rp = require('request-promise')
+const trae = require('trae');
 const { redisGet, redisSet } = require('../../../modules/redis')
 
-// function to request coinmarketcap price
+// function to request coinapi price
 const getPrice = async () => {
   try {
-    const requestOptions = {
-      method: 'GET',
-      uri: 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest',
-      qs: {
-        'id': '1'
-      },
+    const coinapi = await trae.get('https://rest.coinapi.io/v1/exchangerate/BTC/USD', {
       headers: {
-        'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY
-      },
-      json: true,
-      gzip: true
-    }
+        'X-CoinAPI-Key': process.env.COINAPI_KEY
+      }
+    })
 
-    const coinmarketcap = await rp(requestOptions)
-    const coinmarketcapPrice = coinmarketcap.data['1'].quote.USD
-    return coinmarketcapPrice
+    const coinapiPrice = Number(coinapi.data.rate)
+
+    return coinapiPrice
   } catch (err) {
     console.error('Error ' + err)
     throw err
@@ -49,18 +42,18 @@ module.exports = async (req, res) => {
       console.log(redisReplyPriceTimeSet)
 
       // get last price
-      const lastPrice = await getPrice()
+      const price = await getPrice()
 
       // we check that we have received a number
-      if (lastPrice.price > 0) {
+      if (price > 0) {
         // save price
-        const redisReplyPriceSet = await redisSet('price', JSON.stringify(lastPrice))
+        const redisReplyPriceSet = await redisSet('price', price)
         console.log(redisReplyPriceSet)
 
-        res.end('Updated ' + lastPrice)
+        res.end('Updated ' + price)
         return
       } else {
-        throw lastPrice
+        throw price
       }
     } else {
       const timeRemaining = new Date(FIFTEEN_MINUTES - timeDiff)
