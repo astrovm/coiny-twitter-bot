@@ -21,7 +21,7 @@ const getPrice = async () => {
     })
 
     const coinapiPrice = Number(coinapi.data.rate)
-    const coinmarketcapPrice = Number(coinmarketcap.data['1'].quote.USD)
+    const coinmarketcapPrice = Number(coinmarketcap.data.data['1'].quote.USD.price)
 
     const price = {
       coiny: (coinapiPrice + coinmarketcapPrice) / 2,
