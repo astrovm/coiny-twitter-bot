@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
       // we check that we have received a number
       if (price.coiny > 0) {
         // save price
-        const redisReplyPriceSet = JSON.stringify(await redisSet('price', price))
+        const redisReplyPriceSet = await redisSet('price', JSON.stringify(price))
         console.log(redisReplyPriceSet)
 
         res.end('Updated ' + price)
