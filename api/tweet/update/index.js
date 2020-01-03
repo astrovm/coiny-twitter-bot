@@ -75,7 +75,7 @@ const buildText = async (fees) => {
     if (fees[144] < fees[48]) text = text + `\n${fees[144]} sat/B ($${(fees[144] * feetousd).toFixed(2)}) - 24h`
     if (fees[504] < fees[144]) text = text + `\n${fees[504]} sat/B ($${(fees[504] * feetousd).toFixed(2)}) - 3d`
     if (fees[1008] < fees[504]) text = text + `\n${fees[1008]} sat/B ($${(fees[1008] * feetousd).toFixed(2)}) - 7d`
-    text = text + `\n\nheight ${blocks.height}`
+    text = text + `\n\nblocks ${blocks.height}`
     return text
   } catch (err) {
     console.error('Error ' + err)
