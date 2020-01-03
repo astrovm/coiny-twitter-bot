@@ -20,13 +20,22 @@ const getPrice = async () => {
       }
     })
 
+    const coingecko = await trae.get('https://api.coingecko.com/api/v3/simple/price', {
+      params: {
+        ids: 'bitcoin',
+        vs_currencies: 'usd'
+      }
+    })
+
     const coinapiPrice = Number(coinapi.data.rate)
     const coinmarketcapPrice = Number(coinmarketcap.data.data['1'].quote.USD.price)
+    const coingeckoPrice = Number(coingecko.data.bitcoin.usd)
 
     const price = {
-      coiny: (coinapiPrice + coinmarketcapPrice) / 2,
+      coiny: (coinapiPrice + coinmarketcapPrice + coingeckoPrice) / 3,
       coinapi: coinapiPrice,
-      coinmarketcap: coinmarketcapPrice
+      coinmarketcap: coinmarketcapPrice,
+      coingecko: coingeckoPrice
     }
 
     return price
