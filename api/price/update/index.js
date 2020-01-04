@@ -1,6 +1,7 @@
 // require libs
-const trae = require('trae');
+const trae = require('trae')
 const { redisGet, redisSet } = require('../../../modules/redis')
+const { mean, median } = require('mathjs')
 
 // function to request price
 const getPrice = async () => {
@@ -33,6 +34,8 @@ const getPrice = async () => {
 
     const price = {
       coiny: (coinapiPrice + coinmarketcapPrice + coingeckoPrice) / 3,
+      mean: mean(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
+      median: median(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
       coinapi: coinapiPrice,
       coinmarketcap: coinmarketcapPrice,
       coingecko: coingeckoPrice
