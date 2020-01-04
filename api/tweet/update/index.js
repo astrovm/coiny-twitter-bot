@@ -56,7 +56,7 @@ const checkDiff = async (currentTime, maxTime) => {
 const buildText = async (fees) => {
   try {
     const getPrice = JSON.parse(await redisGet('price'))
-    const price = Number(getPrice.mean).toFixed()
+    const price = Number(getPrice.median).toFixed()
 
     const usdtobtc = (1 / price).toFixed(8)
     const usdtosats = (usdtobtc * 10 ** 8).toFixed()
