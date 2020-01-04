@@ -33,7 +33,6 @@ const getPrice = async () => {
     const coingeckoPrice = Number(coingecko.data.bitcoin.usd)
 
     const price = {
-      coiny: (coinapiPrice + coinmarketcapPrice + coingeckoPrice) / 3,
       mean: mean(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
       median: median(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
       coinapi: coinapiPrice,
@@ -73,7 +72,7 @@ module.exports = async (req, res) => {
       const price = await getPrice()
 
       // we check that we have received a number
-      if (price.coiny > 0) {
+      if (price.mean > 0) {
         // save price
         const redisReplyPriceSet = await redisSet('price', JSON.stringify(price))
         console.log(redisReplyPriceSet)
