@@ -6,7 +6,7 @@ const { redisGet, redisSet } = require('../../../modules/redis')
 const getBlocks = async () => {
   try {
     const lastBlockHeight = await trae.get('https://blockstream.info/api/blocks/tip/height')
-    const blockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2019-5-10')
+    const blockchainSize = await trae.get('https://api.smartbit.com.au/v1/blockchain/chart/block-size-total?from=2020-01-01')
     let blocks = {}
     blocks.height = lastBlockHeight.data
     blocks.size = (Number(blockchainSize.data.chart.data.slice(-1)[0].y) / 1000000000).toFixed(2)
@@ -23,17 +23,17 @@ module.exports = async (req, res) => {
     // check last time updated
     const lastUpdateTime = await redisGet('blocks:time')
 
-    const TEN_MINUTES = 10 * 60 * 1000
+    const FIVE_MINUTES = 5 * 60 * 1000
     const currentTime = Date.now()
 
     // if blocks:time is empty, just run the update
-    const keyTime = ((lastUpdateTime == null) ? (currentTime - TEN_MINUTES) : lastUpdateTime)
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - FIVE_MINUTES) : lastUpdateTime)
 
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    // if last time >= 10 minutes, update it now
-    if (timeDiff >= TEN_MINUTES) {
+    // if last time >= 5 minutes, update it now
+    if (timeDiff >= FIVE_MINUTES) {
       // save time of the update
       const redisReplyBlocksTimeSet = await redisSet('blocks:time', currentTime)
       console.log(redisReplyBlocksTimeSet)
@@ -48,7 +48,7 @@ module.exports = async (req, res) => {
       res.end('Updated ' + blocks)
       return
     } else {
-      const timeRemaining = new Date(TEN_MINUTES - timeDiff)
+      const timeRemaining = new Date(FIVE_MINUTES - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
       return
     }
