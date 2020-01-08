@@ -22,4 +22,4 @@ Install the dependencies, set up env vars, and run:
 
 ## License
 
-Coiny is licensed under the [GNU Affero General Public License v3.0](https://github.com/astrolince/coiny/blob/master/LICENSE).
+Coiny is licensed under the [MIT License](https://github.com/astrolince/coiny/blob/master/LICENSE).
