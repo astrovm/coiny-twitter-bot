@@ -19,8 +19,6 @@
         }
     ],
     "env": {
-        "COINAPI_KEY": "@coinapi_key",
-        "COINMARKETCAP_API_KEY": "@coinmarketcap_api_key",
         "REDIS_PORT": "@coiny_redis_port",
         "REDIS_HOST": "@coiny_redis_host",
         "REDIS_PASS": "@coiny_redis_pass",

@@ -1,11 +1,10 @@
 {
   "name": "coiny",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Bitcoin fee estimates and market info.",
   "author": "astrolince <astro@astrolince.com>",
   "dependencies": {
     "mastodon": "^1.2.2",
-    "mathjs": "^6.3.0",
     "next": "^9.1.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -13,5 +12,5 @@
     "trae": "^1.4.2",
     "twitter": "^1.7.1"
   },
-  "license": "AGPL-3.0-or-later"
+  "license": "MIT"
 }

@@ -4,7 +4,7 @@ const { redisGet } = require('../../modules/redis')
 // export api
 module.exports = async (req, res) => {
   try {
-    const redisReplyPriceGet = JSON.parse(await redisGet('price'))
+    const redisReplyPriceGet = await redisGet('price')
 
     let respond = {}
     respond.data = redisReplyPriceGet

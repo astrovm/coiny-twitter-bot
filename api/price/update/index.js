@@ -1,26 +1,10 @@
 // require libs
 const trae = require('trae')
 const { redisGet, redisSet } = require('../../../modules/redis')
-const { mean, median } = require('mathjs')
 
 // function to request price
 const getPrice = async () => {
   try {
-    const coinapi = await trae.get('https://rest.coinapi.io/v1/exchangerate/BTC/USD', {
-      headers: {
-        'X-CoinAPI-Key': process.env.COINAPI_KEY
-      }
-    })
-
-    const coinmarketcap = await trae.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest', {
-      params: {
-        id: 1
-      },
-      headers: {
-        'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY
-      }
-    })
-
     const coingecko = await trae.get('https://api.coingecko.com/api/v3/simple/price', {
       params: {
         ids: 'bitcoin',
@@ -28,19 +12,9 @@ const getPrice = async () => {
       }
     })
 
-    const coinapiPrice = Number(coinapi.data.rate)
-    const coinmarketcapPrice = Number(coinmarketcap.data.data['1'].quote.USD.price)
     const coingeckoPrice = Number(coingecko.data.bitcoin.usd)
 
-    const price = {
-      mean: mean(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
-      median: median(coinapiPrice, coinmarketcapPrice, coingeckoPrice),
-      coinapi: coinapiPrice,
-      coinmarketcap: coinmarketcapPrice,
-      coingecko: coingeckoPrice
-    }
-
-    return price
+    return coingeckoPrice
   } catch (err) {
     console.error('Error ' + err)
     throw err
@@ -72,9 +46,9 @@ module.exports = async (req, res) => {
       const price = await getPrice()
 
       // we check that we have received a number
-      if (price.mean > 0) {
+      if (price > 0) {
         // save price
-        const redisReplyPriceSet = await redisSet('price', JSON.stringify(price))
+        const redisReplyPriceSet = await redisSet('price', price)
         console.log(redisReplyPriceSet)
 
         res.end('Updated ' + price)
