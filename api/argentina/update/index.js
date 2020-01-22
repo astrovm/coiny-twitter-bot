@@ -11,10 +11,11 @@ const getPrices = async () => {
       }
     })
 
-    const ripioPrices = getRipio[0]
+    const ripioPrices = ripio[0]
 
     const prices = {
-        ripio: ripioPrices
+        ripio: ripioPrices,
+        test: ripio
     }
 
     return prices
