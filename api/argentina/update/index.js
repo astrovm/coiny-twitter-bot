@@ -11,11 +11,29 @@ const getPrices = async () => {
       }
     })
 
-    const ripioPrices = ripio[0]
+    const ripioBTC = ripio.data.find(price => price.ticker === 'BTC_ARS')
+    const ripioETH = ripio.data.find(price => price.ticker === 'ETH_ARS')
+    const ripioDAI = ripio.data.find(price => price.ticker === 'DAI_ARS')
 
     const prices = {
-        ripio: ripioPrices,
-        test: ripio
+      BTC_ARS: {
+        ripio: {
+          bid: ripioBTC.sell_rate * 0.99 * 0.995, // 1% sell fee + 0.5% bank fee
+          ask: ripioBTC.buy_rate * 1.01 // 1% buy fee
+        }
+      },
+      ETH_ARS: {
+        ripio: {
+          bid: ripioETH.sell_rate * 0.99 * 0.995,
+          ask: ripioETH.buy_rate * 1.01
+        }
+      },
+      DAI_ARS: {
+        ripio: {
+          bid: ripioDAI.sell_rate * 0.99 * 0.995,
+          ask: ripioDAI.buy_rate * 1.01
+        }
+      }
     }
 
     return prices
