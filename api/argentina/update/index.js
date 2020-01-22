@@ -65,19 +65,13 @@ module.exports = async (req, res) => {
       console.log(redisReplyArgentinaTimeSet)
 
       // get last prices
-      const prices = await getPrices()
+      const prices = JSON.stringify(await getPrices())
 
-      // we check that we have received a number
-      if (prices != null) {
-        // save prices
-        const redisReplyArgentinaSet = await redisSet('argentina', prices)
-        console.log(redisReplyArgentinaSet)
+      // save prices
+      const redisReplyArgentinaSet = await redisSet('argentina', prices)
+      console.log(redisReplyArgentinaSet)
 
-        res.end('Updated ' + prices)
-        return
-      } else {
-        throw prices
-      }
+      res.end('Updated ' + prices)
     } else {
       const timeRemaining = new Date(ONE_MINUTE - timeDiff)
       res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)

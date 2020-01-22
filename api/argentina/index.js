@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     const redisReplyArgentinaGet = await redisGet('argentina')
 
     let respond = {}
-    respond.data = redisReplyArgentinaGet
+    respond.data = JSON.parse(redisReplyArgentinaGet)
     respond.error = false
     respond.path = req.url
 
