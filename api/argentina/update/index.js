@@ -12,8 +12,9 @@ const getPrices = async () => {
     const prices = {
       BTC_ARS: {
         ripio: {
-          bid: ripioBTC.ARS_SELL * 0.99 * 0.995, // 1% sell fee + 0.5% bank fee
-          ask: ripioBTC.ARS_BUY * 1.01 // 1% buy fee
+          bid: ripioBTC.ARS_SELL * 0.99, // 1% fee
+          ask: ripioBTC.ARS_BUY * 1.01, // 1% fee
+          networkfee: 0.00000582 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         }
       }
     }
