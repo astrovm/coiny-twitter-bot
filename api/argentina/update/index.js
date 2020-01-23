@@ -49,7 +49,7 @@ const getPrices = async () => {
         bitex: {
           bid: Number(bitexPrices.attributes.bid) * 0.989 * 0.9975, // 1.1% + 0.25% fee
           ask: Number(bitexPrices.attributes.ask) * 1.011 * 1.0025, // 1.1% + 0.25% fee
-          networkfee: 0.0 
+          networkfee: 0.0
         }
       }
     }
