@@ -9,7 +9,8 @@ const bestBuy = (amount, prices) => {
 
   const best = {
     exchange: sorted[0],
-    amount: btcamount,
+    ars_amount: amount,
+    btc_amount: btcamount,
     rate: amount / btcamount,
     data: prices[sorted[0]],
     sorted: sorted
