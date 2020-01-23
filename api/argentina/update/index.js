@@ -6,28 +6,28 @@ const { redisGet, redisSet } = require('../../../modules/redis')
 const getPrices = async () => {
   try {
     const ripio = await trae.get('https://ripio.com/api/v1/rates/')
-    const ripioxchg = await trae.get('https://api.exchange.ripio.com/api/v1/rate/BTC_ARS/')
+    const bitso = await trae.get('https://api.bitso.com/v3/ticker/?book=btc_ars')
     const argenbtc = await trae.get('https://argenbtc.com/public/cotizacion_js.php')
 
     const ripioPrices = ripio.data.rates
-    const ripioxchgPrices = ripioxchg.data
+    const bitsoPrices = bitso.data.payload
     const argenbtcPrices = JSON.parse(argenbtc.data)
 
     const prices = {
       BTC_ARS: {
         ripio: {
-          bid: ripioPrices.ARS_SELL * 0.99, // 1% fee
-          ask: ripioPrices.ARS_BUY * 1.01, // 1% fee
+          bid: Number(ripioPrices.ARS_SELL) * 0.99, // 1% fee
+          ask: Number(ripioPrices.ARS_BUY) * 1.01, // 1% fee
           networkfee: 0.00000582 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         },
-        ripioxchg: {
-          bid: ripioxchgPrices.bid, // no fees?
-          ask: ripioxchgPrices.ask, // no fees?
-          networkfee: 0.00000582 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
+        bitso: {
+          bid: Number(bitsoPrices.bid) * 0.998, // 0.2% fee
+          ask: Number(bitsoPrices.ask) * 1.002, // 0.2% fee
+          networkfee: 0.00004227 // https://bitso.com/fees
         },
         argenbtc: {
-          bid: argenbtcPrices.precio_venta, // spread fee
-          ask: argenbtcPrices.precio_compra, // spread fee
+          bid: Number(argenbtcPrices.precio_venta), // spread fee
+          ask: Number(argenbtcPrices.precio_compra), // spread fee
           networkfee: 0.00005000 // https://argenbtc.com/SolicitarRetirosBTC
         }
       }
