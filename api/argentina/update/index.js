@@ -39,7 +39,7 @@ const getPrices = async () => {
       ETH_BTC: coinbasepro_ETH_BTC.data
     }
 
-    const prices = {
+    let prices = {
       BTC_ARS: {
         ripio: {
           bid: Number(ripioPrices.ARS_SELL) * 0.99, // 1% fee
@@ -80,18 +80,9 @@ const getPrices = async () => {
           bid: Number(qubitPrices.bid), // spread fee
           ask: Number(qubitPrices.ask), // spread fee
           networkfee: 0 // https://www.qubit.com.ar/faq
-        },
-        dai_buenbit_usdc_coinbasepro_btc: {
-          bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * buenbitPrices.daiars.purchase_price, // 0.5% + 0.5% fee
-          ask: 1 / (1 / buenbitPrices.daiars.selling_price * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
-          networkfee: 0
-        },
-        dai_buenbit_eth_coinbasepro_btc: {
-          bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * buenbitPrices.daiars.purchase_price, // 0.5% + 0.5% fee
-          ask: 1 / (1 / buenbitPrices.daiars.selling_price / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
-          networkfee: 0
         }
       },
+      BTC_USD: {},
       DAI_ARS: {
         buenbit: {
           bid: Number(buenbitPrices.daiars.purchase_price),
@@ -106,6 +97,30 @@ const getPrices = async () => {
           networkfee: 0
         }
       }
+    }
+
+    prices.BTC_ARS.dai_buenbit_usdc_coinbasepro_btc = {
+      bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
+    }
+
+    prices.BTC_ARS.dai_buenbit_eth_coinbasepro_btc = {
+      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
+    }
+
+    prices.BTC_USD.dai_buenbit_usdc_coinbasepro_btc = {
+      bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * prices.DAI_USD.buenbit.bid, // 0.5% + 0.5% fee
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
+    }
+
+    prices.BTC_USD.dai_buenbit_eth_coinbasepro_btc = {
+      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_USD.buenbit.bid, // 0.5% + 0.5% fee
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
     }
 
     return prices
