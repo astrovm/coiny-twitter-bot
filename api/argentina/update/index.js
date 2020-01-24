@@ -32,27 +32,27 @@ const getPrices = async () => {
         ripio: {
           bid: Number(ripioPrices.ARS_SELL) * 0.99, // 1% fee
           ask: Number(ripioPrices.ARS_BUY) * 1.01, // 1% fee
-          networkfee: 0.00000582 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
+          networkfee: 0.00001164 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         },
         bitso: {
           bid: Number(bitsoPrices.bid) * 0.998, // 0.2% fee
           ask: Number(bitsoPrices.ask) * 1.002, // 0.2% fee
-          networkfee: 0.00004227 // https://bitso.com/fees
+          networkfee: 0.00003599 // https://bitso.com/fees
         },
         argenbtc: {
           bid: Number(argenbtcPrices.precio_venta), // spread fee
           ask: Number(argenbtcPrices.precio_compra), // spread fee
-          networkfee: 0.00005000 // https://argenbtc.com/SolicitarRetirosBTC
+          networkfee: 0.00005 // https://argenbtc.com/SolicitarRetirosBTC
         },
         satoshitango: {
           bid: Number(satoshitangoPrices.BTC.bid) * 0.99, // 1% fee
           ask: Number(satoshitangoPrices.BTC.ask) * 1.01, // 1% fee
-          networkfee: 0.00030000 // https://www.satoshitango.com/help
+          networkfee: 0.0003 // https://www.satoshitango.com/help
         },
         cryptomkt: {
           bid: Number(cryptomktPrices.bid) * 0.985, // 1.5% fee
           ask: Number(cryptomktPrices.ask) * 1.015, // 1.5% fee
-          networkfee: 0.00050000 // https://www.cryptomkt.com/en/fees
+          networkfee: 0.0005 // https://www.cryptomkt.com/en/fees
         },
         bitex: {
           bid: Number(bitexPrices.attributes.bid) * 0.989 * 0.9975, // 1.1% + 0.25% fee
