@@ -14,6 +14,7 @@ const getPrices = async () => {
     const buda = await trae.get('https://www.buda.com/api/v2/markets/btc-ars/ticker')
     const qubit_bid = await trae.get('https://www.qubit.com.ar/c_unvalue')
     const qubit_ask = await trae.get('https://www.qubit.com.ar/c_value')
+    const buenbit = await trae.get('https://be.buenbit.com/api/market/tickers/')
 
     const ripioPrices = ripio.data.rates
     const bitsoPrices = bitso.data.payload
@@ -26,6 +27,7 @@ const getPrices = async () => {
       bid: qubit_bid.data.BTC[2],
       ask: qubit_ask.data.BTC[2]
     }
+    const buenbitPrices = buenbit.data.object
 
     const prices = {
       BTC_ARS: {
@@ -68,6 +70,18 @@ const getPrices = async () => {
           bid: Number(qubitPrices.bid), // spread fee
           ask: Number(qubitPrices.ask), // spread fee
           networkfee: 0 // https://www.qubit.com.ar/faq
+        }
+      },
+      DAI_ARS: {
+        buenbit: {
+          bid: Number(buenbitPrices.daiars.purchase_price),
+          ask: Number(buenbitPrices.daiars.selling_price)
+        }
+      },
+      DAI_USD: {
+        buenbit: {
+          bid: Number(buenbitPrices.daiusd.purchase_price),
+          ask: Number(buenbitPrices.daiusd.selling_price)
         }
       }
     }
