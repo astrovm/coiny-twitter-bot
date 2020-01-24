@@ -96,7 +96,13 @@ const getPrices = async () => {
           ask: Number(buenbitPrices.daiusd.selling_price),
           networkfee: 0
         }
-      }
+      },
+      USD_ARS: {}
+    }
+
+    prices.USD_ARS.buenbit = {
+      bid: prices.DAI_ARS.buenbit.bid / prices.DAI_USD.buenbit.ask,
+      ask: prices.DAI_ARS.buenbit.ask / prices.DAI_USD.buenbit.bid
     }
 
     prices.BTC_ARS.dai_buenbit_usdc_coinbasepro_btc = {
