@@ -12,6 +12,8 @@ const getPrices = async () => {
     const cryptomkt = await trae.get('https://api.cryptomkt.com/v1/ticker?market=BTCARS')
     const bitex = await trae.get('https://bitex.la/api/tickers/btc_ars')
     const buda = await trae.get('https://www.buda.com/api/v2/markets/btc-ars/ticker')
+    const qubit_bid = await trae.get('https://www.qubit.com.ar/c_unvalue')
+    const qubit_ask = await trae.get('https://www.qubit.com.ar/c_value')
 
     const ripioPrices = ripio.data.rates
     const bitsoPrices = bitso.data.payload
@@ -20,6 +22,10 @@ const getPrices = async () => {
     const cryptomktPrices = cryptomkt.data.data[0]
     const bitexPrices = JSON.parse(bitex.data).data
     const budaPrices = buda.data.ticker
+    const qubitPrices = {
+      bid: qubit_bid.data.BTC[2],
+      ask: qubit_ask.data.BTC[2]
+    }
 
     const prices = {
       BTC_ARS: {
@@ -51,12 +57,17 @@ const getPrices = async () => {
         bitex: {
           bid: Number(bitexPrices.attributes.bid) * 0.989 * 0.9975, // 1.1% + 0.25% fee
           ask: Number(bitexPrices.attributes.ask) * 1.011 * 1.0025, // 1.1% + 0.25% fee
-          networkfee: 0 // no fee
+          networkfee: 0 // https://bitex.zendesk.com/hc/es/articles/115000357172-Comisiones
         },
         buda: {
           bid: Number(budaPrices.max_bid[0]) * 0.994 * 0.996, // 0.6% + 0.4% fee
           ask: Number(budaPrices.min_ask[0]) * 1.006 * 1.004, // 0.6% + 0.4% fee
-          networkfee: 0 // no fee
+          networkfee: 0 // https://www.buda.com/comisiones
+        },
+        qubit: {
+          bid: Number(qubitPrices.bid), // spread fee
+          ask: Number(qubitPrices.ask), // spread fee
+          networkfee: 0 // https://www.qubit.com.ar/faq
         }
       }
     }
