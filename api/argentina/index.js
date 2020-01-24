@@ -28,7 +28,8 @@ module.exports = async (req, res) => {
 
     let resPrices = getprices
     resPrices.BTC_ARS.best = {
-      ask: bestBuy(amount, getprices.BTC_ARS)
+      ask: bestBuy(amount, getprices.BTC_ARS),
+      bid: Object.keys(getprices.BTC_ARS).sort(function (a, b) { return getprices.BTC_ARS[b].bid - getprices.BTC_ARS[a].bid })
     }
 
     let respond = {}

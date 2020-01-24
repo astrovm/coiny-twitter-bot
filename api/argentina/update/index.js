@@ -15,6 +15,8 @@ const getPrices = async () => {
     const qubit_bid = await trae.get('https://www.qubit.com.ar/c_unvalue')
     const qubit_ask = await trae.get('https://www.qubit.com.ar/c_value')
     const buenbit = await trae.get('https://be.buenbit.com/api/market/tickers/')
+    const coinbaseproBtcUsdc = await trae.get('https://api.pro.coinbase.com/products/btc-usdc/ticker')
+    const coinbaseproDaiUsdc = await trae.get('https://api.pro.coinbase.com/products/dai-usdc/ticker')
 
     const ripioPrices = ripio.data.rates
     const bitsoPrices = bitso.data.payload
@@ -28,6 +30,10 @@ const getPrices = async () => {
       ask: qubit_ask.data.BTC[2]
     }
     const buenbitPrices = buenbit.data.object
+    const coinbaseproPrices = {
+      BTC_USDC: coinbaseproBtcUsdc.data,
+      DAI_USDC: coinbaseproDaiUsdc.data
+    }
 
     const prices = {
       BTC_ARS: {
@@ -70,6 +76,11 @@ const getPrices = async () => {
           bid: Number(qubitPrices.bid), // spread fee
           ask: Number(qubitPrices.ask), // spread fee
           networkfee: 0 // https://www.qubit.com.ar/faq
+        },
+        buenbit_coinbasepro: {
+          bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * buenbitPrices.daiars.purchase_price, // 0.5% + 0.5% fee
+          ask: 1 / (1 / buenbitPrices.daiars.selling_price * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
+          networkfee: 0
         }
       },
       DAI_ARS: {
