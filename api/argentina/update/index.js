@@ -319,6 +319,16 @@ const getPrices = async () => {
           bid: qubitPrices.BTC_ARS.bid, // spread fee
           ask: qubitPrices.BTC_ARS.ask, // spread fee
           networkfee: 0 // https://www.qubit.com.ar/faq
+        },
+        buenbit: {
+          bid: buenbitPrices.BTC_ARS.bid * 0.994 * 0.9965, // 0.6% + 0.35% fee
+          ask: buenbitPrices.BTC_ARS.ask * 1.006 * 1.0035, // 0.6% + 0.35% fee
+          networkfee: 0.00030 // https://exchange.buenbit.com/funds#/withdraws/btc
+        },
+        universalcoins: {
+          bid: universalcoins.BTC_ARS.bid, // spread fee
+          ask: universalcoins.BTC_ARS.ask * 1.032, // 3.2% fee
+          networkfee: 0
         }
       },
       BTC_USD: {},
