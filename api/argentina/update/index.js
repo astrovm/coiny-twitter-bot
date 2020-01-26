@@ -326,8 +326,8 @@ const getPrices = async () => {
           networkfee: 0.00030 // https://exchange.buenbit.com/funds#/withdraws/btc
         },
         universalcoins: {
-          bid: universalcoins.BTC_ARS.bid, // spread fee
-          ask: universalcoins.BTC_ARS.ask * 1.032, // 3.2% fee
+          bid: universalcoinsPrices.BTC_ARS.bid, // spread fee
+          ask: universalcoinsPrices.BTC_ARS.ask * 1.032, // 3.2% fee
           networkfee: 0
         }
       },
