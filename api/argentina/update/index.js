@@ -118,13 +118,77 @@ const getPrices = async () => {
       }
     }
 
-    // qubit.com.ar FALTAN
+    // qubit.com.ar
     const qubit_bid = await trae.get('https://www.qubit.com.ar/c_unvalue')
     const qubit_ask = await trae.get('https://www.qubit.com.ar/c_value')
     const qubitPrices = {
       BTC_ARS: {
         bid: Number(qubit_bid.data.BTC[2]),
         ask: Number(qubit_ask.data.BTC[2])
+      },
+      USDT_ARS: {
+        bid: Number(qubit_bid.data.USDT[2]),
+        ask: Number(qubit_ask.data.USDT[2])
+      },
+      ETH_ARS: {
+        bid: Number(qubit_bid.data.ETH[2]),
+        ask: Number(qubit_ask.data.ETH[2])
+      },
+      XRP_ARS: {
+        bid: Number(qubit_bid.data.XRP[2]),
+        ask: Number(qubit_ask.data.XRP[2])
+      },
+      ADA_ARS: {
+        bid: Number(qubit_bid.data.ADA[2]),
+        ask: Number(qubit_ask.data.ADA[2])
+      },
+      ETC_ARS: {
+        bid: Number(qubit_bid.data.ETC[2]),
+        ask: Number(qubit_ask.data.ETC[2])
+      },
+      LINK_ARS: {
+        bid: Number(qubit_bid.data.LINK[2]),
+        ask: Number(qubit_ask.data.LINK[2])
+      },
+      XLM_ARS: {
+        bid: Number(qubit_bid.data.XLM[2]),
+        ask: Number(qubit_ask.data.XLM[2])
+      },
+      QTUM_ARS: {
+        bid: Number(qubit_bid.data.QTUM[2]),
+        ask: Number(qubit_ask.data.QTUM[2])
+      },
+      EOS_ARS: {
+        bid: Number(qubit_bid.data.EOS[2]),
+        ask: Number(qubit_ask.data.EOS[2])
+      },
+      TUSD_ARS: {
+        bid: Number(qubit_bid.data.TUSD[2]),
+        ask: Number(qubit_ask.data.TUSD[2])
+      },
+      PAX_ARS: {
+        bid: Number(qubit_bid.data.PAX[2]),
+        ask: Number(qubit_ask.data.PAX[2])
+      },
+      BNB_ARS: {
+        bid: Number(qubit_bid.data.BNB[2]),
+        ask: Number(qubit_ask.data.BNB[2])
+      },
+      LTC_ARS: {
+        bid: Number(qubit_bid.data.LTC[2]),
+        ask: Number(qubit_ask.data.LTC[2])
+      },
+      IOTA_ARS: {
+        bid: Number(qubit_bid.data.IOTA[2]),
+        ask: Number(qubit_ask.data.IOTA[2])
+      },
+      ICX_ARS: {
+        bid: Number(qubit_bid.data.ICX[2]),
+        ask: Number(qubit_ask.data.ICX[2])
+      },
+      NEO_ARS: {
+        bid: Number(qubit_bid.data.NEO[2]),
+        ask: Number(qubit_ask.data.NEO[2])
       }
     }
 
@@ -190,15 +254,28 @@ const getPrices = async () => {
       }
     }
 
+    // pro.coinbase.com
     const coinbasepro_BTC_USDC = await trae.get('https://api.pro.coinbase.com/products/btc-usdc/ticker')
     const coinbasepro_DAI_USDC = await trae.get('https://api.pro.coinbase.com/products/dai-usdc/ticker')
     const coinbasepro_ETH_DAI = await trae.get('https://api.pro.coinbase.com/products/eth-dai/ticker')
     const coinbasepro_ETH_BTC = await trae.get('https://api.pro.coinbase.com/products/eth-btc/ticker')
     const coinbaseproPrices = {
-      BTC_USDC: coinbasepro_BTC_USDC.data,
-      DAI_USDC: coinbasepro_DAI_USDC.data,
-      ETH_DAI: coinbasepro_ETH_DAI.data,
-      ETH_BTC: coinbasepro_ETH_BTC.data
+      BTC_USDC: {
+        bid: Number(coinbasepro_BTC_USDC.data.bid),
+        ask: Number(coinbasepro_BTC_USDC.data.ask)
+      },
+      DAI_USDC: {
+        bid: Number(coinbasepro_DAI_USDC.data.bid),
+        ask: Number(coinbasepro_DAI_USDC.data.ask)
+      },
+      ETH_DAI: {
+        bid: Number(coinbasepro_ETH_DAI.data.bid),
+        ask: Number(coinbasepro_ETH_DAI.data.ask)
+      },
+      ETH_BTC: {
+        bid: Number(coinbasepro_ETH_BTC.data.bid),
+        ask: Number(coinbasepro_ETH_BTC.data.ask)
+      }
     }
 
     let prices = {
