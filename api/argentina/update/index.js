@@ -283,12 +283,12 @@ const getPrices = async () => {
         ripio: {
           bid: ripioPrices.BTC_ARS.bid * 0.99, // 1% fee
           ask: ripioPrices.BTC_ARS.ask * 1.01, // 1% fee
-          networkfee: 0.00000582 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
+          networkfee: 0.00003492 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         },
         bitso: {
           bid: bitsoPrices.BTC_ARS.bid * 0.998, // 0.2% fee
           ask: bitsoPrices.BTC_ARS.ask * 1.002, // 0.2% fee
-          networkfee: 0.00001440 // https://bitso.com/fees
+          networkfee: 0.00004103 // https://bitso.com/fees
         },
         argenbtc: {
           bid: argenbtcPrices.BTC_ARS.bid, // spread fee
