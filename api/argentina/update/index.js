@@ -324,20 +324,16 @@ const getPrices = async () => {
       USD_ARS: {}
     }
 
+    // ARS <Buenbit> DAI <Buenbit> USD
     prices.USD_ARS.buenbit = {
       bid: prices.DAI_ARS.buenbit.bid / prices.DAI_USD.buenbit.ask,
       ask: prices.DAI_ARS.buenbit.ask / prices.DAI_USD.buenbit.bid
     }
 
+    // ARS <Buenbit> DAI <Coinbase Pro> USDC <Coinbase Pro> BTC
     prices.BTC_ARS.dai_buenbit_usdc_coinbasepro_btc = {
       bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
       ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
-      networkfee: 0
-    }
-
-    prices.BTC_ARS.dai_buenbit_eth_coinbasepro_btc = {
-      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
       networkfee: 0
     }
 
@@ -347,9 +343,23 @@ const getPrices = async () => {
       networkfee: 0
     }
 
+    // ARS <Buenbit> DAI <Coinbase Pro> ETH <Coinbase Pro> BTC
+    prices.BTC_ARS.dai_buenbit_eth_coinbasepro_btc = {
+      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
+    }
+
     prices.BTC_USD.dai_buenbit_eth_coinbasepro_btc = {
       bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_USD.buenbit.bid, // 0.5% + 0.5% fee
       ask: 1 / (1 / prices.DAI_USD.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+      networkfee: 0
+    }
+
+    // ARS <Bitso> BTC <Bitso> XRP <Coinbase Pro> BTC
+    prices.BTC_ARS.btc_bitso_xrp_coinbasepro_btc = {
+      bid: 1 / coinbaseproPrices.XRP_BTC.ask * 0.995 * bitsoPrices.XRP_BTC.bid * 0.99925 * prices.BTC_ARS.bitso.bid * 0.998, // 0.2% + 0.075% + 0.5% fee
+      ask: 1 / (1 / prices.BTC_ARS.bitso.ask * 0.998 / bitsoPrices.XRP_BTC.ask * 0.99902 * coinbaseproPrices.XRP_BTC.bid * 0.995), // 0.2% + 0.098% + 0.5% fee
       networkfee: 0
     }
 
