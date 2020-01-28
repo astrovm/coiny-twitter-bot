@@ -17,11 +17,26 @@ const getPrices = async () => {
     // bitso.com
     const bitso = await trae.get('https://api.bitso.com/v3/ticker')
     const bitso_BTC_ARS = bitso.data.payload.find(coin => coin.book === 'btc_ars')
+    const bitso_LTC_BTC = bitso.data.payload.find(coin => coin.book === 'ltc_btc')
+    const bitso_XRP_BTC = bitso.data.payload.find(coin => coin.book === 'xrp_btc')
+    const bitso_ETH_BTC = bitso.data.payload.find(coin => coin.book === 'eth_btc')
     const bitsoPrices = {
       BTC_ARS: {
         bid: Number(bitso_BTC_ARS.bid),
         ask: Number(bitso_BTC_ARS.ask)
-      }
+      },
+      LTC_BTC: {
+        bid: Number(bitso_LTC_BTC.bid),
+        ask: Number(bitso_LTC_BTC.ask)
+      },
+      XRP_BTC: {
+        bid: Number(bitso_XRP_BTC.bid),
+        ask: Number(bitso_XRP_BTC.ask)
+      },
+      ETH_BTC: {
+        bid: Number(bitso_ETH_BTC.bid),
+        ask: Number(bitso_ETH_BTC.ask)
+      },
     }
 
     // argenbtc.com
@@ -52,10 +67,6 @@ const getPrices = async () => {
       XRP_ARS: {
         bid: Number(satoshitango.data.data.ticker.XRP.bid),
         ask: Number(satoshitango.data.data.ticker.XRP.ask)
-      },
-      BCH_ARS: {
-        bid: Number(satoshitango.data.data.ticker.BCH.bid),
-        ask: Number(satoshitango.data.data.ticker.BCH.ask)
       }
     }
 
@@ -98,7 +109,6 @@ const getPrices = async () => {
     const buda_BTC = await trae.get('https://www.buda.com/api/v2/markets/btc-ars/ticker')
     const buda_ETH = await trae.get('https://www.buda.com/api/v2/markets/eth-ars/ticker')
     const buda_LTC = await trae.get('https://www.buda.com/api/v2/markets/ltc-ars/ticker')
-    const buda_BCH = await trae.get('https://www.buda.com/api/v2/markets/bch-ars/ticker')
     const budaPrices = {
       BTC_ARS: {
         bid: Number(buda_BTC.data.ticker.max_bid[0]),
@@ -111,10 +121,6 @@ const getPrices = async () => {
       LTC_ARS: {
         bid: Number(buda_LTC.data.ticker.max_bid[0]),
         ask: Number(buda_LTC.data.ticker.min_ask[0])
-      },
-      BCH_ARS: {
-        bid: Number(buda_BCH.data.ticker.max_bid[0]),
-        ask: Number(buda_BCH.data.ticker.min_ask[0])
       }
     }
 
@@ -138,29 +144,9 @@ const getPrices = async () => {
         bid: Number(qubit_bid.data.XRP[2]),
         ask: Number(qubit_ask.data.XRP[2])
       },
-      ADA_ARS: {
-        bid: Number(qubit_bid.data.ADA[2]),
-        ask: Number(qubit_ask.data.ADA[2])
-      },
-      ETC_ARS: {
-        bid: Number(qubit_bid.data.ETC[2]),
-        ask: Number(qubit_ask.data.ETC[2])
-      },
-      LINK_ARS: {
-        bid: Number(qubit_bid.data.LINK[2]),
-        ask: Number(qubit_ask.data.LINK[2])
-      },
       XLM_ARS: {
         bid: Number(qubit_bid.data.XLM[2]),
         ask: Number(qubit_ask.data.XLM[2])
-      },
-      QTUM_ARS: {
-        bid: Number(qubit_bid.data.QTUM[2]),
-        ask: Number(qubit_ask.data.QTUM[2])
-      },
-      EOS_ARS: {
-        bid: Number(qubit_bid.data.EOS[2]),
-        ask: Number(qubit_ask.data.EOS[2])
       },
       TUSD_ARS: {
         bid: Number(qubit_bid.data.TUSD[2]),
@@ -170,25 +156,9 @@ const getPrices = async () => {
         bid: Number(qubit_bid.data.PAX[2]),
         ask: Number(qubit_ask.data.PAX[2])
       },
-      BNB_ARS: {
-        bid: Number(qubit_bid.data.BNB[2]),
-        ask: Number(qubit_ask.data.BNB[2])
-      },
       LTC_ARS: {
         bid: Number(qubit_bid.data.LTC[2]),
         ask: Number(qubit_ask.data.LTC[2])
-      },
-      IOTA_ARS: {
-        bid: Number(qubit_bid.data.IOTA[2]),
-        ask: Number(qubit_ask.data.IOTA[2])
-      },
-      ICX_ARS: {
-        bid: Number(qubit_bid.data.ICX[2]),
-        ask: Number(qubit_ask.data.ICX[2])
-      },
-      NEO_ARS: {
-        bid: Number(qubit_bid.data.NEO[2]),
-        ask: Number(qubit_ask.data.NEO[2])
       }
     }
 
@@ -225,8 +195,6 @@ const getPrices = async () => {
     const universalcoins_ETH_ARS = universalcoins.data.find(coin => coin.codigo === 'ETH')
     const universalcoins_XRP_ARS = universalcoins.data.find(coin => coin.codigo === 'XRP')
     const universalcoins_LTC_ARS = universalcoins.data.find(coin => coin.codigo === 'LTC')
-    const universalcoins_BCH_ARS = universalcoins.data.find(coin => coin.codigo === 'BCH')
-    const universalcoins_EOS_ARS = universalcoins.data.find(coin => coin.codigo === 'EOS')
     const universalcoinsPrices = {
       BTC_ARS: {
         bid: Number(universalcoins_BTC_ARS.cotizacionBaseCompraARS) * Number(universalcoins_BTC_ARS.multiplicadorCompraARS),
@@ -243,14 +211,6 @@ const getPrices = async () => {
       LTC_ARS: {
         bid: Number(universalcoins_LTC_ARS.cotizacionBaseCompraARS) * Number(universalcoins_LTC_ARS.multiplicadorCompraARS),
         ask: Number(universalcoins_LTC_ARS.cotizacionBaseCompraARS) * Number(universalcoins_LTC_ARS.multiplicadorVentaARS)
-      },
-      BCH_ARS: {
-        bid: Number(universalcoins_BCH_ARS.cotizacionBaseCompraARS) * Number(universalcoins_BCH_ARS.multiplicadorCompraARS),
-        ask: Number(universalcoins_BCH_ARS.cotizacionBaseCompraARS) * Number(universalcoins_BCH_ARS.multiplicadorVentaARS)
-      },
-      EOS_ARS: {
-        bid: Number(universalcoins_EOS_ARS.cotizacionBaseCompraARS) * Number(universalcoins_EOS_ARS.multiplicadorCompraARS),
-        ask: Number(universalcoins_EOS_ARS.cotizacionBaseCompraARS) * Number(universalcoins_EOS_ARS.multiplicadorVentaARS)
       }
     }
 
@@ -259,6 +219,9 @@ const getPrices = async () => {
     const coinbasepro_DAI_USDC = await trae.get('https://api.pro.coinbase.com/products/dai-usdc/ticker')
     const coinbasepro_ETH_DAI = await trae.get('https://api.pro.coinbase.com/products/eth-dai/ticker')
     const coinbasepro_ETH_BTC = await trae.get('https://api.pro.coinbase.com/products/eth-btc/ticker')
+    const coinbasepro_LTC_BTC = await trae.get('https://api.pro.coinbase.com/products/ltc-btc/ticker')
+    const coinbasepro_XRP_BTC = await trae.get('https://api.pro.coinbase.com/products/xrp-btc/ticker')
+    const coinbasepro_XLM_BTC = await trae.get('https://api.pro.coinbase.com/products/xlm-btc/ticker')
     const coinbaseproPrices = {
       BTC_USDC: {
         bid: Number(coinbasepro_BTC_USDC.data.bid),
@@ -275,6 +238,18 @@ const getPrices = async () => {
       ETH_BTC: {
         bid: Number(coinbasepro_ETH_BTC.data.bid),
         ask: Number(coinbasepro_ETH_BTC.data.ask)
+      },
+      LTC_BTC: {
+        bid: Number(coinbasepro_LTC_BTC.data.bid),
+        ask: Number(coinbasepro_LTC_BTC.data.ask)
+      },
+      XRP_BTC: {
+        bid: Number(coinbasepro_XRP_BTC.data.bid),
+        ask: Number(coinbasepro_XRP_BTC.data.ask)
+      },
+      XLM_BTC: {
+        bid: Number(coinbasepro_XLM_BTC.data.bid),
+        ask: Number(coinbasepro_XLM_BTC.data.ask)
       }
     }
 
