@@ -71,6 +71,23 @@ module.exports = async (req, res) => {
     let resPrices = alternatives
     resPrices.BTC_ARS.best = await bestSort(amount, alternatives.BTC_ARS)
 
+    // temp
+    resPrices.BTC_USD.buenbit_dai_coinbasepro_usdc = {
+      bid: 1 / getprices.DAI_BTC.coinbasepro_usdc.ask * getprices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / getprices.DAI_USD.buenbit.ask * getprices.DAI_BTC.coinbasepro_usdc.bid)
+    }
+
+    resPrices.BTC_USD.buenbit_dai_coinbasepro_eth = {
+      bid: 1 / getprices.DAI_BTC.coinbasepro_eth.ask * getprices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / getprices.DAI_USD.buenbit.ask * getprices.DAI_BTC.coinbasepro_eth.bid)
+    }
+
+    resPrices.BTC_USD.best_ars = {
+      bid: alternatives.BTC_ARS.best.bid.rate / alternatives.USD_ARS.buenbit.ask,
+      ask: alternatives.BTC_ARS.best.ask.rate / alternatives.USD_ARS.buenbit.bid
+    }
+    //
+
     let respond = {}
     respond.data = resPrices
     respond.error = false
