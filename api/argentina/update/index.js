@@ -253,12 +253,12 @@ const getPrices = async () => {
         ripio: {
           bid: ripioPrices.BTC_ARS.bid * 0.99, // 1% trade fee
           ask: ripioPrices.BTC_ARS.ask * 1.01, // 1% trade fee
-          networkfee: 0.00003492 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
+          networkfee: 0.00001164 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         },
         bitso: {
           bid: bitsoPrices.BTC_ARS.bid * 0.998, // 0.2% trade fee
           ask: bitsoPrices.BTC_ARS.ask * 1.002, // 0.2% trade fee
-          networkfee: 0.00003995 // https://bitso.com/fees
+          networkfee: 0.00003963 // https://bitso.com/fees
         },
         argenbtc: {
           bid: argenbtcPrices.BTC_ARS.bid, // spread fee
@@ -400,7 +400,7 @@ const getPrices = async () => {
         bitso_btc: {
           bid: bitsoPrices.ETH_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
           ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.ETH_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
-          networkfee: 0.00034776
+          networkfee: 0.00024150
         },
         satoshitango: {
           bid: satoshitangoPrices.ETH_ARS.bid * 0.99, // 1% trade fee
@@ -420,7 +420,7 @@ const getPrices = async () => {
         buda: {
           bid: budaPrices.ETH_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
           ask: budaPrices.ETH_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-          networkfee: 0.000166124 // https://www.buda.com/comisiones
+          networkfee: 0.000164321 // https://www.buda.com/comisiones
         },
         cryptomkt: {
           bid: cryptomktPrices.ETH_ARS.bid * 0.985, // 1.5% trade fee
@@ -437,7 +437,7 @@ const getPrices = async () => {
         bitso_btc: {
           bid: bitsoPrices.LTC_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
           ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.LTC_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
-          networkfee: 0.00179504
+          networkfee: 0.00091800
         },
         satoshitango: {
           bid: satoshitangoPrices.LTC_ARS.bid * 0.99, // 1% trade fee
@@ -457,7 +457,7 @@ const getPrices = async () => {
         buda: {
           bid: budaPrices.LTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
           ask: budaPrices.LTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-          networkfee: 0.0001 // https://www.buda.com/comisiones
+          networkfee: 0.00005 // https://www.buda.com/comisiones
         }
       },
       XLM_ARS: {
