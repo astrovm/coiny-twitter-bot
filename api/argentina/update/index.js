@@ -74,7 +74,6 @@ const getPrices = async () => {
     const cryptomkt = await trae.get('https://api.cryptomkt.com/v1/ticker')
     const cryptomkt_BTC_ARS = cryptomkt.data.data.find(coin => coin.market === 'BTCARS')
     const cryptomkt_ETH_ARS = cryptomkt.data.data.find(coin => coin.market === 'ETHARS')
-    const cryptomkt_EOS_ARS = cryptomkt.data.data.find(coin => coin.market === 'EOSARS')
     const cryptomkt_XLM_ARS = cryptomkt.data.data.find(coin => coin.market === 'XLMARS')
     const cryptomktPrices = {
       BTC_ARS: {
@@ -84,10 +83,6 @@ const getPrices = async () => {
       ETH_ARS: {
         bid: Number(cryptomkt_ETH_ARS.bid),
         ask: Number(cryptomkt_ETH_ARS.ask)
-      },
-      EOS_ARS: {
-        bid: Number(cryptomkt_EOS_ARS.bid),
-        ask: Number(cryptomkt_EOS_ARS.ask)
       },
       XLM_ARS: {
         bid: Number(cryptomkt_XLM_ARS.bid),
@@ -263,7 +258,7 @@ const getPrices = async () => {
         bitso: {
           bid: bitsoPrices.BTC_ARS.bid * 0.998, // 0.2% trade fee
           ask: bitsoPrices.BTC_ARS.ask * 1.002, // 0.2% trade fee
-          networkfee: 0.00004103 // https://bitso.com/fees
+          networkfee: 0.00003995 // https://bitso.com/fees
         },
         argenbtc: {
           bid: argenbtcPrices.BTC_ARS.bid, // spread fee
@@ -339,48 +334,194 @@ const getPrices = async () => {
           networkfee: 0
         }
       },
+      DAI_BTC: {
+        coinbasepro_usdc: {
+          bid: 1 / (1 / (coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995)),  // 0.5% + 0.5% fee
+          ask: 1 / (coinbaseproPrices.BTC_USDC.bid * 0.995 / coinbaseproPrices.DAI_USDC.ask * 0.995),  // 0.5% + 0.5% fee
+          networkfee: 0
+        },
+        coinbasepro_eth: {
+          bid: 1 / (1 / (1 / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995)),  // 0.5% + 0.5% fee
+          ask: 1 / (1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995),  // 0.5% + 0.5% fee
+          networkfee: 0
+        }
+      },
+      XLM_BTC: {
+        coinbasepro: {
+          bid: coinbaseproPrices.XLM_BTC.bid * 0.995,
+          ask: coinbaseproPrices.XLM_BTC.ask * 1.005,
+          networkfee: 0
+        }
+      },
+      XRP_BTC: {
+        coinbasepro: {
+          bid: coinbaseproPrices.XRP_BTC.bid * 0.995,
+          ask: coinbaseproPrices.XRP_BTC.ask * 1.005,
+          networkfee: 0
+        }
+      },
+      ETH_BTC: {
+        coinbasepro: {
+          bid: coinbaseproPrices.ETH_BTC.bid * 0.995,
+          ask: coinbaseproPrices.ETH_BTC.ask * 1.005,
+          networkfee: 0
+        }
+      },
+      LTC_BTC: {
+        coinbasepro: {
+          bid: coinbaseproPrices.LTC_BTC.bid * 0.995,
+          ask: coinbaseproPrices.LTC_BTC.ask * 1.005,
+          networkfee: 0
+        }
+      },
       XRP_ARS: {
         bitso_btc: {
           bid: bitsoPrices.XRP_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
           ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.XRP_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
           networkfee: 0
+        },
+        satoshitango: {
+          bid: satoshitangoPrices.XRP_ARS.bid * 0.99, // 1% trade fee
+          ask: satoshitangoPrices.XRP_ARS.ask * 1.01, // 1% trade fee
+          networkfee: 0.02 // https://www.satoshitango.com/help
+        },
+        qubit: {
+          bid: qubitPrices.XRP_ARS.bid, // spread fee
+          ask: qubitPrices.XRP_ARS.ask, // spread fee
+          networkfee: 0 // https://www.qubit.com.ar/faq
+        },
+        universalcoins: {
+          bid: universalcoinsPrices.XRP_ARS.bid, // spread fee
+          ask: universalcoinsPrices.XRP_ARS.ask * 1.032, // 3.2% deposit fee
+          networkfee: 0
         }
       },
-      ETH_ARS: {},
-      LTC_ARS: {},
-      XLM_ARS: {}
+      ETH_ARS: {
+        bitso_btc: {
+          bid: bitsoPrices.ETH_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
+          ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.ETH_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
+          networkfee: 0.00034776
+        },
+        satoshitango: {
+          bid: satoshitangoPrices.ETH_ARS.bid * 0.99, // 1% trade fee
+          ask: satoshitangoPrices.ETH_ARS.ask * 1.01, // 1% trade fee
+          networkfee: 0.001 // https://www.satoshitango.com/help
+        },
+        qubit: {
+          bid: qubitPrices.ETH_ARS.bid, // spread fee
+          ask: qubitPrices.ETH_ARS.ask, // spread fee
+          networkfee: 0 // https://www.qubit.com.ar/faq
+        },
+        universalcoins: {
+          bid: universalcoinsPrices.ETH_ARS.bid, // spread fee
+          ask: universalcoinsPrices.ETH_ARS.ask * 1.032, // 3.2% deposit fee
+          networkfee: 0
+        },
+        buda: {
+          bid: budaPrices.ETH_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
+          ask: budaPrices.ETH_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
+          networkfee: 0.000166124 // https://www.buda.com/comisiones
+        },
+        cryptomkt: {
+          bid: cryptomktPrices.ETH_ARS.bid * 0.985, // 1.5% trade fee
+          ask: cryptomktPrices.ETH_ARS.ask * 1.015, // 1.5% trade fee
+          networkfee: 0.0005 // https://www.cryptomkt.com/en/fees
+        },
+        buenbit: {
+          bid: buenbitPrices.ETH_ARS.bid * 0.994 * 0.9965, // 0.6% withdraw fee + 0.35% trade fee
+          ask: buenbitPrices.ETH_ARS.ask * 1.006 * 1.0035 * 1.006, // 0.6% deposit fee + 0.35% trade fee + 0.6% withdrawal fee
+          networkfee: 0 // https://exchange.buenbit.com/funds#/withdraws/eth
+        }
+      },
+      LTC_ARS: {
+        bitso_btc: {
+          bid: bitsoPrices.LTC_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
+          ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.LTC_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
+          networkfee: 0.00179504
+        },
+        satoshitango: {
+          bid: satoshitangoPrices.LTC_ARS.bid * 0.99, // 1% trade fee
+          ask: satoshitangoPrices.LTC_ARS.ask * 1.01, // 1% trade fee
+          networkfee: 0.001 // https://www.satoshitango.com/help
+        },
+        qubit: {
+          bid: qubitPrices.LTC_ARS.bid, // spread fee
+          ask: qubitPrices.LTC_ARS.ask, // spread fee
+          networkfee: 0 // https://www.qubit.com.ar/faq
+        },
+        universalcoins: {
+          bid: universalcoinsPrices.LTC_ARS.bid, // spread fee
+          ask: universalcoinsPrices.LTC_ARS.ask * 1.032, // 3.2% deposit fee
+          networkfee: 0
+        },
+        buda: {
+          bid: budaPrices.LTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
+          ask: budaPrices.LTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
+          networkfee: 0.0001 // https://www.buda.com/comisiones
+        }
+      },
+      XLM_ARS: {
+        cryptomkt: {
+          bid: cryptomktPrices.XLM_ARS.bid * 0.985, // 1.5% trade fee
+          ask: cryptomktPrices.XLM_ARS.ask * 1.015, // 1.5% trade fee
+          networkfee: 0 // https://www.cryptomkt.com/en/fees
+        },
+        qubit: {
+          bid: qubitPrices.XLM_ARS.bid, // spread fee
+          ask: qubitPrices.XLM_ARS.ask, // spread fee
+          networkfee: 0 // https://www.qubit.com.ar/faq
+        }
+      }
     }
 
-    // ARS <Buenbit> DAI <Coinbase Pro> USDC <Coinbase Pro> BTC
+    // alternatives with dai
     prices.BTC_ARS.buenbit_dai_coinbasepro_usdc = {
-      bid: prices.BTC_DAI.coinbasepro_usdc.bid * prices.DAI_ARS.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / prices.BTC_DAI.coinbasepro_usdc.ask),
+      bid: 1 / prices.DAI_BTC.coinbasepro_usdc.ask * prices.DAI_ARS.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * prices.DAI_BTC.coinbasepro_usdc.bid),
+      networkfee: 0
+    }
+
+    prices.BTC_ARS.buenbit_dai_coinbasepro_eth = {
+      bid: 1 / prices.DAI_BTC.coinbasepro_eth.ask * prices.DAI_ARS.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * prices.DAI_BTC.coinbasepro_eth.bid),
       networkfee: 0
     }
 
     prices.BTC_USD.buenbit_dai_coinbasepro_usdc = {
-      bid: prices.BTC_DAI.coinbasepro_usdc.bid * prices.DAI_USD.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / prices.BTC_DAI.coinbasepro_usdc.ask),
-      networkfee: 0
-    }
-
-    // ARS <Buenbit> DAI <Coinbase Pro> ETH <Coinbase Pro> BTC
-    prices.BTC_ARS.buenbit_dai_coinbasepro_eth = {
-      bid: prices.BTC_DAI.coinbasepro_eth.bid * prices.DAI_ARS.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / prices.BTC_DAI.coinbasepro_eth.ask),
+      bid: 1 / prices.DAI_BTC.coinbasepro_usdc.ask * prices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * prices.DAI_BTC.coinbasepro_usdc.bid),
       networkfee: 0
     }
 
     prices.BTC_USD.buenbit_dai_coinbasepro_eth = {
-      bid: prices.BTC_DAI.coinbasepro_eth.bid * prices.DAI_USD.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / prices.BTC_DAI.coinbasepro_eth.ask),
+      bid: 1 / prices.DAI_BTC.coinbasepro_eth.ask * prices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * prices.DAI_BTC.coinbasepro_eth.bid),
       networkfee: 0
     }
 
-    // ARS <Bitso> BTC <Bitso> XRP <Coinbase Pro> BTC
+    // alternatives with eth
+    prices.BTC_ARS.buenbit_eth_coinbasepro = {
+      bid: 1 / prices.ETH_BTC.coinbasepro.ask * prices.ETH_ARS.buenbit.bid,
+      ask: 1 / (1 / prices.ETH_ARS.buenbit.ask * prices.ETH_BTC.coinbasepro.bid),
+      networkfee: 0
+    }
+
+    // alternatives with xrp
     prices.BTC_ARS.bitso_xrp_coinbasepro = {
-      bid: 1 / coinbaseproPrices.XRP_BTC.ask * 0.995 * prices.XRP_ARS.bitso_btc.bid, // 0.5% fee
-      ask: 1 / (1 / prices.XRP_ARS.bitso_btc.ask * coinbaseproPrices.XRP_BTC.bid * 0.995), // 0.5% fee
+      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.bitso_btc.bid,
+      ask: 1 / (1 / prices.XRP_ARS.bitso_btc.ask * prices.XRP_BTC.coinbasepro.bid),
+      networkfee: 0
+    }
+
+    prices.BTC_ARS.qubit_xrp_coinbasepro = {
+      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.qubit.bid,
+      ask: 1 / (1 / prices.XRP_ARS.qubit.ask * prices.XRP_BTC.coinbasepro.bid),
+      networkfee: 0
+    }
+
+    prices.BTC_ARS.universalcoins_xrp_coinbasepro = {
+      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.universalcoins.bid,
+      ask: 1 / (1 / prices.XRP_ARS.universalcoins.ask * prices.XRP_BTC.coinbasepro.bid),
       networkfee: 0
     }
 
