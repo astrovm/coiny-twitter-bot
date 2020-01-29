@@ -256,13 +256,13 @@ const getPrices = async () => {
     let prices = {
       BTC_ARS: {
         ripio: {
-          bid: ripioPrices.BTC_ARS.bid * 0.99, // 1% fee
-          ask: ripioPrices.BTC_ARS.ask * 1.01, // 1% fee
+          bid: ripioPrices.BTC_ARS.bid * 0.99, // 1% trade fee
+          ask: ripioPrices.BTC_ARS.ask * 1.01, // 1% trade fee
           networkfee: 0.00003492 // https://ripio.com/api/v3/transactions/fees/network-fee/BTC/
         },
         bitso: {
-          bid: bitsoPrices.BTC_ARS.bid * 0.998, // 0.2% fee
-          ask: bitsoPrices.BTC_ARS.ask * 1.002, // 0.2% fee
+          bid: bitsoPrices.BTC_ARS.bid * 0.998, // 0.2% trade fee
+          ask: bitsoPrices.BTC_ARS.ask * 1.002, // 0.2% trade fee
           networkfee: 0.00004103 // https://bitso.com/fees
         },
         argenbtc: {
@@ -271,23 +271,23 @@ const getPrices = async () => {
           networkfee: 0.00005 // https://argenbtc.com/SolicitarRetirosBTC
         },
         satoshitango: {
-          bid: satoshitangoPrices.BTC_ARS.bid * 0.99, // 1% fee
-          ask: satoshitangoPrices.BTC_ARS.ask * 1.01, // 1% fee
+          bid: satoshitangoPrices.BTC_ARS.bid * 0.99, // 1% trade fee
+          ask: satoshitangoPrices.BTC_ARS.ask * 1.01, // 1% trade fee
           networkfee: 0.0003 // https://www.satoshitango.com/help
         },
         cryptomkt: {
-          bid: cryptomktPrices.BTC_ARS.bid * 0.985, // 1.5% fee
-          ask: cryptomktPrices.BTC_ARS.ask * 1.015, // 1.5% fee
+          bid: cryptomktPrices.BTC_ARS.bid * 0.985, // 1.5% trade fee
+          ask: cryptomktPrices.BTC_ARS.ask * 1.015, // 1.5% trade fee
           networkfee: 0.0005 // https://www.cryptomkt.com/en/fees
         },
         bitex: {
-          bid: bitexPrices.BTC_ARS.bid * 0.989 * 0.9975, // 1.1% + 0.25% fee
-          ask: bitexPrices.BTC_ARS.ask * 1.011 * 1.0025, // 1.1% + 0.25% fee
+          bid: bitexPrices.BTC_ARS.bid * 0.989 * 0.9975, // 1.1% withdraw fee + 0.25% trade fee
+          ask: bitexPrices.BTC_ARS.ask * 1.011 * 1.0025, // 1.1% deposit fee + 0.25% trade fee
           networkfee: 0 // https://bitex.zendesk.com/hc/es/articles/115000357172-Comisiones
         },
         buda: {
-          bid: budaPrices.BTC_ARS.bid * 0.994 * 0.996, // 0.6% + 0.4% fee
-          ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% + 0.4% fee
+          bid: budaPrices.BTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
+          ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
           networkfee: 0.0001 // https://www.buda.com/comisiones
         },
         qubit: {
@@ -296,13 +296,13 @@ const getPrices = async () => {
           networkfee: 0 // https://www.qubit.com.ar/faq
         },
         buenbit: {
-          bid: buenbitPrices.BTC_ARS.bid * 0.994 * 0.9965, // 0.6% + 0.35% fee
-          ask: buenbitPrices.BTC_ARS.ask * 1.006 * 1.0035, // 0.6% + 0.35% fee
+          bid: buenbitPrices.BTC_ARS.bid * 0.994 * 0.9965, // 0.6% withdraw fee + 0.35% trade fee
+          ask: buenbitPrices.BTC_ARS.ask * 1.006 * 1.0035, // 0.6% deposit fee + 0.35% trade fee
           networkfee: 0.00030 // https://exchange.buenbit.com/funds#/withdraws/btc
         },
         universalcoins: {
           bid: universalcoinsPrices.BTC_ARS.bid, // spread fee
-          ask: universalcoinsPrices.BTC_ARS.ask * 1.032, // 3.2% fee
+          ask: universalcoinsPrices.BTC_ARS.ask * 1.032, // 3.2% deposit fee
           networkfee: 0
         }
       },
@@ -321,45 +321,66 @@ const getPrices = async () => {
           networkfee: 0
         }
       },
-      USD_ARS: {}
-    }
-
-    // ARS <Buenbit> DAI <Buenbit> USD
-    prices.USD_ARS.buenbit = {
-      bid: prices.DAI_ARS.buenbit.bid / prices.DAI_USD.buenbit.ask,
-      ask: prices.DAI_ARS.buenbit.ask / prices.DAI_USD.buenbit.bid
+      USD_ARS: {
+        buenbit: {
+          bid: buenbitPrices.DAI_ARS.bid / buenbitPrices.DAI_USD.ask,
+          ask: buenbitPrices.DAI_ARS.ask / buenbitPrices.DAI_USD.bid
+        }
+      },
+      BTC_DAI: {
+        coinbasepro_usdc: {
+          bid: coinbaseproPrices.BTC_USDC.bid * 0.995 / coinbaseproPrices.DAI_USDC.ask * 0.995,  // 0.5% + 0.5% fee
+          ask: 1 / (coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995),  // 0.5% + 0.5% fee
+          networkfee: 0
+        },
+        coinbasepro_eth: {
+          bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995,  // 0.5% + 0.5% fee
+          ask: 1 / (1 / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995),  // 0.5% + 0.5% fee
+          networkfee: 0
+        }
+      },
+      XRP_ARS: {
+        bitso_btc: {
+          bid: bitsoPrices.XRP_BTC.bid * 0.99925 * bitsoPrices.BTC_ARS.bid * 0.998, // 0.075% + 0.2% trade fee
+          ask: 1 / (1 / bitsoPrices.BTC_ARS.ask * 0.998 / bitsoPrices.XRP_BTC.ask * 0.99902), // 0.2% + 0.098% trade fee
+          networkfee: 0
+        }
+      },
+      ETH_ARS: {},
+      LTC_ARS: {},
+      XLM_ARS: {}
     }
 
     // ARS <Buenbit> DAI <Coinbase Pro> USDC <Coinbase Pro> BTC
-    prices.BTC_ARS.dai_buenbit_usdc_coinbasepro_btc = {
-      bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
+    prices.BTC_ARS.buenbit_dai_coinbasepro_usdc = {
+      bid: prices.BTC_DAI.coinbasepro_usdc.bid * prices.DAI_ARS.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / prices.BTC_DAI.coinbasepro_usdc.ask),
       networkfee: 0
     }
 
-    prices.BTC_USD.dai_buenbit_usdc_coinbasepro_btc = {
-      bid: coinbaseproPrices.BTC_USDC.bid * 0.995 * coinbaseproPrices.DAI_USDC.ask * 0.995 * prices.DAI_USD.buenbit.bid, // 0.5% + 0.5% fee
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * coinbaseproPrices.DAI_USDC.bid * 0.995 / coinbaseproPrices.BTC_USDC.ask * 0.995), // 0.5% + 0.5% fee
+    prices.BTC_USD.buenbit_dai_coinbasepro_usdc = {
+      bid: prices.BTC_DAI.coinbasepro_usdc.bid * prices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / prices.BTC_DAI.coinbasepro_usdc.ask),
       networkfee: 0
     }
 
     // ARS <Buenbit> DAI <Coinbase Pro> ETH <Coinbase Pro> BTC
-    prices.BTC_ARS.dai_buenbit_eth_coinbasepro_btc = {
-      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_ARS.buenbit.bid, // 0.5% + 0.5% fee
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+    prices.BTC_ARS.buenbit_dai_coinbasepro_eth = {
+      bid: prices.BTC_DAI.coinbasepro_eth.bid * prices.DAI_ARS.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask / prices.BTC_DAI.coinbasepro_eth.ask),
       networkfee: 0
     }
 
-    prices.BTC_USD.dai_buenbit_eth_coinbasepro_btc = {
-      bid: 1 / coinbaseproPrices.ETH_BTC.ask * 0.995 * coinbaseproPrices.ETH_DAI.bid * 0.995 * prices.DAI_USD.buenbit.bid, // 0.5% + 0.5% fee
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / coinbaseproPrices.ETH_DAI.ask * 0.995 * coinbaseproPrices.ETH_BTC.bid * 0.995), // 0.5% + 0.5% fee
+    prices.BTC_USD.buenbit_dai_coinbasepro_eth = {
+      bid: prices.BTC_DAI.coinbasepro_eth.bid * prices.DAI_USD.buenbit.bid,
+      ask: 1 / (1 / prices.DAI_USD.buenbit.ask / prices.BTC_DAI.coinbasepro_eth.ask),
       networkfee: 0
     }
 
     // ARS <Bitso> BTC <Bitso> XRP <Coinbase Pro> BTC
-    prices.BTC_ARS.btc_bitso_xrp_coinbasepro_btc = {
-      bid: 1 / coinbaseproPrices.XRP_BTC.ask * 0.995 * bitsoPrices.XRP_BTC.bid * 0.99925 * prices.BTC_ARS.bitso.bid * 0.998, // 0.2% + 0.075% + 0.5% fee
-      ask: 1 / (1 / prices.BTC_ARS.bitso.ask * 0.998 / bitsoPrices.XRP_BTC.ask * 0.99902 * coinbaseproPrices.XRP_BTC.bid * 0.995), // 0.2% + 0.098% + 0.5% fee
+    prices.BTC_ARS.bitso_xrp_coinbasepro = {
+      bid: 1 / coinbaseproPrices.XRP_BTC.ask * 0.995 * prices.XRP_ARS.bitso_btc.bid, // 0.5% fee
+      ask: 1 / (1 / prices.XRP_ARS.bitso_btc.ask * coinbaseproPrices.XRP_BTC.bid * 0.995), // 0.5% fee
       networkfee: 0
     }
 
