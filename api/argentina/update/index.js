@@ -474,57 +474,6 @@ const getPrices = async () => {
       }
     }
 
-    // alternatives with dai
-    prices.BTC_ARS.buenbit_dai_coinbasepro_usdc = {
-      bid: 1 / prices.DAI_BTC.coinbasepro_usdc.ask * prices.DAI_ARS.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * prices.DAI_BTC.coinbasepro_usdc.bid),
-      networkfee: 0
-    }
-
-    prices.BTC_ARS.buenbit_dai_coinbasepro_eth = {
-      bid: 1 / prices.DAI_BTC.coinbasepro_eth.ask * prices.DAI_ARS.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_ARS.buenbit.ask * prices.DAI_BTC.coinbasepro_eth.bid),
-      networkfee: 0
-    }
-
-    prices.BTC_USD.buenbit_dai_coinbasepro_usdc = {
-      bid: 1 / prices.DAI_BTC.coinbasepro_usdc.ask * prices.DAI_USD.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * prices.DAI_BTC.coinbasepro_usdc.bid),
-      networkfee: 0
-    }
-
-    prices.BTC_USD.buenbit_dai_coinbasepro_eth = {
-      bid: 1 / prices.DAI_BTC.coinbasepro_eth.ask * prices.DAI_USD.buenbit.bid,
-      ask: 1 / (1 / prices.DAI_USD.buenbit.ask * prices.DAI_BTC.coinbasepro_eth.bid),
-      networkfee: 0
-    }
-
-    // alternatives with eth
-    prices.BTC_ARS.buenbit_eth_coinbasepro = {
-      bid: 1 / prices.ETH_BTC.coinbasepro.ask * prices.ETH_ARS.buenbit.bid,
-      ask: 1 / (1 / prices.ETH_ARS.buenbit.ask * prices.ETH_BTC.coinbasepro.bid),
-      networkfee: 0
-    }
-
-    // alternatives with xrp
-    prices.BTC_ARS.bitso_xrp_coinbasepro = {
-      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.bitso_btc.bid,
-      ask: 1 / (1 / prices.XRP_ARS.bitso_btc.ask * prices.XRP_BTC.coinbasepro.bid),
-      networkfee: 0
-    }
-
-    prices.BTC_ARS.qubit_xrp_coinbasepro = {
-      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.qubit.bid,
-      ask: 1 / (1 / prices.XRP_ARS.qubit.ask * prices.XRP_BTC.coinbasepro.bid),
-      networkfee: 0
-    }
-
-    prices.BTC_ARS.universalcoins_xrp_coinbasepro = {
-      bid: 1 / prices.XRP_BTC.coinbasepro.ask * prices.XRP_ARS.universalcoins.bid,
-      ask: 1 / (1 / prices.XRP_ARS.universalcoins.ask * prices.XRP_BTC.coinbasepro.bid),
-      networkfee: 0
-    }
-
     return prices
   } catch (err) {
     console.error('Error ' + err)
