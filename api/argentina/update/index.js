@@ -285,6 +285,11 @@ const getPrices = async () => {
           ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
           networkfee: 0.0001 // https://www.buda.com/comisiones
         },
+        buda_ln: {
+          bid: budaPrices.BTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
+          ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
+          networkfee: 0 // https://www.buda.com/comisiones
+        },
         qubit: {
           bid: qubitPrices.BTC_ARS.bid, // spread fee
           ask: qubitPrices.BTC_ARS.ask, // spread fee
