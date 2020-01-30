@@ -1,5 +1,7 @@
 # Coiny
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/astrolince/coiny.svg)](https://greenkeeper.io/)
+
 Bitcoin fee estimates and market info.
 
 [@coinyfees@twitter.com](https://twitter.com/coinyfees) and [@coiny@bitcoinhackers.org](https://bitcoinhackers.org/@coiny) tweets/toots every hour the recommended fee to get a confirmation in x time using the estimates of BitGo and Blockstream.
