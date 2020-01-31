@@ -258,28 +258,40 @@ const getPrices = async () => {
       }
     }
 
+    // https://www.buda.com/comisiones
+    const fees = {
+      bid: 1 - ((100 + 0.6 + 0.4) / 100 - 1), // 0.6% withdraw fee + 0.4% trade fee
+      ask: (100 + 0.6 + 0.4) / 100, // 0.6% deposit fee + 0.4% trade fee
+      network: {
+        btc: 0.0001,
+        btc_ln: 0,
+        ltc: 0.00005,
+        eth: 0.000164321
+      }
+    }
+
     prices.BTC_ARS.buda = {
-      bid: budaPrices.BTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
-      ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-      networkfee: 0.0001 // https://www.buda.com/comisiones
+      bid: budaPrices.BTC_ARS.bid * fees.bid,
+      ask: budaPrices.BTC_ARS.ask * fees.ask,
+      networkfee: fees.network.btc
     }
 
     prices.BTC_ARS.buda_ln = {
-      bid: budaPrices.BTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
-      ask: budaPrices.BTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-      networkfee: 0 // https://www.buda.com/comisiones
+      bid: budaPrices.BTC_ARS.bid * fees.bid,
+      ask: budaPrices.BTC_ARS.ask * fees.ask,
+      networkfee: fees.network.btc_ln
     }
 
     prices.LTC_ARS.buda = {
-      bid: budaPrices.LTC_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
-      ask: budaPrices.LTC_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-      networkfee: 0.00005 // https://www.buda.com/comisiones
+      bid: budaPrices.LTC_ARS.bid * fees.bid,
+      ask: budaPrices.LTC_ARS.ask * fees.ask,
+      networkfee: fees.network.ltc
     }
 
     prices.ETH_ARS.buda = {
-      bid: budaPrices.ETH_ARS.bid * 0.994 * 0.996, // 0.6% withdraw fee + 0.4% trade fee
-      ask: budaPrices.ETH_ARS.ask * 1.006 * 1.004, // 0.6% deposit fee + 0.4% trade fee
-      networkfee: 0.000164321 // https://www.buda.com/comisiones
+      bid: budaPrices.ETH_ARS.bid * fees.bid,
+      ask: budaPrices.ETH_ARS.ask * fees.ask,
+      networkfee: fees.network.eth
     }
   } catch (err) {
     console.error('Error with buda.com: ' + err)
