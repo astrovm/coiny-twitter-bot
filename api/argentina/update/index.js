@@ -236,8 +236,8 @@ const getPrices = async () => {
     for (let index = 0; index < 5; index++) {
       fiveAskFiat += Number(buda_BTC.data.order_book.asks[index][0]) * Number(buda_BTC.data.order_book.asks[index][1])
       fiveAskCrypto += Number(buda_BTC.data.order_book.asks[index][1])
-      fiveBidFiat += Number(buda_BTC.data.order_book.asks[index][0]) * Number(buda_BTC.data.order_book.asks[index][1])
-      fiveBidCrypto += Number(buda_BTC.data.order_book.asks[index][1])
+      fiveBidFiat += Number(buda_BTC.data.order_book.bids[index][0]) * Number(buda_BTC.data.order_book.bids[index][1])
+      fiveBidCrypto += Number(buda_BTC.data.order_book.bids[index][1])
     }
     const fiveAsk = fiveAskFiat / fiveAskCrypto
     const fiveBid = fiveBidFiat / fiveBidCrypto
