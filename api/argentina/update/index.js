@@ -229,34 +229,8 @@ const getPrices = async () => {
   // buda.com
   try {
     const buda_BTC = await trae.get('https://www.buda.com/api/v2/markets/btc-ars/order_book')
-    let fiveAskFiat = 0
-    let fiveAskCrypto = 0
-    let fiveBidFiat = 0
-    let fiveBidCrypto = 0
-    for (let index = 0; index < 5; index++) {
-      fiveAskFiat += Number(buda_BTC.data.order_book.asks[index][0]) * Number(buda_BTC.data.order_book.asks[index][1])
-      fiveAskCrypto += Number(buda_BTC.data.order_book.asks[index][1])
-      fiveBidFiat += Number(buda_BTC.data.order_book.bids[index][0]) * Number(buda_BTC.data.order_book.bids[index][1])
-      fiveBidCrypto += Number(buda_BTC.data.order_book.bids[index][1])
-    }
-    const fiveAsk = fiveAskFiat / fiveAskCrypto
-    const fiveBid = fiveBidFiat / fiveBidCrypto
     const buda_ETH = await trae.get('https://www.buda.com/api/v2/markets/eth-ars/ticker')
     const buda_LTC = await trae.get('https://www.buda.com/api/v2/markets/ltc-ars/ticker')
-    const budaPrices = {
-      BTC_ARS: {
-        bid: Number(fiveBid),
-        ask: Number(fiveAsk)
-      },
-      ETH_ARS: {
-        bid: Number(buda_ETH.data.ticker.max_bid[0]),
-        ask: Number(buda_ETH.data.ticker.min_ask[0])
-      },
-      LTC_ARS: {
-        bid: Number(buda_LTC.data.ticker.max_bid[0]),
-        ask: Number(buda_LTC.data.ticker.min_ask[0])
-      }
-    }
 
     // https://www.buda.com/comisiones
     const fees = {
@@ -270,15 +244,47 @@ const getPrices = async () => {
       }
     }
 
+    let orderBookBTC = {
+      bids: [],
+      asks: []
+    }
+    for (let order in buda_BTC.data.order_book.bids) {
+      orderBookBTC.bids.push({
+        price: Number(buda_BTC.data.order_book.bids[order][0]) * fees.bid,
+        amount: Number(buda_BTC.data.order_book.bids[order][1])
+      })
+    }
+    for (let order in buda_BTC.data.order_book.asks) {
+      orderBookBTC.asks.push({
+        price: Number(buda_BTC.data.order_book.asks[order][0]) * fees.ask,
+        amount: Number(buda_BTC.data.order_book.asks[order][1])
+      })
+    }
+
+    const budaPrices = {
+      BTC_ARS: {
+        bids: orderBookBTC.bids,
+        asks: orderBookBTC.asks
+      },
+      ETH_ARS: {
+        bid: Number(buda_ETH.data.ticker.max_bid[0]),
+        ask: Number(buda_ETH.data.ticker.min_ask[0])
+      },
+      LTC_ARS: {
+        bid: Number(buda_LTC.data.ticker.max_bid[0]),
+        ask: Number(buda_LTC.data.ticker.min_ask[0])
+      }
+    }
+
     prices.BTC_ARS.buda = {
-      bid: budaPrices.BTC_ARS.bid * fees.bid,
-      ask: budaPrices.BTC_ARS.ask * fees.ask,
+      bids: budaPrices.BTC_ARS.bids,
+      asks: budaPrices.BTC_ARS.asks,
       networkfee: fees.network.btc
     }
 
     prices.BTC_ARS.buda_ln = {
-      bid: budaPrices.BTC_ARS.bid * fees.bid,
-      ask: budaPrices.BTC_ARS.ask * fees.ask,
+      bids: budaPrices.BTC_ARS.bids,
+      asks: budaPrices.BTC_ARS.asks,
       networkfee: fees.network.btc_ln
     }
 

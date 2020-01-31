@@ -2,6 +2,63 @@
 const { parse } = require('url')
 const { redisGet } = require('../../modules/redis')
 
+// calc rates based in amount
+const orderBookRate = (amount, prices) => {
+  let response = prices
+
+  for (let pair in prices) {
+    if (pair.endsWith('ARS')) {
+      for (let exchange in prices[pair]) {
+        if (prices[pair][exchange].bids) {
+          let pendingAmount = amount
+          let coveredAmount = 0
+          for (let order in prices[pair][exchange].bids) {
+            const orderRate = Number(prices[pair][exchange].bids[order].price)
+            const orderAmount = Number(prices[pair][exchange].bids[order].amount)
+            const orderAmountConverted = orderRate * orderAmount
+            if (pendingAmount > orderAmountConverted) {
+              coveredAmount += orderAmount
+              pendingAmount -= orderAmountConverted
+            } else {
+              coveredAmount += pendingAmount / orderRate
+              pendingAmount -= pendingAmount
+            }
+            if (pendingAmount == 0) {
+              response[pair][exchange].bid = amount / coveredAmount
+              delete response[pair][exchange].bids
+              break
+            }
+          }
+        }
+
+        if (prices[pair][exchange].asks) {
+          let pendingAmount = amount
+          let coveredAmount = 0
+          for (let order in prices[pair][exchange].asks) {
+            const orderRate = Number(prices[pair][exchange].asks[order].price)
+            const orderAmount = Number(prices[pair][exchange].asks[order].amount)
+            const orderAmountConverted = orderRate * orderAmount
+            if (pendingAmount > orderAmountConverted) {
+              coveredAmount += orderAmount
+              pendingAmount -= orderAmountConverted
+            } else {
+              coveredAmount += pendingAmount / orderRate
+              pendingAmount -= pendingAmount
+            }
+            if (pendingAmount == 0) {
+              response[pair][exchange].ask = amount / coveredAmount
+              delete response[pair][exchange].asks
+              break
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return response
+}
+
 // calc best exchange including withdrawal fees
 const alternativesCalc = (amount, prices) => {
   let alternatives = prices
@@ -26,6 +83,7 @@ const alternativesCalc = (amount, prices) => {
   return alternatives
 }
 
+// sort best exchange rates
 const bestSort = (amount, prices) => {
   const sortedAsk = Object.keys(prices).sort(function (a, b) { return (amount / prices[b].ask - prices[b].networkfee) - (amount / prices[a].ask - prices[a].networkfee) })
   const btcamountAsk = amount / prices[sortedAsk[0]].ask - prices[sortedAsk[0]].networkfee
@@ -67,7 +125,9 @@ module.exports = async (req, res) => {
     const { query } = parse(req.url, true)
     const amount = (query.amount) ? Number(query.amount) : 2500
 
-    const alternatives = await alternativesCalc(amount, getprices)
+    const prices = await orderBookRate(amount, getprices)
+    const alternatives = await alternativesCalc(amount, prices)
+
     let resPrices = alternatives
     resPrices.BTC_ARS.best = await bestSort(amount, alternatives.BTC_ARS)
 
