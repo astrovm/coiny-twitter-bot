@@ -229,8 +229,8 @@ const getPrices = async () => {
   // buda.com
   try {
     const buda_BTC = await trae.get('https://www.buda.com/api/v2/markets/btc-ars/order_book')
-    const buda_ETH = await trae.get('https://www.buda.com/api/v2/markets/eth-ars/ticker')
-    const buda_LTC = await trae.get('https://www.buda.com/api/v2/markets/ltc-ars/ticker')
+    const buda_ETH = await trae.get('https://www.buda.com/api/v2/markets/eth-ars/order_book')
+    const buda_LTC = await trae.get('https://www.buda.com/api/v2/markets/ltc-ars/order_book')
 
     // https://www.buda.com/comisiones
     const fees = {
@@ -244,60 +244,55 @@ const getPrices = async () => {
       }
     }
 
-    let orderBookBTC = {
-      bids: [],
-      asks: []
-    }
-    for (let order in buda_BTC.data.order_book.bids) {
-      orderBookBTC.bids.push({
-        price: Number(buda_BTC.data.order_book.bids[order][0]) * fees.bid,
-        amount: Number(buda_BTC.data.order_book.bids[order][1])
-      })
-    }
-    for (let order in buda_BTC.data.order_book.asks) {
-      orderBookBTC.asks.push({
-        price: Number(buda_BTC.data.order_book.asks[order][0]) * fees.ask,
-        amount: Number(buda_BTC.data.order_book.asks[order][1])
-      })
+    const budaOrderBook = async (orders) => {
+      let orderBook = {
+        bids: [],
+        asks: []
+      }
+
+      for (let order in orders.bids) {
+        orderBook.bids.push({
+          price: Number(orders.bids[order][0]) * fees.bid,
+          amount: Number(orders.bids[order][1])
+        })
+      }
+
+      for (let order in orders.asks) {
+        orderBook.asks.push({
+          price: Number(orders.asks[order][0]) * fees.ask,
+          amount: Number(orders.asks[order][1])
+        })
+      }
+
+      return orderBook
     }
 
-    const budaPrices = {
-      BTC_ARS: {
-        bids: orderBookBTC.bids,
-        asks: orderBookBTC.asks
-      },
-      ETH_ARS: {
-        bid: Number(buda_ETH.data.ticker.max_bid[0]),
-        ask: Number(buda_ETH.data.ticker.min_ask[0])
-      },
-      LTC_ARS: {
-        bid: Number(buda_LTC.data.ticker.max_bid[0]),
-        ask: Number(buda_LTC.data.ticker.min_ask[0])
-      }
-    }
+    const orderBookBTC = await budaOrderBook(buda_BTC.data.order_book)
+    const orderBookETH = await budaOrderBook(buda_ETH.data.order_book)
+    const orderBookLTC = await budaOrderBook(buda_LTC.data.order_book)
 
     prices.BTC_ARS.buda = {
-      bids: budaPrices.BTC_ARS.bids,
-      asks: budaPrices.BTC_ARS.asks,
+      bids: orderBookBTC.bids,
+      asks: orderBookBTC.asks,
       networkfee: fees.network.btc
     }
 
     prices.BTC_ARS.buda_ln = {
-      bids: budaPrices.BTC_ARS.bids,
-      asks: budaPrices.BTC_ARS.asks,
+      bids: orderBookBTC.bids,
+      asks: orderBookBTC.asks,
       networkfee: fees.network.btc_ln
     }
 
-    prices.LTC_ARS.buda = {
-      bid: budaPrices.LTC_ARS.bid * fees.bid,
-      ask: budaPrices.LTC_ARS.ask * fees.ask,
-      networkfee: fees.network.ltc
+    prices.ETH_ARS.buda = {
+      bids: orderBookETH.bids,
+      asks: orderBookETH.asks,
+      networkfee: fees.network.eth
     }
 
-    prices.ETH_ARS.buda = {
-      bid: budaPrices.ETH_ARS.bid * fees.bid,
-      ask: budaPrices.ETH_ARS.ask * fees.ask,
-      networkfee: fees.network.eth
+    prices.LTC_ARS.buda = {
+      bids: orderBookLTC.bids,
+      asks: orderBookLTC.asks,
+      networkfee: fees.network.ltc
     }
   } catch (err) {
     console.error('Error with buda.com: ' + err)
