@@ -386,15 +386,15 @@ const getPrices = async () => {
       BTC_ARS: {
         bid: Number(buenbit_old.data.btcars.ticker.buy),
         ask: Number(buenbit_old.data.btcars.ticker.sell)
-      },
-      ETH_ARS: {
-        bid: Number(buenbit_old.data.ethars.ticker.buy),
-        ask: Number(buenbit_old.data.ethars.ticker.sell)
-      },
-      BTC_DAI: {
-        bid: Number(buenbit_old.data.btcdai.ticker.buy),
-        ask: Number(buenbit_old.data.btcdai.ticker.sell)
-      }
+      }// ,
+      // ETH_ARS: {
+      //   bid: Number(buenbit_old.data.ethars.ticker.buy),
+      //   ask: Number(buenbit_old.data.ethars.ticker.sell)
+      // },
+      // BTC_DAI: {
+      //   bid: Number(buenbit_old.data.btcdai.ticker.buy),
+      //   ask: Number(buenbit_old.data.btcdai.ticker.sell)
+      // }
     }
 
     prices.BTC_ARS.buenbit = {
@@ -403,11 +403,11 @@ const getPrices = async () => {
       networkfee: 0.00030 // https://exchange.buenbit.com/funds#/withdraws/btc
     }
 
-    prices.ETH_ARS.buenbit = {
-      bid: buenbitPrices.ETH_ARS.bid * 0.994 * 0.9965, // 0.6% withdraw fee + 0.35% trade fee
-      ask: buenbitPrices.ETH_ARS.ask * 1.006 * 1.0035 * 1.006, // 0.6% deposit fee + 0.35% trade fee + 0.6% withdrawal fee
-      networkfee: 0 // https://exchange.buenbit.com/funds#/withdraws/eth
-    }
+    // prices.ETH_ARS.buenbit = {
+    //   bid: buenbitPrices.ETH_ARS.bid * 0.994 * 0.9965, // 0.6% withdraw fee + 0.35% trade fee
+    //   ask: buenbitPrices.ETH_ARS.ask * 1.006 * 1.0035 * 1.006, // 0.6% deposit fee + 0.35% trade fee + 0.6% withdrawal fee
+    //   networkfee: 0 // https://exchange.buenbit.com/funds#/withdraws/eth
+    // }
 
     prices.DAI_ARS.buenbit = {
       bid: buenbitPrices.DAI_ARS.bid,
