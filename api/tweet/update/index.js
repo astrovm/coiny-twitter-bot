@@ -134,12 +134,10 @@ const triggerDBUpdate = async () => {
       const redisReplyPriceSet = await redisSet('price', price)
       console.log(redisReplyPriceSet)
 
-      res.end('Updated ' + blocksString + feesString + price)
-      return
+      return 'Updated ' + blocksString + feesString + price
     } else {
       const timeRemaining = new Date(ONE_MINUTE - timeDiff)
-      res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
-      return
+      return `Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`
     }
   } catch (err) {
     console.error('Error ' + err)
@@ -274,6 +272,10 @@ module.exports = async (req, res) => {
 
     // if last time >= 20 minutes, update it now
     if (timeDiff >= TWENTY_MINUTES) {
+      // trigger db update
+      const triggerUpdate = await triggerDBUpdate()
+      console.log(triggerUpdate)
+
       // save time of the update
       const redisReplyTweetTimeSet = await redisSet('tweet:time', currentTime)
       console.log(redisReplyTweetTimeSet)
