@@ -1,6 +1,4 @@
-# Coiny
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/astrolince/coiny.svg)](https://greenkeeper.io/)
+# coiny-twitter-bot
 
 Bitcoin fee estimates and market info.
 
@@ -8,11 +6,11 @@ Bitcoin fee estimates and market info.
 
 ## Specifications
 
-It's written in Javascript using Now.sh serverless Node.js builder and the Redis database.
+It's written in Javascript using Vercel serverless Node.js builder and the Redis database.
 
 So you need to install Node and Redis and then install Now with npm:
 
-`$ npm i -g now`
+`$ npm i -g vercel`
 
 Install the dependencies, set up env vars, and run:
 
@@ -24,4 +22,4 @@ Install the dependencies, set up env vars, and run:
 
 ## License
 
-Coiny is licensed under the [MIT License](https://github.com/astrolince/coiny/blob/master/LICENSE).
+[MIT License](https://github.com/astrolince/coiny/blob/master/LICENSE).

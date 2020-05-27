@@ -4,10 +4,6 @@
         {
             "src": "api/**/index.js",
             "use": "@now/node"
-        },
-        {
-            "src": "next.config.js",
-            "use": "@now/next"
         }
     ],
     "routes": [

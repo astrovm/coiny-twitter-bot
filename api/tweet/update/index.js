@@ -1,7 +1,151 @@
 // require libs
 const Twitter = require('twitter')
 const Masto = require('mastodon')
+const trae = require('trae')
 const { redisGet, redisSet } = require('../../../modules/redis')
+
+// request block height
+const getBlocks = async () => {
+  try {
+    const lastBlockHeight = await trae.get('https://blockstream.info/api/blocks/tip/height')
+    const blocks = {
+      height: lastBlockHeight.data
+    }
+    return blocks
+  } catch (err) {
+    console.error('Error ' + err)
+    throw err
+  }
+}
+
+// convert bitgo fees to satoshis
+const convertToSats = (fees) => {
+  const keys = Object.keys(fees)
+
+  let response = {}
+  for (let key in keys) {
+    response[keys[key]] = fees[keys[key]] / 1000
+  }
+
+  return response
+}
+
+// select the cheapest fees
+const bestFees = (bitGoFees, blockstreamFees) => {
+  const targetsBitGo = Object.keys(bitGoFees)
+  const targetsBlockstream = Object.keys(blockstreamFees)
+  const targets = [2, 4, 6, 12, 24, 48, 144, 504, 1008]
+
+  let response = {}
+
+  for (let target in targets) {
+    for (let key in targetsBitGo) {
+      if (targets[target] >= Number(targetsBitGo[key])) {
+        response[targets[target]] = bitGoFees[targetsBitGo[key]].toFixed(2)
+      }
+    }
+
+    for (let key in blockstreamFees) {
+      if (targets[target] >= Number(targetsBlockstream[key])) {
+        if (blockstreamFees[targetsBlockstream[key]] < response[targets[target]]) {
+          response[targets[target]] = blockstreamFees[targetsBlockstream[key]].toFixed(2)
+        }
+      }
+    }
+  }
+
+  return response
+}
+
+// request fees
+const getFees = async () => {
+  try {
+    const _bitGo = await trae.get('https://www.bitgo.com/api/v1/tx/fee')
+    const bitGoFees = convertToSats(_bitGo.data.feeByBlockTarget)
+    const _blockstream = await trae.get('https://blockstream.info/api/fee-estimates')
+    const blockstreamFees = _blockstream.data
+
+    const fees = {
+      coiny: bestFees(bitGoFees, blockstreamFees),
+      bitgo: bitGoFees,
+      blockstream: blockstreamFees
+    }
+
+    return fees
+  } catch (err) {
+    console.error('Error ' + err)
+    throw err
+  }
+}
+
+// request price
+const getPrice = async () => {
+  try {
+    const coingecko = await trae.get('https://api.coingecko.com/api/v3/simple/price', {
+      params: {
+        ids: 'bitcoin',
+        vs_currencies: 'usd'
+      }
+    })
+
+    const coingeckoPrice = Number(coingecko.data.bitcoin.usd)
+
+    return coingeckoPrice
+  } catch (err) {
+    console.error('Error ' + err)
+    throw err
+  }
+}
+
+const triggerDBUpdate = async () => {
+  try {
+    // check last time updated
+    const lastUpdateTime = await redisGet('update:time')
+
+    const ONE_MINUTE = 1 * 60 * 1000
+    const currentTime = Date.now()
+
+    // if fees:time is empty, just run the update
+    const keyTime = ((lastUpdateTime == null) ? (currentTime - ONE_MINUTE) : lastUpdateTime)
+
+    // calc diff
+    const timeDiff = currentTime - keyTime
+
+    // if last time >= 1 minute, update it now
+    if (timeDiff >= ONE_MINUTE) {
+      // save time of the update
+      const redisReplyUpdateTimeSet = await redisSet('update:time', currentTime)
+      console.log(redisReplyUpdateTimeSet)
+
+      // request data
+      const blocks = await getBlocks()
+      const fees = await getFees()
+      const price = await getPrice()
+
+      // stringify for redis
+      const blocksString = JSON.stringify(blocks)
+      const feesString = JSON.stringify(fees)
+
+      // save to redis
+      const redisReplyBlocksSet = await redisSet('blocks', blocksString)
+      console.log(redisReplyBlocksSet)
+      const redisReplyFeesSet = await redisSet('fees', feesString)
+      console.log(redisReplyFeesSet)
+      const redisReplyPriceSet = await redisSet('price', price)
+      console.log(redisReplyPriceSet)
+
+      res.end('Updated ' + blocksString + feesString + price)
+      return
+    } else {
+      const timeRemaining = new Date(ONE_MINUTE - timeDiff)
+      res.end(`Wait ${timeRemaining.getUTCMinutes()} minutes and ${timeRemaining.getUTCSeconds()} seconds`)
+      return
+    }
+  } catch (err) {
+    console.error('Error ' + err)
+    throw err
+  }
+}
 
 // conf twitter
 const tw = new Twitter({
@@ -32,17 +176,17 @@ const checkDiff = async (currentTime, maxTime) => {
     // calc diff
     const timeDiff = currentTime - keyTime
 
-    if (timeDiff >= maxTime) return fresh // if last tweet is very old, tweet
+    if (timeDiff >= maxTime) return fresh.coiny // if last tweet is very old, tweet
 
     const getTweet = await redisGet('tweet')
     const used = JSON.parse(getTweet)
 
-    if (!used) return fresh
-    if (Object.keys(used).length === 0) return fresh
+    if (!used) return fresh.coiny
+    if (Object.keys(used).length === 0) return fresh.coiny
 
     for (let i in used) {
-      const diff = used[i] / fresh[i]
-      if (diff < 0.9 || diff > 1.1) return fresh
+      const diff = used[i] / fresh.coiny[i]
+      if (diff < 0.9 || diff > 1.1) return fresh.coiny
     }
 
     return null
