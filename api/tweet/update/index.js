@@ -41,14 +41,14 @@ const bestFees = (bitGoFees, blockstreamFees) => {
   for (let target in targets) {
     for (let key in targetsBitGo) {
       if (targets[target] >= Number(targetsBitGo[key])) {
-        response[targets[target]] = bitGoFees[targetsBitGo[key]].toFixed(2)
+        response[targets[target]] = Math.ceil(bitGoFees[targetsBitGo[key]])
       }
     }
 
     for (let key in blockstreamFees) {
       if (targets[target] >= Number(targetsBlockstream[key])) {
         if (blockstreamFees[targetsBlockstream[key]] < response[targets[target]]) {
-          response[targets[target]] = blockstreamFees[targetsBlockstream[key]].toFixed(2)
+          response[targets[target]] = Math.ceil(blockstreamFees[targetsBlockstream[key]])
         }
       }
     }
