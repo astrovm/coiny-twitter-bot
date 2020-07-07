@@ -22,4 +22,4 @@ Install the dependencies, set up env vars, and run:
 
 ## License
 
-[MIT License](https://github.com/astrolince/coiny/blob/master/LICENSE).
+[MIT License](https://github.com/astrolince/coiny/blob/master/LICENSE)
