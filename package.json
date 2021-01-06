@@ -1,6 +1,6 @@
 {
   "name": "coiny-twitter-bot",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Bitcoin fee estimates and market info",
   "author": "astrolince <astro@astrolince.com>",
   "dependencies": {
